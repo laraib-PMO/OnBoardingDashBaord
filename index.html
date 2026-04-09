@@ -199,6 +199,12 @@ a{text-decoration:none;color:inherit;}
 .lf::placeholder{color:var(--t3);}
 .lfu{color:var(--blue);flex:1;}
 .rin{font-size:14px;font-weight:500;border:none;border-bottom:1.5px solid var(--blue);outline:none;background:transparent;font-family:inherit;color:#fff;min-width:180px;}
+.mc.drag-over{border-color:var(--blue)!important;background:rgba(91,146,245,.12)!important;transform:scale(1.02);}
+.mc.dragging{opacity:.35;transform:scale(.97);}
+.sb-it.sb-drag-over{background:rgba(91,146,245,.1)!important;border-left-color:var(--blue)!important;}
+.sb-it.sb-dragging{opacity:.35;}
+.mc[draggable=true]{cursor:grab;}.mc[draggable=true]:active{cursor:grabbing;}
+.sb-it[draggable=true]{cursor:grab;}.sb-it[draggable=true]:active{cursor:grabbing;}
 /* DESIGN NOT STARTED */
 .ds-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;text-align:center;gap:1rem;}
 .ds-icon{width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,.04);border:.5px dashed rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin-bottom:.5rem;}
@@ -711,6 +717,7 @@ let team=[
   {id:13,name:'Claire',role:'Marketing',dept:'marketing'},
   {id:14,name:'Buse Suche Coşkun',role:'Marketing',dept:'marketing'}
 ];
+let dragSrcId=null;
 function ini(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();}
 
 let lid=10;
@@ -848,8 +855,13 @@ function renderTeam(){
 }
 function buildCard(m){
   const col=dc[m.dept]||dc.development;const av=dav[m.dept]||'#1a2d45';
-  const d=document.createElement('div');d.className='mc';d.id='mc-'+m.id;
+  const d=document.createElement('div');d.className='mc';d.id='mc-'+m.id;d.draggable=true;
   d.innerHTML=`<div class="mca"><button class="mcb edb" onclick="editMember(${m.id})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5l2.5 2.5L4 10.5H1.5V8L8 1.5z"/></svg></button><button class="mcb del" onclick="deleteMember(${m.id})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h8M5 3V2h2v1M4 3v7h4V3"/></svg></button></div><div class="mct"><div class="mcav" style="background:${av};color:${col.tx};">${ini(m.name)}</div><div><div class="mcn">${m.name}</div><div class="mcr">${m.role}</div><span class="mcd" style="background:${col.bg};color:${col.tx};">${col.label}</span></div></div>`;
+  d.addEventListener('dragstart',e=>{dragSrcId=m.id;e.dataTransfer.effectAllowed='move';setTimeout(()=>d.classList.add('dragging'),0);});
+  d.addEventListener('dragend',()=>{d.classList.remove('dragging');document.querySelectorAll('.mc').forEach(c=>c.classList.remove('drag-over'));});
+  d.addEventListener('dragover',e=>{e.preventDefault();if(dragSrcId!==m.id)d.classList.add('drag-over');});
+  d.addEventListener('dragleave',()=>d.classList.remove('drag-over'));
+  d.addEventListener('drop',e=>{e.preventDefault();d.classList.remove('drag-over');if(dragSrcId===m.id)return;const si=team.findIndex(x=>x.id===dragSrcId),ti=team.findIndex(x=>x.id===m.id);if(si<0||ti<0)return;const[r]=team.splice(si,1);team.splice(ti,0,r);renderTeam();});
   return d;
 }
 function editMember(id){
@@ -894,6 +906,25 @@ function renderSbTeam(){
     list.appendChild(d);
   });
 }
+function initSbDrag(){
+  let sbDrag=null;
+  document.querySelectorAll('.sb-it').forEach(el=>{
+    el.draggable=true;
+    el.removeEventListener('dragstart',el._ds||null);
+    el.removeEventListener('dragend',el._de||null);
+    el.removeEventListener('dragover',el._do||null);
+    el.removeEventListener('dragleave',el._dl||null);
+    el.removeEventListener('drop',el._dr||null);
+    el._ds=()=>{sbDrag=el;setTimeout(()=>el.classList.add('sb-dragging'),0);};
+    el._de=()=>{el.classList.remove('sb-dragging');document.querySelectorAll('.sb-it').forEach(i=>i.classList.remove('sb-drag-over'));};
+    el._do=e=>{e.preventDefault();if(sbDrag&&sbDrag!==el)el.classList.add('sb-drag-over');};
+    el._dl=()=>el.classList.remove('sb-drag-over');
+    el._dr=e=>{e.preventDefault();el.classList.remove('sb-drag-over');if(!sbDrag||sbDrag===el)return;const sb=document.getElementById('sidebar');const all=[...sb.querySelectorAll('.sb-it')];const si=all.indexOf(sbDrag),ti=all.indexOf(el);si<ti?el.after(sbDrag):el.before(sbDrag);};
+    el.addEventListener('dragstart',el._ds);el.addEventListener('dragend',el._de);
+    el.addEventListener('dragover',el._do);el.addEventListener('dragleave',el._dl);
+    el.addEventListener('drop',el._dr);
+  });
+}
 function sw(id){
   document.querySelectorAll('.sb-it').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
@@ -916,7 +947,7 @@ function confirmAdd(){
   panel.innerHTML=buildCustomPanel(key,nm);
   document.getElementById('panel-team').insertAdjacentElement('afterend',panel);
   document.getElementById('add-inp').value='';cancelAdd();sw(key);
-  initTips();
+  initTips();initSbDrag();
 }
 function buildCustomPanel(key,nm){
   return `<div class="pi"><div class="phdr"><div id="tw-${key}"><span style="font-size:15px;font-weight:500;" id="dt-${key}">${nm}</span></div><div style="display:flex;gap:6px;"><button class="dab" onclick="startRename('${key}')">Rename</button><button class="dab danger" onclick="deleteDept('${key}')">Delete</button></div></div><div id="bks-${key}" class="bks"><p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed rgba(255,255,255,.12);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p></div><div class="btb"><button class="bbt" onclick="addBlock('${key}','note')">+ Note</button><button class="bbt" onclick="addBlock('${key}','task')">+ Task</button><button class="bbt" onclick="addBlock('${key}','link')">+ Link</button><button class="bbt" onclick="addBlock('${key}','section')">+ Section</button></div></div>`;
@@ -952,7 +983,7 @@ function deleteBlock(bId,key){
   const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');
   const ex=document.querySelector('link[rel="icon"]');if(ex)ex.remove();document.head.appendChild(l);
 })();
-buildRings();animateTimeline();renderSbTeam();renderLinks();renderTools();initTips();
+buildRings();animateTimeline();renderSbTeam();renderLinks();renderTools();initTips();initSbDrag();
 </script>
 </body>
 </html>
