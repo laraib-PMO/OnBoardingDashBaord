@@ -6,360 +6,478 @@
 <title>Attimo · Internal</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#f4f4f2;--card:#fff;--b:rgba(0,0,0,.1);--b2:rgba(0,0,0,.2);--t1:#111;--t2:#555;--t3:#999;}
+:root{--bg:#07111e;--bg2:#0c1a2b;--bg3:#112233;--b:rgba(255,255,255,.07);--b2:rgba(255,255,255,.14);--t1:#fff;--t2:rgba(255,255,255,.58);--t3:rgba(255,255,255,.3);--blue:#5b92f5;--teal:#1ecb8e;--amber:#f0a535;--purple:#9089ee;--red:#e85555;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;}
 a{text-decoration:none;color:inherit;}
 @keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fi{from{opacity:0}to{opacity:1}}
-@keyframes grow{from{width:0}to{width:var(--w,0%)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes si{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
-@keyframes pop{0%{transform:scale(.95);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes si{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pop{0%{transform:scale(.93);opacity:0}100%{transform:scale(1);opacity:1}}
 @keyframes sd{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fo{to{opacity:0;transform:scale(.95)}}
-@keyframes lift{to{transform:translateY(-2px)}}
-@keyframes ripple{0%{transform:scale(0);opacity:.4}100%{transform:scale(3);opacity:0}}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(127,119,221,.25)}50%{box-shadow:0 0 0 4px rgba(127,119,221,.08)}}
-.hdr{height:54px;background:#0c0c0c;padding:0 1.25rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:200;animation:fi .4s ease;}
-.lw{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.wm{color:#fff;font-size:16px;font-weight:500;letter-spacing:-.4px;}
-.hdiv{width:.5px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0;}
-.hlinks{display:flex;gap:6px;flex:1;}
-.hl{display:flex;align-items:center;gap:5px;padding:4px 10px;border:.5px solid rgba(255,255,255,.15);border-radius:6px;font-size:11px;color:rgba(255,255,255,.7);cursor:pointer;transition:all .15s;}
-.hl:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;}
-.hbadge{margin-left:auto;font-size:10px;color:rgba(255,255,255,.35);white-space:nowrap;}
-.live{width:6px;height:6px;border-radius:50%;background:#1D9E75;animation:pulse 2s infinite;flex-shrink:0;}
-.layout{display:flex;min-height:calc(100vh - 54px);}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(91,146,245,.15)}50%{box-shadow:0 0 18px 2px rgba(91,146,245,.07)}}
+@keyframes grow{from{width:0}to{width:var(--w,0%)}}
+/* HDR */
+.hdr{height:52px;background:#050e1a;border-bottom:.5px solid var(--b);display:flex;align-items:center;padding:0 1.25rem;position:sticky;top:0;z-index:200;animation:fi .4s ease;}
+.atl{color:#fff;font-size:19px;font-weight:300;letter-spacing:.6px;margin-right:auto;}
+.ato{position:relative;display:inline-block;}
+.atc{position:absolute;width:6px;height:6px;border:1.5px solid rgba(255,255,255,.75);border-radius:50%;top:-5px;right:-2px;}
+.hbadge{font-size:10px;color:rgba(255,255,255,.28);}
+/* LAYOUT */
+.app{position:relative;min-height:calc(100vh - 52px);}
+.layout{display:flex;min-height:calc(100vh - 52px);}
+/* TOOLTIP */
+#tt{position:absolute;display:none;z-index:9999;background:#0c1d32;color:rgba(255,255,255,.88);font-size:10px;padding:7px 11px;border-radius:8px;max-width:200px;pointer-events:none;border:.5px solid rgba(255,255,255,.12);line-height:1.55;box-shadow:0 4px 16px rgba(0,0,0,.4);}
 /* SIDEBAR */
-.sb{width:214px;flex-shrink:0;background:var(--card);border-right:.5px solid var(--b);position:sticky;top:54px;max-height:calc(100vh - 54px);overflow-y:auto;padding:.85rem;display:flex;flex-direction:column;gap:3px;animation:si .4s ease both;}
-.sb-sec{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);padding:7px 5px 3px;margin-top:3px;}
-.sb-it{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--t2);transition:background .12s,color .12s;border:.5px solid transparent;}
-.sb-it:hover{background:var(--bg);color:var(--t1);}
-.sb-it.on{background:var(--bg);color:var(--t1);font-weight:500;border-color:var(--b);animation:glow 3s ease infinite;}
+.sb{width:210px;flex-shrink:0;background:#090f1c;border-right:.5px solid var(--b);position:sticky;top:52px;max-height:calc(100vh - 52px);overflow-y:auto;padding:.85rem;display:flex;flex-direction:column;gap:2px;animation:si .4s ease both;}
+.sb-sec{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);padding:8px 6px 4px;margin-top:4px;}
+.sb-it{display:flex;align-items:center;gap:8px;padding:7px 8px 7px 10px;border-radius:0 7px 7px 0;cursor:pointer;font-size:12px;color:var(--t2);transition:all .15s;border-left:2px solid transparent;margin-left:-2px;}
+.sb-it:hover{background:rgba(255,255,255,.04);color:var(--t1);}
+.sb-it.on{background:rgba(91,146,245,.09);color:var(--t1);font-weight:500;border-left-color:var(--blue);animation:glow 4s ease infinite;}
 .sb-ico{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sb-div{height:.5px;background:var(--b);margin:6px 0;}
-.sb-add{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:7px;cursor:pointer;font-size:11px;color:var(--t3);border:.5px dashed var(--b2);font-family:inherit;background:transparent;width:100%;transition:background .12s;margin-top:2px;}
-.sb-add:hover{background:var(--bg);}
-.adf{display:none;padding:5px 3px;animation:sd .2s ease both;}
-.adf input,.adf select{width:100%;font-size:11px;padding:5px 7px;border:.5px solid var(--b2);border-radius:5px;outline:none;font-family:inherit;background:var(--bg);color:var(--t1);margin-bottom:4px;}
-.adf input:focus,.adf select:focus{border-color:#7F77DD;}
+.sb-div{height:.5px;background:var(--b);margin:7px 0;}
+.sb-add{display:flex;align-items:center;gap:7px;padding:6px 10px;cursor:pointer;font-size:11px;color:var(--t3);border:.5px dashed rgba(255,255,255,.12);border-radius:7px;font-family:inherit;background:transparent;width:100%;transition:all .12s;margin-top:3px;}
+.sb-add:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.22);}
+.adf{display:none;padding:5px 2px;animation:sd .2s ease both;}
+.adf input{width:100%;font-size:11px;padding:6px 8px;border:.5px solid rgba(255,255,255,.15);border-radius:5px;outline:none;font-family:inherit;background:rgba(255,255,255,.05);color:#fff;margin-bottom:5px;}
+.adf input::placeholder{color:var(--t3);}.adf input:focus{border-color:var(--blue);}
 .fbr{display:flex;gap:4px;}
-.fb{flex:1;font-size:10px;padding:5px 0;border:none;border-radius:5px;cursor:pointer;font-family:inherit;transition:opacity .12s;}
-.fb:hover{opacity:.82;}
-.fb.p{background:#7F77DD;color:#fff;}
-.fb.c{background:var(--bg);color:var(--t2);border:.5px solid var(--b2);}
-.sbm{display:flex;align-items:center;gap:7px;padding:4px 5px;border-radius:7px;transition:background .12s;cursor:default;}
-.sbm:hover{background:var(--bg);}
+.fb{flex:1;font-size:10px;padding:5px 0;border:none;border-radius:5px;cursor:pointer;font-family:inherit;}
+.fb.p{background:var(--blue);color:#fff;}.fb.c{background:rgba(255,255,255,.06);color:var(--t2);border:.5px solid rgba(255,255,255,.12);}
+.sbm{display:flex;align-items:center;gap:7px;padding:4px 6px;border-radius:7px;transition:background .12s;}
+.sbm:hover{background:rgba(255,255,255,.04);}
 .sbav{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;}
 .sbmn{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .sbmr{font-size:9px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* CONTENT */
-.content{flex:1;min-width:0;padding:1rem;animation:fu .45s ease both;}
-/* STATS */
-.sg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1rem;}
-@media(max-width:860px){.sg{grid-template-columns:repeat(2,1fr);}}
-.sc{background:var(--card);border:.5px solid var(--b);border-radius:10px;padding:.9rem;display:flex;align-items:flex-start;gap:10px;overflow:hidden;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;animation:pop .5s ease both;cursor:default;}
-.sc:hover{transform:translateY(-2px);border-color:var(--b2);box-shadow:0 4px 14px rgba(0,0,0,.07);}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;}
-.sc.c0::before{background:#7F77DD;}.sc.c1::before{background:#EF9F27;}.sc.c2::before{background:#1D9E75;}.sc.c3::before{background:#E24B4A;}
-.sc.c4::before{background:#185FA5;}.sc.c5::before{background:#0F6E56;}.sc.c6::before{background:#534AB7;}.sc.c7::before{background:#854F0B;}
-.sc-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sc-body{flex:1;min-width:0;}
-.sc-val{font-size:18px;font-weight:500;letter-spacing:-.5px;line-height:1;margin-bottom:2px;}
-.sc-lbl{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--t2);margin-bottom:2px;}
-.sc-sub{font-size:10px;color:var(--t3);line-height:1.35;}
-.sc-bar{height:3px;background:var(--bg);border-radius:3px;margin-top:6px;overflow:hidden;}
-.sc-bf{height:100%;border-radius:3px;animation:grow .9s ease both;animation-delay:.6s;}
-/* CARD */
-.card{background:var(--card);border:.5px solid var(--b);border-radius:10px;}
-.card-hdr{padding:.85rem 1rem;border-bottom:.5px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
-.ct{font-size:12px;font-weight:500;}
-.cs{font-size:10px;color:var(--t3);}
-.card-body{padding:.85rem 1rem;}
-.dg{display:grid;grid-template-columns:1fr 295px;gap:8px;margin-bottom:1rem;}
-@media(max-width:800px){.dg{grid-template-columns:1fr;}}
-.phr{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid rgba(0,0,0,.05);}
-.phr:last-child{border-bottom:none;padding-bottom:0;}
-.phn{font-size:9px;font-weight:500;color:var(--t3);width:48px;flex-shrink:0;text-transform:uppercase;}
-.phnm{font-size:11px;flex:1;min-width:0;}
-.phbw{width:70px;height:4px;background:var(--bg);border-radius:4px;overflow:hidden;flex-shrink:0;}
-.phb{height:100%;border-radius:4px;animation:grow .9s ease both;}
-.pill{font-size:9px;padding:2px 7px;border-radius:100px;flex-shrink:0;}
-.pp{background:#FAEEDA;color:#854F0B;}.pn{background:#EEEDFE;color:#534AB7;}.pw{background:#f3f3f0;color:var(--t3);}
-.wb{padding:.85rem 1rem;border-top:.5px solid var(--b);}
-.wbl{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
-.wbr{display:flex;align-items:flex-start;gap:7px;padding:5px 7px;background:var(--bg);border-radius:6px;font-size:11px;line-height:1.4;margin-bottom:3px;animation:si .35s ease both;}
-.wbr:last-child{margin-bottom:0;}
-.wd{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px;}
-.wdn{background:#1D9E75;}.wdp{background:#EF9F27;animation:pulse 1.8s infinite;}.wdx{background:#7F77DD;}.wdw{background:#ccc;}
-.ss{display:flex;flex-direction:column;gap:8px;}
-.qlk{display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:.5px solid var(--b);cursor:pointer;transition:background .15s;font-size:12px;position:relative;overflow:hidden;}
-.qlk::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(0,0,0,.04);border-radius:50%;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
-.qlk:hover::after{width:200px;height:200px;}
-.qlk:last-child{border-bottom:none;}
-.qlk:hover{background:var(--bg);}
-.qi{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.qn{font-weight:500;font-size:12px;}.qs{font-size:10px;color:var(--t3);}
-.qa{margin-left:auto;font-size:13px;color:var(--t3);}
-.tgrd{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:.85rem;padding-top:.5rem;}
-.tl{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border-radius:7px;transition:background .12s,transform .2s;animation:fu .5s ease both;}
-.tl:hover{background:var(--bg);transform:translateY(-1px);}
-.tlico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
-.tln{font-size:9px;font-weight:500;text-align:center;color:var(--t2);}
-.tlc{font-size:8px;color:var(--t3);text-align:center;}
-.flow{display:flex;overflow-x:auto;}
-.fn{flex:1;min-width:130px;padding:.9rem .85rem;border-right:.5px solid rgba(0,0,0,.07);transition:filter .15s,transform .2s;}
-.fn:last-child{border-right:none;}
-.fn:hover{filter:brightness(.97);transform:translateY(-1px);}
-.fnn{font-size:9px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px;}
-.fnt{font-size:12px;font-weight:600;margin-bottom:4px;}
-.fnd{font-size:10px;line-height:1.5;}
-.ftags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
-.ftg{font-size:9px;padding:1px 5px;border-radius:3px;border:.5px solid rgba(0,0,0,.1);}
+.content{flex:1;min-width:0;padding:1.25rem;display:flex;flex-direction:column;gap:1rem;}
+/* RIGHT PANEL */
+.rp{width:200px;flex-shrink:0;background:#090f1c;border-left:.5px solid var(--b);position:sticky;top:52px;max-height:calc(100vh - 52px);overflow-y:auto;padding:.85rem;display:flex;flex-direction:column;gap:.85rem;}
+.rp-sec{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+.rp-add{width:18px;height:18px;border-radius:4px;background:rgba(91,146,245,.15);color:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;transition:background .12s;}
+.rp-add:hover{background:rgba(91,146,245,.3);}
+.rlink{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:.5px solid var(--b);font-size:11px;cursor:pointer;transition:all .12s;position:relative;}
+.rlink:last-of-type{border-bottom:none;}
+.rlink:hover{color:var(--t1);}
+.rlink:hover .rlink-del{opacity:1;}
+.rlink-ico{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:600;}
+.rlink-nm{flex:1;font-size:11px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rlink-del{opacity:0;background:none;border:none;cursor:pointer;color:var(--red);font-size:14px;line-height:1;transition:opacity .15s;padding:0 2px;flex-shrink:0;}
+.rlink-arr{font-size:11px;color:var(--t3);flex-shrink:0;}
+/* LINK ADD FORM */
+.rp-form{background:rgba(91,146,245,.06);border:.5px solid rgba(91,146,245,.2);border-radius:8px;padding:9px;animation:sd .2s ease both;display:none;}
+.rp-form input{width:100%;font-size:11px;padding:5px 7px;border:.5px solid rgba(255,255,255,.13);border-radius:5px;outline:none;font-family:inherit;background:rgba(255,255,255,.05);color:#fff;margin-bottom:4px;}
+.rp-form input::placeholder{color:var(--t3);}.rp-form input:focus{border-color:var(--blue);}
+/* TOOLS GRID */
+.tools-g{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.tool{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 3px;border-radius:7px;transition:background .12s,transform .15s;position:relative;cursor:default;animation:fu .4s ease both;}
+.tool:hover{background:rgba(255,255,255,.05);transform:translateY(-1px);}
+.tool:hover .tool-del{opacity:1;}
+.tool-ico{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;}
+.tool-nm{font-size:9px;font-weight:500;text-align:center;color:var(--t2);}
+.tool-cat{font-size:7.5px;color:var(--t3);text-align:center;}
+.tool-del{position:absolute;top:2px;right:2px;opacity:0;background:rgba(232,85,85,.2);border:none;cursor:pointer;color:var(--red);font-size:10px;line-height:1;padding:1px 3px;border-radius:3px;transition:opacity .15s;}
+.tool-del:hover{background:rgba(232,85,85,.35);}
+.tool-add-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 3px;border-radius:7px;border:.5px dashed rgba(255,255,255,.12);cursor:pointer;background:transparent;transition:background .12s;width:100%;}
+.tool-add-btn:hover{background:rgba(255,255,255,.04);}
+/* HERO */
+.hero{background:linear-gradient(135deg,#0c1d34,#0d2545);border:.5px solid rgba(91,146,245,.18);border-radius:16px;padding:2rem;position:relative;overflow:hidden;animation:fu .5s ease both;}
+.hero::after{content:'';position:absolute;top:-80px;right:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(91,146,245,.07) 0%,transparent 65%);pointer-events:none;}
+.hero-eye{display:inline-flex;align-items:center;gap:6px;font-size:10px;padding:3px 10px;border:.5px solid rgba(91,146,245,.35);border-radius:100px;color:var(--blue);margin-bottom:1.1rem;background:rgba(91,146,245,.07);}
+.hero-pulse{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 1.5s infinite;}
+.hero-h{font-size:28px;font-weight:400;letter-spacing:-.8px;line-height:1.25;margin-bottom:.75rem;max-width:560px;}
+.hero-h em{color:var(--blue);font-style:normal;}
+.hero-sub{font-size:13px;color:var(--t2);max-width:480px;line-height:1.65;margin-bottom:1.75rem;}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;}
+.hs{border-left:2px solid rgba(255,255,255,.08);padding-left:1rem;}
+.hs-val{font-size:22px;font-weight:500;letter-spacing:-.6px;line-height:1;}
+.hs-lbl{font-size:10px;color:var(--t3);margin-top:3px;text-transform:uppercase;letter-spacing:.5px;}
+/* PRIORITY ITEMS */
+.pri{background:rgba(240,165,53,.05);border:.5px solid rgba(240,165,53,.2);border-radius:12px;padding:1rem 1.25rem;animation:fu .5s ease both;animation-delay:.08s;}
+.pri-hdr{display:flex;align-items:center;gap:8px;margin-bottom:.85rem;}
+.pri-ico{width:20px;height:20px;border-radius:5px;background:rgba(240,165,53,.15);display:flex;align-items:center;justify-content:center;}
+.pri-title{font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:.6px;}
+.pri-meta{margin-left:auto;font-size:10px;color:var(--t3);}
+.pi-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:.5px solid rgba(255,255,255,.04);font-size:12px;color:var(--t2);line-height:1.45;}
+.pi-row:last-child{border-bottom:none;padding-bottom:0;}
+.pi-n{width:18px;height:18px;border-radius:50%;background:rgba(240,165,53,.15);color:var(--amber);font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.pi-tag{font-size:9px;padding:2px 7px;border-radius:4px;margin-left:auto;flex-shrink:0;align-self:flex-start;margin-top:2px;}
+.pi-owner{font-size:9px;padding:2px 7px;background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.08);border-radius:4px;margin-left:6px;color:var(--t3);flex-shrink:0;align-self:flex-start;margin-top:2px;}
+.urgent{background:rgba(232,85,85,.12);color:#e85555;border:.5px solid rgba(232,85,85,.25);}
+.ok{background:rgba(30,203,142,.1);color:var(--teal);border:.5px solid rgba(30,203,142,.2);}
+.info{background:rgba(91,146,245,.12);color:var(--blue);border:.5px solid rgba(91,146,245,.2);}
+/* FLOW CHART */
+.flow-anim-card{background:var(--bg2);border:.5px solid var(--b);border-radius:14px;overflow:hidden;animation:fu .5s ease both;animation-delay:.12s;}
+.fac-hdr{padding:1rem 1.25rem;border-bottom:.5px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.fac-title{font-size:12px;font-weight:500;}
+.fac-sub{font-size:10px;color:var(--t3);}
+.fac-body{padding:.75rem 1.25rem 1rem;}
+/* TIMELINE */
+.tl-card{background:var(--bg2);border:.5px solid var(--b);border-radius:14px;padding:1.25rem;animation:fu .5s ease both;animation-delay:.18s;}
+.tl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;}
+.tl-ttl{font-size:12px;font-weight:500;}
+.tl-leg{display:flex;align-items:center;gap:14px;font-size:9px;color:var(--t3);}
+.ldot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px;}
+/* RINGS */
+.rg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;animation:fu .5s ease both;animation-delay:.24s;}
+@media(max-width:800px){.rg{grid-template-columns:repeat(2,1fr);}}
+.rc{background:var(--bg2);border:.5px solid var(--b);border-radius:12px;padding:1rem .85rem;display:flex;flex-direction:column;align-items:center;gap:5px;transition:transform .2s,border-color .2s;cursor:default;position:relative;overflow:hidden;}
+.rc:hover{transform:translateY(-2px);border-color:var(--b2);}
+.rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;}
+.rc.c0::before{background:var(--purple);}.rc.c1::before{background:var(--amber);}.rc.c2::before{background:var(--teal);}.rc.c3::before{background:var(--blue);}
+.rc.c4::before{background:var(--blue);}.rc.c5::before{background:var(--teal);}.rc.c6::before{background:var(--purple);}.rc.c7::before{background:var(--amber);}
+.rw{position:relative;width:68px;height:68px;}
+.rv{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:500;text-align:center;line-height:1.2;white-space:nowrap;}
+.rl{font-size:10px;font-weight:500;text-align:center;}
+.rs{font-size:9px;color:var(--t3);text-align:center;line-height:1.3;}
 /* PANELS */
 .panel{display:none;animation:pop .3s ease both;}
 .panel.on{display:block;}
-.pi{background:var(--card);border:.5px solid var(--b);border-radius:10px;padding:1.1rem;}
+.pi{background:var(--bg2);border:.5px solid var(--b);border-radius:14px;padding:1.25rem;}
 .phdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
-.pttl{font-size:14px;font-weight:500;}
+.pttl{font-size:15px;font-weight:500;}
 .sub{margin-top:1.1rem;}
-.slbl{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:6px;}
+.slbl{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:7px;}
 .rows{display:flex;flex-direction:column;gap:4px;}
-.row{display:flex;align-items:flex-start;gap:8px;padding:6px 9px;background:var(--bg);border-radius:6px;font-size:12px;line-height:1.4;}
+.row{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;background:rgba(255,255,255,.04);border-radius:7px;font-size:12px;line-height:1.4;border:.5px solid rgba(255,255,255,.04);}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}
 @media(max-width:700px){.g2,.g3{grid-template-columns:1fr;}}
-.mini{padding:9px 11px;background:var(--bg);border-radius:7px;border:.5px solid var(--b);}
-.mid{font-size:9px;font-weight:500;color:#534AB7;margin-bottom:2px;}
+.mini{padding:10px 12px;background:rgba(255,255,255,.04);border-radius:8px;border:.5px solid rgba(255,255,255,.06);}
+.mid{font-size:9px;font-weight:500;color:var(--blue);margin-bottom:2px;}
 .mnm{font-size:12px;font-weight:500;margin-bottom:2px;}
 .md{font-size:11px;color:var(--t3);line-height:1.35;}
-.mbox{font-size:12px;color:var(--t2);line-height:1.65;background:var(--bg);padding:10px 12px;border-radius:7px;}
+.mbox{font-size:12px;color:var(--t2);line-height:1.65;background:rgba(255,255,255,.04);padding:10px 13px;border-radius:8px;border:.5px solid rgba(255,255,255,.05);}
 .tags{display:flex;flex-wrap:wrap;gap:5px;}
-.tag{font-size:11px;padding:3px 8px;border:.5px solid var(--b);border-radius:5px;background:var(--bg);color:var(--t2);}
-.tw{background:#FAEEDA;color:#854F0B;border-color:#FAC775;}
-/* TEAM PANEL */
+.tag{font-size:11px;padding:3px 8px;border:.5px solid rgba(255,255,255,.08);border-radius:5px;background:rgba(255,255,255,.04);color:var(--t2);}
+.tw{background:rgba(240,165,53,.1);color:var(--amber);border-color:rgba(240,165,53,.25);}
+.wd{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.wdn{background:#1ecb8e;}.wdp{background:#f0a535;animation:pulse 1.8s infinite;}.wdx{background:var(--purple);}.wdw{background:rgba(255,255,255,.18);}
+.pill{font-size:9px;padding:2px 8px;border-radius:100px;flex-shrink:0;}
+.pp{background:rgba(240,165,53,.12);color:var(--amber);border:.5px solid rgba(240,165,53,.25);}
+.pn{background:rgba(144,137,238,.12);color:var(--purple);border:.5px solid rgba(144,137,238,.25);}
+.pw{background:rgba(255,255,255,.05);color:var(--t3);}
+.card{background:var(--bg2);border:.5px solid var(--b);border-radius:12px;}
+.chdr{padding:.85rem 1rem;border-bottom:.5px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-size:12px;font-weight:500;}.cs{font-size:10px;color:var(--t3);}
+.vizbox{background:rgba(0,0,0,.2);border:.5px solid var(--b);border-radius:10px;padding:.75rem;overflow:hidden;}
+/* TEAM */
 .dfilter{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;}
-.dfb{font-size:11px;padding:3px 10px;border:.5px solid var(--b);border-radius:100px;cursor:pointer;background:transparent;color:var(--t2);font-family:inherit;transition:all .15s;}
-.dfb:hover{border-color:var(--b2);}
-.dfb.on{background:#111;color:#fff;border-color:#111;}
+.dfb{font-size:11px;padding:3px 10px;border:.5px solid rgba(255,255,255,.1);border-radius:100px;cursor:pointer;background:transparent;color:var(--t2);font-family:inherit;transition:all .15s;}
+.dfb:hover{border-color:rgba(255,255,255,.22);}
+.dfb.on{background:var(--blue);color:#fff;border-color:var(--blue);}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
-.mc{background:var(--bg);border:.5px solid var(--b);border-radius:10px;padding:12px 14px;position:relative;transition:border-color .15s,transform .2s,box-shadow .2s;animation:pop .3s ease both;}
-.mc:hover{border-color:var(--b2);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.06);}
+.mc{background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 14px;position:relative;transition:all .2s;animation:pop .3s ease both;}
+.mc:hover{border-color:rgba(255,255,255,.14);transform:translateY(-1px);background:rgba(255,255,255,.055);}
 .mc:hover .mca{opacity:1;}
 .mct{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .mcav{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;transition:transform .2s;}
 .mc:hover .mcav{transform:scale(1.06);}
-.mcn{font-size:13px;font-weight:500;margin-bottom:2px;}
-.mcr{font-size:11px;color:var(--t2);margin-bottom:5px;}
+.mcn{font-size:13px;font-weight:500;margin-bottom:2px;}.mcr{font-size:11px;color:var(--t2);margin-bottom:5px;}
 .mcd{font-size:9px;padding:2px 7px;border-radius:100px;font-weight:500;}
 .mca{position:absolute;top:10px;right:10px;display:flex;gap:4px;opacity:0;transition:opacity .15s;}
-.mcb{width:26px;height:26px;border-radius:6px;border:.5px solid var(--b);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;}
-.mcb:hover{border-color:var(--b2);}
-.mcb.del:hover{background:#FCEBEB;border-color:#F09595;color:#A32D2D;}
-.mcb.edb:hover{background:#EEEDFE;border-color:#AFA9EC;color:#534AB7;}
-.me{background:var(--card);border:1.5px solid #7F77DD;border-radius:10px;padding:14px;animation:sd .2s ease both;}
-.ef{width:100%;font-size:12px;padding:6px 8px;border:.5px solid var(--b2);border-radius:6px;outline:none;font-family:inherit;background:var(--bg);color:var(--t1);margin-bottom:6px;}
-.ef:focus{border-color:#7F77DD;}
+.mcb{width:26px;height:26px;border-radius:6px;border:.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;color:var(--t2);}
+.mcb:hover{border-color:rgba(255,255,255,.22);}
+.mcb.del:hover{background:rgba(232,85,85,.15);border-color:rgba(232,85,85,.35);color:#e85555;}
+.mcb.edb:hover{background:rgba(91,146,245,.15);border-color:rgba(91,146,245,.35);color:var(--blue);}
+.me{background:rgba(91,146,245,.06);border:1px solid rgba(91,146,245,.25);border-radius:10px;padding:14px;animation:sd .2s ease both;}
+.ef{width:100%;font-size:12px;padding:6px 9px;border:.5px solid rgba(255,255,255,.13);border-radius:6px;outline:none;font-family:inherit;background:rgba(255,255,255,.05);color:#fff;margin-bottom:6px;}
+.ef::placeholder{color:var(--t3);}.ef:focus{border-color:var(--blue);}
 .el{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;}
 .er{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.amf{background:var(--bg);border:1.5px dashed #7F77DD;border-radius:10px;padding:14px;margin-bottom:10px;animation:sd .25s ease both;}
-.amtitle{font-size:12px;font-weight:500;margin-bottom:10px;color:#534AB7;}
-.amb{font-size:11px;padding:5px 12px;background:#111;color:#fff;border:none;border-radius:7px;cursor:pointer;font-family:inherit;transition:opacity .15s;display:inline-flex;align-items:center;gap:5px;}
+.amf{background:rgba(91,146,245,.05);border:1px dashed rgba(91,146,245,.28);border-radius:10px;padding:14px;margin-bottom:10px;animation:sd .25s ease both;}
+.amtitle{font-size:12px;font-weight:500;margin-bottom:10px;color:var(--blue);}
+.amb{font-size:11px;padding:5px 14px;background:var(--blue);color:#fff;border:none;border-radius:7px;cursor:pointer;font-family:inherit;transition:opacity .15s;display:inline-flex;align-items:center;gap:5px;}
 .amb:hover{opacity:.82;}
-/* CUSTOM DEPT */
-.dab{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;border:.5px solid var(--b2);background:var(--bg);color:var(--t2);transition:all .12s;}
-.dab:hover{background:#e8e8e5;}
-.dab.danger{border-color:#F09595;color:#A32D2D;}
-.dab.danger:hover{background:#FCEBEB;}
+.dab{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;border:.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--t2);transition:all .12s;}
+.dab:hover{background:rgba(255,255,255,.08);}
+.dab.danger{border-color:rgba(232,85,85,.3);color:#e85555;}
+.dab.danger:hover{background:rgba(232,85,85,.1);}
 .btb{margin-top:10px;padding-top:10px;border-top:.5px solid var(--b);display:flex;gap:6px;flex-wrap:wrap;}
-.bbt{font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit;border:.5px dashed var(--b2);background:transparent;color:var(--t2);transition:all .12s;}
-.bbt:hover{background:var(--bg);border-color:#7F77DD;color:#534AB7;}
+.bbt{font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit;border:.5px dashed rgba(255,255,255,.12);background:transparent;color:var(--t2);transition:all .12s;}
+.bbt:hover{background:rgba(91,146,245,.1);border-color:rgba(91,146,245,.35);color:var(--blue);}
 .bks{display:flex;flex-direction:column;gap:6px;}
-.bk{border:.5px solid var(--b);border-radius:8px;padding:10px 12px;background:var(--bg);position:relative;animation:fu .25s ease both;}
+.bk{border:.5px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;background:rgba(255,255,255,.03);position:relative;animation:fu .25s ease both;}
 .bk:hover .bkd{opacity:1;}
 .bkd{position:absolute;top:6px;right:8px;background:none;border:none;cursor:pointer;font-size:16px;color:var(--t3);opacity:0;transition:opacity .15s;line-height:1;padding:0 2px;}
-.bkd:hover{color:#A32D2D;}
+.bkd:hover{color:#e85555;}
 .btag{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);font-weight:500;margin-bottom:5px;display:block;}
 .bed{font-size:12px;line-height:1.55;color:var(--t2);outline:none;min-height:22px;word-break:break-word;}
-.bed:focus{color:var(--t1);}
+.bed:focus{color:#fff;}
 .bed:empty::before{content:attr(placeholder);color:var(--t3);}
 .tdr{display:flex;align-items:center;gap:8px;}
-.tdot{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--b2);cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;}
-.tdot.done{background:#1D9E75;border-color:#1D9E75;}
+.tdot{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.tdot.done{background:#1ecb8e;border-color:#1ecb8e;}
 .tdot.done::after{content:'';width:4px;height:7px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:block;}
 .sbk{border:none!important;background:transparent!important;padding:6px 0!important;border-bottom:.5px solid var(--b)!important;border-radius:0!important;}
-.sh{font-size:13px;font-weight:600;outline:none;color:var(--t1);}
+.sh{font-size:13px;font-weight:600;outline:none;color:#fff;}
 .sh:empty::before{content:attr(placeholder);color:var(--t3);font-weight:400;}
 .lr{display:flex;align-items:center;gap:8px;margin-top:4px;}
-.lf{font-size:12px;border:none;outline:none;background:transparent;font-family:inherit;border-bottom:.5px solid var(--b2);padding:2px 0;color:var(--t2);}
-.lf:focus{border-color:#7F77DD;color:var(--t1);}
+.lf{font-size:12px;border:none;outline:none;background:transparent;font-family:inherit;border-bottom:.5px solid rgba(255,255,255,.13);padding:2px 0;color:var(--t2);}
+.lf:focus{border-color:var(--blue);color:#fff;}
 .lf::placeholder{color:var(--t3);}
-.lfu{color:#534AB7;flex:1;}
-.rin{font-size:14px;font-weight:500;border:none;border-bottom:1.5px solid #7F77DD;outline:none;background:transparent;font-family:inherit;color:var(--t1);min-width:180px;}
+.lfu{color:var(--blue);flex:1;}
+.rin{font-size:14px;font-weight:500;border:none;border-bottom:1.5px solid var(--blue);outline:none;background:transparent;font-family:inherit;color:#fff;min-width:180px;}
 </style>
 </head>
 <body>
 <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Attimo internal dashboard</h2>
 
-<!-- HEADER -->
 <header class="hdr">
-  <div class="lw">
-    <span class="atl">attim<span class="ato">o<span class="atc"></span></span></span>
-  </div>
-  <div class="hdiv"></div>
-  <div class="hlinks">
-    <a href="https://app.clickup.com/90182492115/v/l/f/901813315551" target="_blank" class="hl"><div class="live"></div>ClickUp Board</a>
-    <a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="hl">
-      <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3.5" fill="#185FA5"/></svg>
-      Architecture Docs
-    </a>
-  </div>
-  <span class="hbadge">Internal · MVP Phase 0 · v0.1</span>
+  <span class="atl">attim<span class="ato">o<span class="atc"></span></span></span>
+  <span class="hbadge">Internal · MVP Phase 0 · Apr 2025</span>
 </header>
 
+<div class="app">
+<div id="tt"></div>
 <div class="layout">
 
 <!-- SIDEBAR -->
 <aside class="sb" id="sidebar">
-  <div class="sb-sec">Navigation</div>
-  <div class="sb-it on" id="tile-product" onclick="sw('product')">
-    <div class="sb-ico" style="background:#EEEDFE;color:#534AB7;" id="ico-product">
+  <div class="sb-sec">Navigate</div>
+  <div class="sb-it on" id="tile-overview" onclick="sw('overview')"
+    data-tip="Overview: CEO-ready summary of the entire product — hero statement, priority items, animated flow diagram, phase timeline, and key metrics.">
+    <div class="sb-ico" style="background:rgba(91,146,245,.15);color:var(--blue);">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x=".5" y=".5" width="4.5" height="4.5" rx="1.2"/><rect x="7" y=".5" width="4.5" height="4.5" rx="1.2" opacity=".5"/><rect x=".5" y="7" width="4.5" height="4.5" rx="1.2" opacity=".5"/><rect x="7" y="7" width="4.5" height="4.5" rx="1.2" opacity=".2"/></svg>
+    </div>
+    <div><div style="font-size:12px;">Overview</div><div style="font-size:9px;color:var(--t3);">Hero · flow · metrics</div></div>
+  </div>
+  <div class="sb-it" id="tile-product" onclick="sw('product')"
+    data-tip="Product: 5 MVP phases, 44 ClickUp epics, 8 core user stories, connector build order, and non-negotiable product rules.">
+    <div class="sb-ico" style="background:rgba(144,137,238,.15);color:var(--purple);">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9V5l4-3 4 3v4L6 12 2 9z"/></svg>
     </div>
     <div><div style="font-size:12px;" id="sbnm-product">Product</div><div style="font-size:9px;color:var(--t3);">5 phases · 44 epics</div></div>
   </div>
-  <div class="sb-it" id="tile-dev" onclick="sw('dev')">
-    <div class="sb-ico" style="background:#E6F1FB;color:#185FA5;">
+  <div class="sb-it" id="tile-dev" onclick="sw('dev')"
+    data-tip="Development: Full system architecture, LangGraph agent network diagram, triple-store visualization (PostgreSQL + Neo4j + Qdrant), 6 AI agents, HITL gates, and security model.">
+    <div class="sb-ico" style="background:rgba(91,146,245,.15);color:var(--blue);">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x="0" y="9" width="3" height="3" rx=".8"/><rect x="4.5" y="5" width="3" height="7" rx=".8"/><rect x="9" y="1" width="3" height="11" rx=".8"/></svg>
     </div>
-    <div><div style="font-size:12px;" id="sbnm-dev">Development</div><div style="font-size:9px;color:var(--t3);">Architecture · Build</div></div>
+    <div><div style="font-size:12px;" id="sbnm-dev">Development</div><div style="font-size:9px;color:var(--t3);">Architecture · 6 agents</div></div>
   </div>
-  <div class="sb-it" id="tile-design" onclick="sw('design')">
-    <div class="sb-ico" style="background:#FBEAF0;color:#993556;">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><path d="M6 2v8M2 6h8"/></svg>
+  <div class="sb-it" id="tile-design" onclick="sw('design')"
+    data-tip="Design: Phase 0 screens (Ask Attimo, Provenance Drawer), upcoming HITL screens, and 6 post-MVP user-type dashboards.">
+    <div class="sb-ico" style="background:rgba(232,85,85,.12);color:#e85555;">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><path d="M6 3.5v5M3.5 6h5"/></svg>
     </div>
-    <div><div style="font-size:12px;" id="sbnm-design">Design</div><div style="font-size:9px;color:var(--t3);">UI · Screens</div></div>
+    <div><div style="font-size:12px;" id="sbnm-design">Design</div><div style="font-size:9px;color:var(--t3);">UI · 6 user dashboards</div></div>
   </div>
-  <div class="sb-it" id="tile-marketing" onclick="sw('marketing')">
-    <div class="sb-ico" style="background:#EAF3DE;color:#3B6D11;">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M1 9L5 4l2.5 2.5L9 3l2 6H1z" opacity=".7"/><circle cx="9.5" cy="2.5" r="1.5"/></svg>
+  <div class="sb-it" id="tile-marketing" onclick="sw('marketing')"
+    data-tip="Marketing: Problem statement, positioning, target markets (Turkey AEC primary, EU secondary), 5 value propositions, and what Attimo is NOT.">
+    <div class="sb-ico" style="background:rgba(30,203,142,.12);color:var(--teal);">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 8L4.5 4l2 2.5L8 3l3 5H1z"/></svg>
     </div>
     <div><div style="font-size:12px;" id="sbnm-marketing">Marketing</div><div style="font-size:9px;color:var(--t3);">Turkey + EU · AEC</div></div>
   </div>
-  <div class="sb-it" id="tile-team" onclick="sw('team')">
-    <div class="sb-ico" style="background:#F1EFE8;color:#5F5E5A;">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4.5" cy="3.5" r="2.2"/><path d="M0 10.5c0-2.5 2-4.5 4.5-4.5S9 8 9 10.5H0z"/><circle cx="9" cy="3.5" r="1.8" opacity=".5"/><path d="M7.5 10.5c0-1.7.7-3.2 1.8-4.3.2-.1.5-.2.7-.2 1.7 0 3 1.4 3 3.5H7.5z" opacity=".5"/></svg>
+  <div class="sb-it" id="tile-team" onclick="sw('team')"
+    data-tip="Team: Full CRUD — add, edit, delete members. Change name, designation, and department. Filter by department. 14 members across 5 departments.">
+    <div class="sb-ico" style="background:rgba(240,165,53,.12);color:var(--amber);">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4.5" cy="3.5" r="2.2"/><path d="M0 10.5c0-2.5 2-4.5 4.5-4.5S9 8 9 10.5H0z"/><circle cx="9.5" cy="3.5" r="1.7" opacity=".5"/><path d="M8 10.5c0-1.8.8-3.3 2-4.3.2-.1.4-.2.6-.2 1.5 0 2.6 1.3 2.6 3H8z" opacity=".5"/></svg>
     </div>
     <div><div style="font-size:12px;" id="sbnm-team">Team</div><div style="font-size:9px;color:var(--t3);" id="team-count-sb">14 members</div></div>
   </div>
   <button class="sb-add" id="add-btn" onclick="showAdd()">
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>
-    Add department
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>Add department
   </button>
   <div class="adf" id="add-form">
     <input id="add-inp" type="text" placeholder="Department name…" onkeydown="addKey(event)"/>
-    <div class="fbr">
-      <button class="fb p" onclick="confirmAdd()">Add</button>
-      <button class="fb c" onclick="cancelAdd()">Cancel</button>
-    </div>
+    <div class="fbr"><button class="fb p" onclick="confirmAdd()">Add</button><button class="fb c" onclick="cancelAdd()">Cancel</button></div>
   </div>
   <div class="sb-div"></div>
   <div class="sb-sec">Team</div>
   <div id="sb-team-list"></div>
 </aside>
 
-<!-- CONTENT -->
+<!-- MAIN CONTENT -->
 <main class="content">
 
-<!-- STATS -->
-<div class="sg" id="stats-grid"></div>
+<!-- OVERVIEW PANEL -->
+<div id="panel-overview" class="panel on">
 
-<!-- DASH GRID -->
-<div class="dg" style="animation:fu .5s ease both;animation-delay:.2s;">
-  <div class="card">
-    <div class="card-hdr">
-      <span class="ct" style="display:flex;align-items:center;gap:6px;">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round"><path d="M6 1v10M1 6h10"/><circle cx="6" cy="6" r="5"/></svg>
-        MVP Build Progress
-      </span>
-      <span class="cs">Phase 0 active — 30% complete</span>
-    </div>
-    <div class="card-body">
-      <div class="phr"><span class="phn">Phase 0</span><span class="phnm">Trusted Context Navigator</span><div class="phbw"><div class="phb" style="--w:30%;background:#EF9F27;animation-delay:.5s;"></div></div><span class="pill pp">In Progress</span></div>
-      <div class="phr"><span class="phn">Phase 1</span><span class="phnm">Accepted State & Change Lineage</span><div class="phbw"><div class="phb" style="--w:0%;background:#7F77DD;"></div></div><span class="pill pn">Up Next</span></div>
-      <div class="phr"><span class="phn">Phase 2</span><span class="phnm">Channel Capture & Signal Structuring</span><div class="phbw"><div class="phb" style="--w:0%;background:#aaa;"></div></div><span class="pill pw">Queued</span></div>
-      <div class="phr"><span class="phn">Phase 3</span><span class="phnm">Source-Linked Obligation Orchestrator</span><div class="phbw"><div class="phb" style="--w:0%;background:#aaa;"></div></div><span class="pill pw">Queued</span></div>
-      <div class="phr"><span class="phn">Phase 4</span><span class="phnm">Evidence Ledger & External Readiness</span><div class="phbw"><div class="phb" style="--w:0%;background:#aaa;"></div></div><span class="pill pw">Queued</span></div>
-    </div>
-    <div class="wb">
-      <div class="wbl">
-        <svg width="8" height="8" viewBox="0 0 8 8" fill="#EF9F27"><circle cx="4" cy="4" r="4"/></svg>
-        Building right now
-      </div>
-      <div class="wbr"><span class="wd wdn"></span>IFC 5D connector — complete</div>
-      <div class="wbr" style="animation-delay:.05s"><span class="wd wdp"></span>Hybrid retrieval engine (BM25 + vector) — building</div>
-      <div class="wbr" style="animation-delay:.1s"><span class="wd wdp"></span>Provenance layer — building</div>
-      <div class="wbr" style="animation-delay:.15s"><span class="wd wdx"></span>Context compression + "why this result" — next</div>
-      <div class="wbr" style="animation-delay:.2s"><span class="wd wdx"></span>Trusted results UI — next</div>
-      <div class="wbr" style="animation-delay:.25s"><span class="wd wdw"></span>Revit connector — pending decision</div>
-    </div>
+<div class="hero" style="animation-delay:.05s;">
+  <div class="hero-eye"><div class="hero-pulse"></div>MVP Phase 0 · In Progress</div>
+  <div class="hero-h">Attimo turns construction chaos<br>into <em>governed truth.</em></div>
+  <div class="hero-sub">Evidence-native coordination for AEC companies — sitting over existing tools without migration. Every signal traced. Every decision logged.</div>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-val" style="color:var(--amber);">Phase 0</div><div class="hs-lbl">Active build phase</div></div>
+    <div class="hs"><div class="hs-val" style="color:var(--teal);">30%</div><div class="hs-lbl">Phase progress</div></div>
+    <div class="hs"><div class="hs-val" style="color:var(--blue);">Jun 2025</div><div class="hs-lbl">Target ship date</div></div>
+    <div class="hs"><div class="hs-val" id="hero-team">14</div><div class="hs-lbl">People building</div></div>
   </div>
-  <div class="ss">
-    <div class="card">
-      <div class="card-hdr" style="padding:.75rem .9rem;"><span class="ct">Quick Access</span></div>
-      <a href="https://app.clickup.com/90182492115/v/l/f/901813315551" target="_blank" class="qlk">
-        <div class="qi" style="background:#7B68EE1a;">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="#7F77DD"><circle cx="7" cy="7" r="6"/><path d="M4 7l2 2 4-4" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div><div class="qn">ClickUp Board</div><div class="qs">44 epics · 80+ subtasks</div></div>
-        <span class="qa">↗</span>
-      </a>
-      <a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="qlk">
-        <div class="qi" style="background:#185FA51a;">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="#185FA5"><rect x="2" y="1" width="10" height="12" rx="2" opacity=".25"/><rect x="2" y="1" width="10" height="12" rx="2" fill="none" stroke="#185FA5" stroke-width="1.5"/><rect x="4" y="4.5" width="6" height="1.2" rx=".6"/><rect x="4" y="7" width="6" height="1.2" rx=".6"/><rect x="4" y="9.5" width="4" height="1.2" rx=".6"/></svg>
-        </div>
-        <div><div class="qn">Architecture Docs</div><div class="qs">13 documents · All phases</div></div>
-        <span class="qa">↗</span>
-      </a>
+</div>
+
+<!-- PRIORITY ITEMS -->
+<div class="pri">
+  <div class="pri-hdr">
+    <div class="pri-ico">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="var(--amber)"><path d="M5 0l1.2 3.8H10L6.9 6.1l1.2 3.8L5 7.6l-3.1 2.3 1.2-3.8L0 3.8h3.8z"/></svg>
     </div>
-    <div class="card">
-      <div class="card-hdr" style="padding:.75rem .9rem;"><span class="ct">Tools We Use</span><span class="cs" id="tool-count">11 tools</span></div>
-      <div class="tgrd" style="grid-template-columns:repeat(4,1fr);">
-        <div class="tl" style="animation-delay:.3s;"><div class="tlico" style="background:#7B68EE1a;"><svg width="14" height="14" viewBox="0 0 14 14" fill="#7F77DD"><circle cx="7" cy="7" r="6"/><path d="M4 7l2 2 4-4" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="tln">ClickUp</div><div class="tlc">Boards</div></div>
-        <div class="tl" style="animation-delay:.35s;"><div class="tlico" style="background:#1111110f;"><svg width="14" height="14" viewBox="0 0 14 14" fill="#333"><rect x="2" y="2" width="10" height="10" rx="2"/><rect x="4" y="5" width="6" height="1.2" rx=".6" fill="#fff"/><rect x="4" y="7.5" width="4" height="1.2" rx=".6" fill="#fff"/></svg></div><div class="tln">Notion</div><div class="tlc">Docs</div></div>
-        <div class="tl" style="animation-delay:.4s;"><div class="tlico" style="background:#F24E1E14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" fill="#F24E1E" opacity=".2"/><circle cx="4.5" cy="7" r="2.5" stroke="#F24E1E" stroke-width="1.3"/><circle cx="9.5" cy="7" r="2.5" stroke="#F24E1E" stroke-width="1.3"/></svg></div><div class="tln">Figma</div><div class="tlc">Design</div></div>
-        <div class="tl" style="animation-delay:.45s;"><div class="tlico" style="background:#185FA514;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5L7 2l5 3v5l-5 3-5-3V5z" stroke="#185FA5" stroke-width="1.3"/><path d="M2 5l5 3M7 8v5M12 5l-5 3" stroke="#185FA5" stroke-width="1.3" opacity=".5"/></svg></div><div class="tln">Drive</div><div class="tlc">Files</div></div>
-        <div class="tl" style="animation-delay:.5s;"><div class="tlico" style="background:#4A90D914;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#4A90D9" stroke-width="1.3"/><circle cx="7" cy="7" r="2" fill="#4A90D9" opacity=".4"/><circle cx="7" cy="7" r=".8" fill="#4A90D9"/></svg></div><div class="tln">Gather</div><div class="tlc">Virtual Office</div></div>
-        <div class="tl" style="animation-delay:.55s;"><div class="tlico" style="background:#6C47FF14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="#6C47FF"><path d="M7 1L2 5v4l5 4 5-4V5L7 1z" opacity=".2"/><path d="M7 1L2 5v4l5 4 5-4V5L7 1z" fill="none" stroke="#6C47FF" stroke-width="1.3"/><circle cx="7" cy="7" r="1.5"/></svg></div><div class="tln">Motion</div><div class="tlc">AI Calendar</div></div>
-        <div class="tl" style="animation-delay:.6s;"><div class="tlico" style="background:#1111110f;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C3.7 1 1 3.7 1 7c0 2.7 1.7 5 4.1 5.8.3.1.4-.1.4-.3V11c-1.7.4-2.1-.8-2.1-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.6 0 1 .6 1 .6.6 1 1.5.7 1.9.5 0-.4.2-.7.4-.9-1.4-.2-2.9-.7-2.9-3.1 0-.7.2-1.3.6-1.7-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.7.6.5-.1 1-.2 1.5-.2s1 .1 1.5.2c1.1-.8 1.7-.6 1.7-.6.4.9.1 1.5.1 1.7.4.4.6 1 .6 1.7 0 2.4-1.5 2.9-2.9 3.1.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3C11.3 12 13 9.7 13 7c0-3.3-2.7-6-6-6z" fill="#333"/></svg></div><div class="tln">GitHub</div><div class="tlc">Code</div></div>
-        <div class="tl" style="animation-delay:.65s;"><div class="tlico" style="background:#4A154B14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="2" stroke="#4A154B" stroke-width="1.3"/><path d="M4 6h6M4 8.5h4" stroke="#4A154B" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="tln">Slack</div><div class="tlc">Comms</div></div>
+    <span class="pri-title">Priority Items</span>
+    <span class="pri-meta">Week 15 · Apr 7 – 11, 2025</span>
+  </div>
+  <div class="pi-row">
+    <div class="pi-n">1</div>
+    <div><strong>Phase 0 is 30% done</strong> — Hybrid retrieval engine and provenance layer actively building. IFC connector complete. On track for June 2025.</div>
+    <span class="pi-tag ok">On Track</span><span class="pi-owner">Talha</span>
+  </div>
+  <div class="pi-row">
+    <div class="pi-n">2</div>
+    <div><strong>Revit connector decision blocking Phase 0</strong> — APS Forge API (recommended) vs user IFC export. One decision unblocks the next 3 tasks immediately.</div>
+    <span class="pi-tag urgent">Decide Now</span><span class="pi-owner">Syed Osama</span>
+  </div>
+  <div class="pi-row">
+    <div class="pi-n">3</div>
+    <div><strong>Messaging channel verification must start today</strong> — Takes 2–4 weeks. Every day of delay pushes Phase 2 back exactly one day.</div>
+    <span class="pi-tag urgent">Start Today</span><span class="pi-owner">Syed Osama</span>
+  </div>
+</div>
 
-        <div style="grid-column:1/-1;height:.5px;background:var(--b);margin:4px 0;"></div>
-        <div style="grid-column:1/-1;font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);padding:2px 4px;">AI Tools</div>
-
-        <div class="tl" style="animation-delay:.7s;"><div class="tlico" style="background:#D4A57414;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4 1.5 1.5 4 1.5 7S4 12.5 7 12.5 12.5 10 12.5 7 10 1.5 7 1.5z" stroke="#C97B2A" stroke-width="1.3"/><path d="M4 7c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3" stroke="#C97B2A" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="7" r="1.2" fill="#C97B2A"/></svg></div><div class="tln">Claude</div><div class="tlc">AI · Primary LLM</div></div>
-        <div class="tl" style="animation-delay:.75s;"><div class="tlico" style="background:#10A37F14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#10A37F" stroke-width="1.3"/><path d="M4.5 9V5l2.5 2.5L9.5 5v4" stroke="#10A37F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="tln">ChatGPT</div><div class="tlc">AI · Writing</div></div>
-        <div class="tl" style="animation-delay:.8s;"><div class="tlico" style="background:#4285F414;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2C4.2 2 2 4.2 2 7s2.2 5 5 5 5-2.2 5-5" stroke="#4285F4" stroke-width="1.3" stroke-linecap="round"/><path d="M9 2.5L12 5.5M9 5.5L12 2.5" stroke="#EA4335" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="tln">Gemini</div><div class="tlc">AI · Research</div></div>
-      </div>
+<!-- ANIMATED FLOW DIAGRAM -->
+<div class="flow-anim-card">
+  <div class="fac-hdr">
+    <span class="fac-title">Signal to evidence — the product flow</span>
+    <span class="fac-sub">Live animation · signals flowing through the system in real time</span>
+  </div>
+  <div class="fac-body">
+    <svg viewBox="0 0 880 200" width="100%" preserveAspectRatio="xMidYMid meet" style="overflow:visible;">
+      <defs>
+        <filter id="gp" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="2.8" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="ng" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Motion paths (hidden) -->
+        <path id="pp0" d="M62,32 C175,32 175,100 268,100 L442,100 L616,100 L810,100"/>
+        <path id="pp1" d="M62,76 C175,76 175,100 268,100 L442,100 L616,100 L810,100"/>
+        <path id="pp2" d="M62,124 C175,124 175,100 268,100 L442,100 L616,100 L810,100"/>
+        <path id="pp3" d="M62,168 C175,168 175,100 268,100 L442,100 L616,100 L810,100"/>
+      </defs>
+      <!-- Visible paths: sources to classify -->
+      <path d="M80,32 C175,32 175,100 240,100" fill="none" stroke="rgba(91,146,245,.12)" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <path d="M80,76 C175,76 175,100 240,100" fill="none" stroke="rgba(30,203,142,.12)" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <path d="M80,124 C175,124 175,100 240,100" fill="none" stroke="rgba(240,165,53,.12)" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <path d="M80,168 C175,168 175,100 240,100" fill="none" stroke="rgba(144,137,238,.12)" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <!-- Main process line -->
+      <line x1="268" y1="100" x2="782" y2="100" stroke="rgba(255,255,255,.07)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <!-- Arrow connectors between nodes -->
+      <path d="M296 100 L414 100" stroke="rgba(255,255,255,.12)" stroke-width="1" marker-end="url(#arr)"/>
+      <path d="M470 100 L588 100" stroke="rgba(255,255,255,.12)" stroke-width="1" marker-end="url(#arr)"/>
+      <path d="M644 100 L782 100" stroke="rgba(255,255,255,.12)" stroke-width="1" marker-end="url(#arr)"/>
+      <defs><marker id="arr" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto"><path d="M0 1.5L2.5 2.5 0 3.5" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1"/></marker></defs>
+      <!-- SOURCE NODE LABELS -->
+      <rect x="10" y="20" width="55" height="24" rx="6" fill="rgba(91,146,245,.09)" stroke="rgba(91,146,245,.22)" stroke-width=".8"/>
+      <text x="37" y="36" text-anchor="middle" fill="rgba(91,146,245,.9)" font-size="9.5" font-weight="500">Email</text>
+      <rect x="10" y="64" width="55" height="24" rx="6" fill="rgba(30,203,142,.09)" stroke="rgba(30,203,142,.22)" stroke-width=".8"/>
+      <text x="37" y="80" text-anchor="middle" fill="rgba(30,203,142,.9)" font-size="9.5" font-weight="500">Files / BIM</text>
+      <rect x="10" y="112" width="55" height="24" rx="6" fill="rgba(240,165,53,.09)" stroke="rgba(240,165,53,.22)" stroke-width=".8"/>
+      <text x="37" y="128" text-anchor="middle" fill="rgba(240,165,53,.9)" font-size="9.5" font-weight="500">Voice</text>
+      <rect x="10" y="156" width="55" height="24" rx="6" fill="rgba(144,137,238,.09)" stroke="rgba(144,137,238,.22)" stroke-width=".8"/>
+      <text x="37" y="172" text-anchor="middle" fill="rgba(144,137,238,.9)" font-size="9.5" font-weight="500">Photos</text>
+      <!-- PROCESS NODES -->
+      <!-- 01 Classify -->
+      <circle cx="268" cy="100" r="32" fill="rgba(91,146,245,.05)" filter="url(#ng)"/>
+      <circle cx="268" cy="100" r="26" fill="rgba(91,146,245,.08)" stroke="rgba(91,146,245,.3)" stroke-width="1.5"/>
+      <text x="268" y="96" text-anchor="middle" fill="rgba(255,255,255,.9)" font-size="11" font-weight="700">01</text>
+      <text x="268" y="108" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="8">Classify</text>
+      <text x="268" y="142" text-anchor="middle" fill="rgba(91,146,245,.7)" font-size="9">&amp; Link</text>
+      <!-- 02 AI -->
+      <circle cx="442" cy="100" r="32" fill="rgba(240,165,53,.05)" filter="url(#ng)"/>
+      <circle cx="442" cy="100" r="26" fill="rgba(240,165,53,.08)" stroke="rgba(240,165,53,.3)" stroke-width="1.5"/>
+      <text x="442" y="96" text-anchor="middle" fill="rgba(255,255,255,.9)" font-size="11" font-weight="700">02</text>
+      <text x="442" y="108" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="8">AI Agents</text>
+      <text x="442" y="142" text-anchor="middle" fill="rgba(240,165,53,.7)" font-size="9">6 subgraphs</text>
+      <!-- 03 HITL -->
+      <circle cx="616" cy="100" r="32" fill="rgba(30,203,142,.05)" filter="url(#ng)"/>
+      <circle cx="616" cy="100" r="26" fill="rgba(30,203,142,.08)" stroke="rgba(30,203,142,.35)" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <text x="616" y="96" text-anchor="middle" fill="rgba(255,255,255,.9)" font-size="11" font-weight="700">03</text>
+      <text x="616" y="108" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="8">Human Gate</text>
+      <text x="616" y="142" text-anchor="middle" fill="rgba(30,203,142,.7)" font-size="9">7 HITL gates</text>
+      <!-- 04 Output -->
+      <circle cx="810" cy="100" r="32" fill="rgba(144,137,238,.08)" filter="url(#ng)"/>
+      <circle cx="810" cy="100" r="26" fill="rgba(144,137,238,.12)" stroke="rgba(144,137,238,.5)" stroke-width="2"/>
+      <text x="810" y="96" text-anchor="middle" fill="rgba(255,255,255,.95)" font-size="11" font-weight="700">04</text>
+      <text x="810" y="108" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="8">Evidence</text>
+      <text x="810" y="142" text-anchor="middle" fill="rgba(144,137,238,.8)" font-size="9">Audit-ready</text>
+      <!-- PARTICLES — Email (blue) path pp0 -->
+      <circle r="4.5" fill="#5b92f5" filter="url(#gp)"><animateMotion dur="5s" repeatCount="indefinite" begin="0s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp0"/></animateMotion><animate attributeName="opacity" values="0;1;1;1;1;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="0s"/></circle>
+      <circle r="3" fill="#5b92f5"><animateMotion dur="5s" repeatCount="indefinite" begin="1.65s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp0"/></animateMotion><animate attributeName="opacity" values="0;.6;.6;.6;.6;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="1.65s"/></circle>
+      <circle r="2.5" fill="#5b92f5"><animateMotion dur="5s" repeatCount="indefinite" begin="3.3s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp0"/></animateMotion><animate attributeName="opacity" values="0;.35;.35;.35;.35;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="3.3s"/></circle>
+      <!-- PARTICLES — Files (teal) path pp1 -->
+      <circle r="4.5" fill="#1ecb8e" filter="url(#gp)"><animateMotion dur="5s" repeatCount="indefinite" begin=".8s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp1"/></animateMotion><animate attributeName="opacity" values="0;1;1;1;1;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin=".8s"/></circle>
+      <circle r="3" fill="#1ecb8e"><animateMotion dur="5s" repeatCount="indefinite" begin="2.45s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp1"/></animateMotion><animate attributeName="opacity" values="0;.6;.6;.6;.6;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="2.45s"/></circle>
+      <circle r="2.5" fill="#1ecb8e"><animateMotion dur="5s" repeatCount="indefinite" begin="4.1s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp1"/></animateMotion><animate attributeName="opacity" values="0;.35;.35;.35;.35;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="4.1s"/></circle>
+      <!-- PARTICLES — Voice (amber) path pp2 -->
+      <circle r="4.5" fill="#f0a535" filter="url(#gp)"><animateMotion dur="5s" repeatCount="indefinite" begin=".4s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp2"/></animateMotion><animate attributeName="opacity" values="0;1;1;1;1;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin=".4s"/></circle>
+      <circle r="3" fill="#f0a535"><animateMotion dur="5s" repeatCount="indefinite" begin="2.05s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp2"/></animateMotion><animate attributeName="opacity" values="0;.6;.6;.6;.6;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="2.05s"/></circle>
+      <circle r="2.5" fill="#f0a535"><animateMotion dur="5s" repeatCount="indefinite" begin="3.7s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp2"/></animateMotion><animate attributeName="opacity" values="0;.35;.35;.35;.35;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="3.7s"/></circle>
+      <!-- PARTICLES — Photos (purple) path pp3 -->
+      <circle r="4.5" fill="#9089ee" filter="url(#gp)"><animateMotion dur="5s" repeatCount="indefinite" begin="1.2s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp3"/></animateMotion><animate attributeName="opacity" values="0;1;1;1;1;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="1.2s"/></circle>
+      <circle r="3" fill="#9089ee"><animateMotion dur="5s" repeatCount="indefinite" begin="2.85s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp3"/></animateMotion><animate attributeName="opacity" values="0;.6;.6;.6;.6;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="2.85s"/></circle>
+      <circle r="2.5" fill="#9089ee"><animateMotion dur="5s" repeatCount="indefinite" begin="4.5s" calcMode="spline" keyTimes="0;.28;.52;.7;.87;1" keySplines=".4 0 .6 1;.4 0 .6 1;.4 0 .6 1;.05 0 .05 1;.6 0 .6 1"><mpath href="#pp3"/></animateMotion><animate attributeName="opacity" values="0;.35;.35;.35;.35;0" keyTimes="0;.04;.3;.88;.96;1" dur="5s" repeatCount="indefinite" begin="4.5s"/></circle>
+    </svg>
+    <div style="display:flex;gap:1.5rem;padding-top:.5rem;flex-wrap:wrap;">
+      <span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:50%;background:#5b92f5;display:inline-block;"></span>Email signals</span>
+      <span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:50%;background:#1ecb8e;display:inline-block;"></span>File / BIM signals</span>
+      <span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:50%;background:#f0a535;display:inline-block;"></span>Voice signals</span>
+      <span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:50%;background:#9089ee;display:inline-block;"></span>Photo signals</span>
+      <span style="font-size:10px;color:rgba(30,203,142,.6);margin-left:auto;display:flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:#1ecb8e;display:inline-block;animation:pulse 1.5s infinite;"></span>Particles slow at Human Gate (step 03)</span>
     </div>
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<div class="card" style="margin-bottom:1rem;overflow:hidden;animation:fu .5s ease both;animation-delay:.3s;">
-  <div class="card-hdr"><span class="ct">How it works</span><span class="cs">The 5-step product flow</span></div>
-  <div class="flow">
-    <div class="fn" style="background:#EEEDFE;"><div class="fnn" style="color:#534AB7;">01 · Capture</div><div class="fnt" style="color:#3C3489;">Signal Sources</div><div class="fnd" style="color:#534AB7;">All project signals from existing channels — no migration needed</div><div class="ftags"><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">Email</span><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">BIM</span><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">Voice</span><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">Photos</span></div></div>
-    <div class="fn" style="background:#E1F5EE;"><div class="fnn" style="color:#0F6E56;">02 · Structure</div><div class="fnt" style="color:#085041;">Classify & Link</div><div class="fnd" style="color:#0F6E56;">Each signal becomes a decision, obligation, deviation, or evidence — auto-linked to its project</div></div>
-    <div class="fn" style="background:#FAEEDA;"><div class="fnn" style="color:#854F0B;">03 · Process</div><div class="fnt" style="color:#633806;">AI Orchestration</div><div class="fnd" style="color:#854F0B;">6 specialized AI agents over a triple-store extract relationships and meaning from every signal</div></div>
-    <div class="fn" style="background:#E6F1FB;"><div class="fnn" style="color:#185FA5;">04 · Govern</div><div class="fnt" style="color:#0C447C;">Human Approval</div><div class="fnd" style="color:#185FA5;">7 human-in-the-loop gates. No external or contractual action executes without a human approving</div></div>
-    <div class="fn" style="background:#EAF3DE;"><div class="fnn" style="color:#3B6D11;">05 · Deliver</div><div class="fnt" style="color:#27500A;">Evidence Packages</div><div class="fnd" style="color:#3B6D11;">Audit-ready packages with full provenance for disputes, audits, and handovers</div></div>
+<!-- PHASE TIMELINE -->
+<div class="tl-card">
+  <div class="tl-hdr">
+    <span class="tl-ttl">MVP Roadmap</span>
+    <div class="tl-leg">
+      <span><span class="ldot" style="background:var(--amber);"></span>Active</span>
+      <span><span class="ldot" style="background:var(--purple);opacity:.5;"></span>Next</span>
+      <span><span class="ldot" style="background:rgba(255,255,255,.2);"></span>Queued</span>
+    </div>
+  </div>
+  <div class="vizbox">
+    <svg id="tl-svg" viewBox="0 0 1000 120" width="100%" preserveAspectRatio="xMidYMid meet">
+      <line x1="80" y1="40" x2="920" y2="40" stroke="rgba(255,255,255,.07)" stroke-width="2.5"/>
+      <line id="pl" x1="80" y1="40" x2="80" y2="40" stroke="#f0a535" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="80" cy="40" r="18" fill="rgba(240,165,53,.07)"/>
+      <circle cx="80" cy="40" r="11" fill="#f0a535"/>
+      <text x="80" y="44" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="700">P0</text>
+      <circle cx="290" cy="40" r="9" fill="rgba(144,137,238,.1)" stroke="rgba(144,137,238,.45)" stroke-width="1.5"/>
+      <text x="290" y="44" text-anchor="middle" fill="rgba(144,137,238,.7)" font-size="8.5">P1</text>
+      <circle cx="500" cy="40" r="9" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+      <text x="500" y="44" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8.5">P2</text>
+      <circle cx="710" cy="40" r="9" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+      <text x="710" y="44" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8.5">P3</text>
+      <circle cx="920" cy="40" r="9" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+      <text x="920" y="44" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8.5">P4</text>
+      <text x="80" y="68" text-anchor="middle" fill="#f0a535" font-size="10" font-weight="500">Trusted Context Navigator</text>
+      <text x="80" y="81" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="9">Mar – Jun 2025 · 30%</text>
+      <text x="80" y="94" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="8">Talha Mubeen</text>
+      <text x="290" y="68" text-anchor="middle" fill="rgba(144,137,238,.85)" font-size="10" font-weight="500">Accepted State</text>
+      <text x="290" y="81" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="9">Jun – Jul 2025</text>
+      <text x="290" y="94" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="8">Talha Mubeen</text>
+      <text x="500" y="68" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="10">Channel Capture</text>
+      <text x="500" y="81" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Aug – Sep 2025</text>
+      <text x="710" y="68" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="10">Obligation Orchestrator</text>
+      <text x="710" y="81" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Oct – Nov 2025</text>
+      <text x="920" y="68" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="10">Evidence Ledger</text>
+      <text x="920" y="81" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Dec 2025 – Q1 2026</text>
+    </svg>
   </div>
 </div>
 
-<!-- PRODUCT PANEL -->
-<div id="panel-product" class="panel on">
+<!-- RING STATS -->
+<div class="rg" id="rings-grid"></div>
+
+</div><!-- end overview panel -->
+
+<!-- PRODUCT -->
+<div id="panel-product" class="panel">
   <div class="pi">
     <div class="phdr"><span class="pttl">Product</span><span class="pill pp" style="padding:3px 10px;">Phase 0 active</span></div>
     <p class="mbox">Attimo is not a task manager and not a chatbot. It is a governed, evidence-native coordination layer. Every output cites its source. Every action is approval-gated. Every decision is logged immutably.</p>
@@ -368,7 +486,7 @@ a{text-decoration:none;color:inherit;}
         <div class="mini"><div class="mid">US1</div><div class="mnm">Recover context</div><div class="md">Find the right info from vague or partial memory</div></div>
         <div class="mini"><div class="mid">US2</div><div class="mnm">Check accepted state</div><div class="md">What is the current approved version?</div></div>
         <div class="mini"><div class="mid">US3</div><div class="mnm">Track obligations</div><div class="md">What do we owe, to whom, by when?</div></div>
-        <div class="mini"><div class="mid">US4</div><div class="mnm">Generate report</div><div class="md">Produce a site audit report from field evidence</div></div>
+        <div class="mini"><div class="mid">US4</div><div class="mnm">Generate report</div><div class="md">Site audit report from field evidence</div></div>
         <div class="mini"><div class="mid">US5</div><div class="mnm">Capture field signal</div><div class="md">Photo or voice from site — auto-structured</div></div>
         <div class="mini"><div class="mid">US6</div><div class="mnm">Review and approve</div><div class="md">Approve obligation closure or state changes</div></div>
         <div class="mini"><div class="mid">US7</div><div class="mnm">Monitor deadlines</div><div class="md">Alerts before obligations go overdue</div></div>
@@ -377,59 +495,105 @@ a{text-decoration:none;color:inherit;}
     </div>
     <div class="sub"><div class="slbl">Non-negotiable rules</div>
       <div class="rows">
-        <div class="row"><span class="wd wdx"></span>State engine is always deterministic rules — never AI</div>
+        <div class="row"><span class="wd wdx"></span>State engine is always a deterministic rules engine — never AI</div>
         <div class="row"><span class="wd wdx"></span>Deviation detection is always a graph query — never AI</div>
-        <div class="row"><span class="wd wdx"></span>Every external or contractual action requires human approval before it executes</div>
+        <div class="row"><span class="wd wdx"></span>Every external or contractual action requires human approval before execution</div>
         <div class="row"><span class="wd wdx"></span>Every derived output carries provenance — no silent AI decisions, ever</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- DEV PANEL -->
+<!-- DEV -->
 <div id="panel-dev" class="panel">
   <div class="pi">
-    <div class="phdr"><span class="pttl">Development</span><a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="hl" style="font-size:11px;border-color:var(--b2);color:var(--t2);">Architecture Docs ↗</a></div>
-    <div class="slbl">System layers</div>
-    <div class="rows">
-      <div class="row"><span class="wd wdx"></span><strong>Presentation</strong> — Next.js 15 SSR, React, Tailwind CSS, shadcn/ui</div>
-      <div class="row"><span class="wd wdx"></span><strong>API</strong> — FastAPI (REST + WebSocket), OAuth 2.0, JWT auth, OpenAPI docs</div>
-      <div class="row"><span class="wd wdx"></span><strong>Orchestration</strong> — LangGraph state machine, PostgreSQL checkpoints, interrupt() HITL gates</div>
-      <div class="row"><span class="wd wdx"></span><strong>Data</strong> — PostgreSQL 16 (relational) + Neo4j (graph + provenance) + Qdrant (vector search)</div>
-      <div class="row"><span class="wd wdx"></span><strong>Workers</strong> — ARQ async workers over Redis. Parse → chunk → embed → index pipeline</div>
-      <div class="row"><span class="wd wdx"></span><strong>Storage</strong> — S3/MinIO for raw files, photos, audio, exports</div>
-      <div class="row"><span class="wd wdx"></span><strong>Ingress</strong> — Traefik (TLS 1.3, rate limiting). Dev: Docker Compose. Prod: Kubernetes</div>
-    </div>
-    <div class="sub"><div class="slbl">Triple store</div>
-      <div class="g3">
-        <div class="mini"><div class="mid">PostgreSQL 16</div><div class="mnm">Relational</div><div class="md">Obligations, audit log, users, RBAC, reports, tokens, LangGraph checkpoints</div></div>
-        <div class="mini"><div class="mid">Neo4j 5</div><div class="mnm">Graph + Provenance</div><div class="md">Projects, documents, revision chains, correspondence threads, approval nodes, deviation edges</div></div>
-        <div class="mini"><div class="mid">Qdrant</div><div class="mnm">Vector Search</div><div class="md">Document chunks, email bodies, voice transcripts, photo captions — tenant-filtered</div></div>
+    <div class="phdr"><span class="pttl">Development</span><a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" style="font-size:11px;color:var(--t3);border:.5px solid rgba(255,255,255,.1);padding:3px 9px;border-radius:6px;display:flex;align-items:center;gap:4px;">13 Arch Docs ↗</a></div>
+    <div class="sub" style="margin-top:0;"><div class="slbl">AI Agent Orchestration</div>
+      <div class="vizbox">
+        <svg viewBox="0 0 760 175" width="100%">
+          <rect x="295" y="10" width="170" height="38" rx="8" fill="rgba(91,146,245,.1)" stroke="rgba(91,146,245,.28)" stroke-width="1"/>
+          <text x="380" y="29" text-anchor="middle" fill="var(--blue)" font-size="10" font-weight="600">LangGraph Orchestrator</text>
+          <text x="380" y="42" text-anchor="middle" fill="rgba(255,255,255,.38)" font-size="8">Signal → Classify → Route → Gate</text>
+          <line x1="323" y1="48" x2="70" y2="105" stroke="rgba(255,255,255,.07)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="345" y1="48" x2="215" y2="105" stroke="rgba(255,255,255,.07)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="380" y1="48" x2="380" y2="105" stroke="rgba(255,255,255,.07)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="415" y1="48" x2="545" y2="105" stroke="rgba(255,255,255,.07)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="437" y1="48" x2="690" y2="105" stroke="rgba(255,255,255,.07)" stroke-width="1" stroke-dasharray="4 3"/>
+          <rect x="10" y="105" width="120" height="48" rx="7" fill="rgba(240,165,53,.09)" stroke="rgba(240,165,53,.32)" stroke-width="1.5"/>
+          <text x="70" y="124" text-anchor="middle" fill="var(--amber)" font-size="9" font-weight="600">J1 · Context Recovery</text>
+          <text x="70" y="136" text-anchor="middle" fill="rgba(255,255,255,.38)" font-size="8">BM25 + vector retrieval</text>
+          <text x="70" y="147" text-anchor="middle" fill="rgba(240,165,53,.6)" font-size="8">Phase 0 · Building now</text>
+          <rect x="155" y="105" width="120" height="48" rx="7" fill="rgba(144,137,238,.07)" stroke="rgba(144,137,238,.28)" stroke-width="1"/>
+          <text x="215" y="124" text-anchor="middle" fill="var(--purple)" font-size="9" font-weight="500">J3 · State Agent</text>
+          <text x="215" y="136" text-anchor="middle" fill="rgba(255,255,255,.38)" font-size="8">Rules engine (not AI)</text>
+          <text x="215" y="147" text-anchor="middle" fill="rgba(144,137,238,.5)" font-size="8">Phase 1</text>
+          <rect x="320" y="105" width="120" height="48" rx="7" fill="rgba(30,203,142,.07)" stroke="rgba(30,203,142,.22)" stroke-width="1"/>
+          <text x="380" y="124" text-anchor="middle" fill="var(--teal)" font-size="9" font-weight="500">J4 · Field Signal</text>
+          <text x="380" y="136" text-anchor="middle" fill="rgba(255,255,255,.38)" font-size="8">Vision AI + STT</text>
+          <text x="380" y="147" text-anchor="middle" fill="rgba(30,203,142,.5)" font-size="8">Phase 2</text>
+          <rect x="485" y="105" width="120" height="48" rx="7" fill="rgba(91,146,245,.07)" stroke="rgba(91,146,245,.22)" stroke-width="1"/>
+          <text x="545" y="124" text-anchor="middle" fill="var(--blue)" font-size="9" font-weight="500">J5 · Obligation Tracker</text>
+          <text x="545" y="136" text-anchor="middle" fill="rgba(255,255,255,.38)" font-size="8">Source → closure chain</text>
+          <text x="545" y="147" text-anchor="middle" fill="rgba(91,146,245,.5)" font-size="8">Phase 3</text>
+          <rect x="625" y="105" width="125" height="48" rx="7" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+          <text x="687" y="124" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="9" font-weight="500">J6 · Report Generator</text>
+          <text x="687" y="136" text-anchor="middle" fill="rgba(255,255,255,.38)" font-size="8">PDF/DOCX + provenance</text>
+          <text x="687" y="147" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8">Phase 4</text>
+        </svg>
       </div>
     </div>
-    <div class="sub"><div class="slbl">6 AI agents</div>
-      <div class="g3">
-        <div class="mini" style="border-color:rgba(239,159,39,.4);"><div class="mid">J1 · Phase 0 — Building</div><div class="mnm">Context Recovery</div><div class="md">Hybrid retrieval, provenance, context compression, "why this result"</div></div>
-        <div class="mini"><div class="mid">J2 · Post-MVP</div><div class="mnm">Scope Clarity</div><div class="md">Spec analysis for scope conflicts and gaps</div></div>
-        <div class="mini"><div class="mid">J3 · Phase 1</div><div class="mnm">State Agent</div><div class="md">assert_state = rules engine only. Never AI. Reads/writes Neo4j revision chains</div></div>
-        <div class="mini"><div class="mid">J4 · Phase 2</div><div class="mnm">Field Signal</div><div class="md">Vision AI for photos, STT for voice. Deviation = graph query, never AI</div></div>
-        <div class="mini"><div class="mid">J5 · Phase 3</div><div class="mnm">Obligation Tracker</div><div class="md">Extracts obligations, links to source, tracks through to closure</div></div>
-        <div class="mini"><div class="mid">J6 · Phase 4</div><div class="mnm">Report Generator</div><div class="md">PDF/DOCX with provenance footer on every page</div></div>
+    <div class="sub"><div class="slbl">Triple store</div>
+      <div class="vizbox">
+        <svg viewBox="0 0 760 125" width="100%">
+          <rect x="20" y="8" width="220" height="108" rx="10" fill="rgba(91,146,245,.05)" stroke="rgba(91,146,245,.18)" stroke-width="1"/>
+          <text x="130" y="30" text-anchor="middle" fill="var(--blue)" font-size="11" font-weight="600">PostgreSQL 16</text>
+          <text x="130" y="43" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8">ACID · Row Level Security</text>
+          <text x="38" y="58" fill="rgba(255,255,255,.42)" font-size="9">Obligations · Audit log</text>
+          <text x="38" y="71" fill="rgba(255,255,255,.42)" font-size="9">Users · RBAC · Reports</text>
+          <text x="38" y="84" fill="rgba(255,255,255,.42)" font-size="9">LangGraph checkpoints</text>
+          <text x="38" y="97" fill="rgba(255,255,255,.42)" font-size="9">Channel OAuth tokens</text>
+          <rect x="270" y="8" width="220" height="108" rx="10" fill="rgba(144,137,238,.05)" stroke="rgba(144,137,238,.18)" stroke-width="1"/>
+          <text x="380" y="30" text-anchor="middle" fill="var(--purple)" font-size="11" font-weight="600">Neo4j 5</text>
+          <text x="380" y="43" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8">Graph · Provenance</text>
+          <text x="288" y="58" fill="rgba(255,255,255,.42)" font-size="9">Projects · Documents</text>
+          <text x="288" y="71" fill="rgba(255,255,255,.42)" font-size="9">Revision chains · Approvals</text>
+          <text x="288" y="84" fill="rgba(255,255,255,.42)" font-size="9">Correspondence threads</text>
+          <text x="288" y="97" fill="rgba(255,255,255,.42)" font-size="9">Deviation edges</text>
+          <rect x="520" y="8" width="220" height="108" rx="10" fill="rgba(30,203,142,.05)" stroke="rgba(30,203,142,.18)" stroke-width="1"/>
+          <text x="630" y="30" text-anchor="middle" fill="var(--teal)" font-size="11" font-weight="600">Qdrant</text>
+          <text x="630" y="43" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8">Vector · Semantic Search</text>
+          <text x="538" y="58" fill="rgba(255,255,255,.42)" font-size="9">Document chunks (500 tok)</text>
+          <text x="538" y="71" fill="rgba(255,255,255,.42)" font-size="9">Email body embeddings</text>
+          <text x="538" y="84" fill="rgba(255,255,255,.42)" font-size="9">Voice transcripts</text>
+          <text x="538" y="97" fill="rgba(255,255,255,.42)" font-size="9">Photo captions (VLM)</text>
+          <defs><marker id="a2" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto"><path d="M0 1L2.5 2.5 0 4" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/></marker></defs>
+          <line x1="240" y1="62" x2="270" y2="62" stroke="rgba(255,255,255,.13)" stroke-width="1" marker-end="url(#a2)"/>
+          <line x1="490" y1="62" x2="520" y2="62" stroke="rgba(255,255,255,.13)" stroke-width="1" marker-end="url(#a2)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="sub"><div class="slbl">System layers</div>
+      <div class="rows">
+        <div class="row"><span class="wd wdx"></span><strong>Presentation</strong> — Next.js 15 SSR, React, Tailwind CSS, shadcn/ui, React Query + Zustand</div>
+        <div class="row"><span class="wd wdx"></span><strong>API</strong> — FastAPI (REST + WebSocket), OAuth 2.0 (Google + Microsoft), JWT RS256, OpenAPI docs</div>
+        <div class="row"><span class="wd wdx"></span><strong>Orchestration</strong> — LangGraph state machine, PostgreSQL checkpoints (durable), interrupt() HITL gates</div>
+        <div class="row"><span class="wd wdx"></span><strong>Workers</strong> — ARQ async workers over Redis queue. Parse → chunk → embed → index pipeline</div>
+        <div class="row"><span class="wd wdx"></span><strong>Infra</strong> — Traefik (TLS 1.3, rate limiting), S3/MinIO, Docker Compose (dev), Kubernetes (prod)</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- DESIGN PANEL -->
+<!-- DESIGN -->
 <div id="panel-design" class="panel">
   <div class="pi">
-    <div class="phdr"><span class="pttl">Design</span><span style="font-size:11px;color:var(--t3);">UI · Screens · User types</span></div>
-    <p class="mbox">Every screen must make provenance and source visible. Users should always understand why they see something and where it came from. No raw file dumps. No unexplained results.</p>
-    <div class="sub"><div class="slbl">Phase 0 — design now</div>
-      <div class="rows">
-        <div class="row"><span class="wd wdx"></span><strong>Trusted Results UI</strong> — Ranked results showing: what it is, why it was returned, where it came from, its status.</div>
-        <div class="row"><span class="wd wdw"></span><strong>Ask Attimo input</strong> — Query entry. Feel of asking a colleague, not running a search query.</div>
-        <div class="row"><span class="wd wdw"></span><strong>Provenance drawer</strong> — Expands a result to show the full source chain: document → revision → approval → person.</div>
+    <div class="phdr"><span class="pttl">Design</span></div>
+    <p class="mbox">Every screen must make provenance and source visible. Users should always understand why they are seeing something and where it came from. No raw file dumps. No unexplained AI results.</p>
+    <div class="sub"><div class="slbl">Phase 0 — screens needed now</div>
+      <div class="g3">
+        <div class="mini"><div class="mid">Screen 1 · Priority</div><div class="mnm">Ask Attimo + Results</div><div class="md">Query entry + ranked results showing what, why, where it came from, status.</div></div>
+        <div class="mini"><div class="mid">Screen 2</div><div class="mnm">Provenance Drawer</div><div class="md">Full source chain: document → revision → approval → person.</div></div>
+        <div class="mini"><div class="mid">Screen 3</div><div class="mnm">Empty State</div><div class="md">What user sees when retrieval finds nothing — with refinement suggestions.</div></div>
       </div>
     </div>
     <div class="sub"><div class="slbl">6 user-type dashboards — post-MVP</div>
@@ -445,20 +609,20 @@ a{text-decoration:none;color:inherit;}
   </div>
 </div>
 
-<!-- MARKETING PANEL -->
+<!-- MARKETING -->
 <div id="panel-marketing" class="panel">
   <div class="pi">
-    <div class="phdr"><span class="pttl">Marketing</span><span style="font-size:11px;color:var(--t3);">AEC · Turkey + European markets</span></div>
+    <div class="phdr"><span class="pttl">Marketing</span><span style="font-size:11px;color:var(--t3);">AEC · Turkey + EU</span></div>
     <div class="g2">
       <div><div class="slbl">The problem</div><div class="mbox">Construction projects generate thousands of signals that are never captured or linked to decisions. When disputes or audits happen, nobody has a single source of truth.</div></div>
-      <div><div class="slbl">The solution</div><div class="mbox">A coordination layer on top of existing tools. Connects fragmented signals into governed, traceable records — without forcing migration.</div></div>
+      <div><div class="slbl">The solution</div><div class="mbox">A coordination layer on top of existing tools without forcing migration. Connects fragmented signals into governed, traceable records.</div></div>
     </div>
-    <div class="sub"><div class="slbl">What it is not</div><div class="tags"><span class="tag tw">Not a task manager</span><span class="tag tw">Not a chatbot</span><span class="tag tw">Not a document manager</span><span class="tag tw">Not a PM tool</span><span class="tag tw">Not a migration project</span></div></div>
+    <div class="sub"><div class="slbl">What it is not</div><div class="tags"><span class="tag tw">Not a task manager</span><span class="tag tw">Not a chatbot</span><span class="tag tw">Not a document manager</span><span class="tag tw">Not another PM tool</span><span class="tag tw">Not a migration project</span></div></div>
     <div class="sub"><div class="slbl">5 value propositions</div>
       <div class="rows">
         <div class="row"><span class="wd wdx"></span>Find any project context in seconds — with proof of why it was returned</div>
         <div class="row"><span class="wd wdx"></span>Always know the current approved version of any document or decision</div>
-        <div class="row"><span class="wd wdx"></span>Capture field signals automatically — photo, voice, text — without office software</div>
+        <div class="row"><span class="wd wdx"></span>Capture field signals automatically — photo, voice, text — no office software needed</div>
         <div class="row"><span class="wd wdx"></span>Track every obligation with its source clause attached through to closure</div>
         <div class="row"><span class="wd wdx"></span>Export audit-ready evidence packages for disputes, handovers, and claims instantly</div>
       </div>
@@ -466,16 +630,10 @@ a{text-decoration:none;color:inherit;}
   </div>
 </div>
 
-<!-- TEAM PANEL -->
+<!-- TEAM -->
 <div id="panel-team" class="panel">
   <div class="pi">
-    <div class="phdr">
-      <span class="pttl">Team</span>
-      <button class="amb" onclick="showAddMember()">
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>
-        Add member
-      </button>
-    </div>
+    <div class="phdr"><span class="pttl">Team</span><button class="amb" onclick="showAddMember()"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>Add member</button></div>
     <div class="dfilter" id="dept-filter">
       <button class="dfb on" onclick="filterTeam('all',this)">All</button>
       <button class="dfb" onclick="filterTeam('leadership',this)">Leadership</button>
@@ -500,10 +658,7 @@ a{text-decoration:none;color:inherit;}
             <option value="marketing">Marketing</option>
           </select>
         </div>
-        <div class="fbr" style="margin-top:4px;">
-          <button class="fb p" onclick="saveNewMember()" style="padding:6px 0;">Save member</button>
-          <button class="fb c" onclick="hideAddMember()" style="padding:6px 0;">Cancel</button>
-        </div>
+        <div class="fbr" style="margin-top:6px;"><button class="fb p" onclick="saveNewMember()" style="padding:7px 0;">Save</button><button class="fb c" onclick="hideAddMember()" style="padding:7px 0;">Cancel</button></div>
       </div>
     </div>
     <div class="tgrid" id="team-grid"></div>
@@ -511,12 +666,38 @@ a{text-decoration:none;color:inherit;}
 </div>
 
 </main>
-</div>
+
+<!-- RIGHT PANEL -->
+<aside class="rp">
+  <div>
+    <div class="rp-sec">Quick Links<button class="rp-add" onclick="showLinkForm()" id="link-add-btn" title="Add link">+</button></div>
+    <div id="rp-link-form" class="rp-form">
+      <input id="lnm" type="text" placeholder="Label…"/>
+      <input id="lurl" type="url" placeholder="https://…"/>
+      <div class="fbr"><button class="fb p" onclick="saveLink()" style="font-size:10px;padding:5px 0;">Add</button><button class="fb c" onclick="hideLinkForm()" style="font-size:10px;padding:5px 0;">Cancel</button></div>
+    </div>
+    <div id="links-list"></div>
+  </div>
+  <div class="sb-div"></div>
+  <div>
+    <div class="rp-sec">Tools<button class="rp-add" onclick="showToolForm()" id="tool-add-btn" title="Add tool">+</button></div>
+    <div id="rp-tool-form" class="rp-form">
+      <input id="tnm" type="text" placeholder="Tool name…"/>
+      <input id="tcat" type="text" placeholder="Category…"/>
+      <div class="fbr"><button class="fb p" onclick="saveTool()" style="font-size:10px;padding:5px 0;">Add</button><button class="fb c" onclick="hideToolForm()" style="font-size:10px;padding:5px 0;">Cancel</button></div>
+    </div>
+    <div class="tools-g" id="tools-grid"></div>
+  </div>
+</aside>
+
+</div><!-- layout -->
+</div><!-- app -->
 
 <script>
-// ─── DATA ───────────────────────────────────────────────────────────────────
-const dc={leadership:{bg:'#111',tx:'#fff',label:'Leadership'},product:{bg:'#EEEDFE',tx:'#534AB7',label:'Product'},development:{bg:'#E1F5EE',tx:'#0F6E56',label:'Development'},design:{bg:'#FBEAF0',tx:'#993556',label:'Design'},marketing:{bg:'#EAF3DE',tx:'#3B6D11',label:'Marketing'}};
-let nid=100;
+// ─── DATA ─────────────────────────────────────────────────────────────────
+const dc={leadership:{bg:'#1a1a2e',tx:'#aaa9f5',label:'Leadership'},product:{bg:'rgba(144,137,238,.15)',tx:'#9089ee',label:'Product'},development:{bg:'rgba(91,146,245,.15)',tx:'#5b92f5',label:'Development'},design:{bg:'rgba(232,85,85,.12)',tx:'#e85555',label:'Design'},marketing:{bg:'rgba(30,203,142,.12)',tx:'#1ecb8e',label:'Marketing'}};
+const dav={leadership:'#2a2848',product:'#2d2a55',development:'#1a2d4a',design:'#3a1a2a',marketing:'#0f2e25'};
+let nid=100,teamFilter='all';
 let team=[
   {id:1,name:'Efehan Maleri',role:'CEO & Co-Founder',dept:'leadership'},
   {id:2,name:'Syed Osama Ali',role:'CTO',dept:'leadership'},
@@ -526,118 +707,158 @@ let team=[
   {id:6,name:'Soo Ling Lim',role:'Developer',dept:'development'},
   {id:7,name:'Murat Tut',role:'Full Stack Developer',dept:'development'},
   {id:8,name:'Burak Çetin',role:'AI Intern',dept:'development'},
-  {id:9,name:'Developer 6',role:'Developer',dept:'development'},
+  {id:9,name:'Developer 6',role:'Developer (Incoming)',dept:'development'},
   {id:10,name:'Tunch',role:'Designer',dept:'design'},
   {id:11,name:'Gamzang',role:'Designer',dept:'design'},
   {id:12,name:'New Joiner',role:'Designer (Incoming)',dept:'design'},
   {id:13,name:'Claire',role:'Marketing',dept:'marketing'},
   {id:14,name:'Buse Suche Coşkun',role:'Marketing',dept:'marketing'}
 ];
-let teamFilter='all';
+function ini(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();}
 
-function initials(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();}
-
-// ─── STATS ──────────────────────────────────────────────────────────────────
-const statsData=[
-  {c:'c0',val:'Phase 0',lbl:'Active Phase',sub:'Trusted Context Navigator',bar:null,icoColor:'#534AB7',icoBg:'#EEEDFE',ico:'phase',target:null},
-  {c:'c1',val:'30%',lbl:'Build Progress',sub:'Phase 0 of 4 total phases',bar:30,barColor:'#EF9F27',icoColor:'#854F0B',icoBg:'#FAEEDA',ico:'bar',target:null},
-  {c:'c2',val:'1 / 7',lbl:'Connectors Live',sub:'IFC done · Revit next in queue',bar:null,icoColor:'#1D9E75',icoBg:'#E1F5EE',ico:'plug',target:null},
-  {c:'c3',val:'1 / 6',lbl:'Agents Active',sub:'J1 building now · 5 queued',bar:null,icoColor:'#E24B4A',icoBg:'#FCEBEB',ico:'agent',target:null},
-  {c:'c4',val:'44',lbl:'Board Epics',sub:'80+ subtasks tracked in ClickUp',bar:null,icoColor:'#185FA5',icoBg:'#E6F1FB',ico:'list',target:44},
-  {c:'c5',val:'',lbl:'Team Members',sub:'5 departments · 1 incoming',bar:null,icoColor:'#0F6E56',icoBg:'#E1F5EE',ico:'people',target:'team'},
-  {c:'c6',val:'13',lbl:'Arch Docs',sub:'All 5 phases documented',bar:null,icoColor:'#534AB7',icoBg:'#EEEDFE',ico:'doc',target:13},
-  {c:'c7',val:'7',lbl:'HITL Gates',sub:'Human approval checkpoints',bar:null,icoColor:'#854F0B',icoBg:'#FAEEDA',ico:'shield',target:7}
+// ─── LINKS DATA (CRUD) ────────────────────────────────────────────────────
+let lid=10;
+let links=[
+  {id:1,name:'ClickUp Board',url:'https://app.clickup.com/90182492115/v/l/f/901813315551',color:'#9089ee'},
+  {id:2,name:'Architecture Docs',url:'https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i',color:'#5b92f5'},
 ];
-const svgIco={
-  phase:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x=".5" y=".5" width="5.5" height="5.5" rx="1.5"/><rect x="8" y=".5" width="5.5" height="5.5" rx="1.5" opacity=".5"/><rect x=".5" y="8" width="5.5" height="5.5" rx="1.5" opacity=".5"/><rect x="8" y="8" width="5.5" height="5.5" rx="1.5" opacity=".2"/></svg>`,
-  bar:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="8" width="3" height="6" rx="1"/><rect x="5" y="4" width="3" height="10" rx="1"/><rect x="10" y="0" width="3" height="14" rx="1"/></svg>`,
-  plug:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="3.5" y="0" width="2" height="4" rx="1"/><rect x="8.5" y="0" width="2" height="4" rx="1"/><rect x="1.5" y="3" width="11" height="6" rx="2"/><rect x="5" y="9" width="4" height="5" rx="1"/></svg>`,
-  agent:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="2" y="3" width="10" height="8" rx="2"/><circle cx="5" cy="7" r="1.2"/><circle cx="9" cy="7" r="1.2"/><rect x="5.5" y="0.5" width="3" height="2.5" rx="1"/><rect x=".5" y="5" width="1.5" height="4" rx=".75" opacity=".5"/><rect x="12" y="5" width="1.5" height="4" rx=".75" opacity=".5"/></svg>`,
-  list:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="1" width="3" height="3" rx=".8"/><rect x="5" y="2" width="9" height="1.5" rx=".75"/><rect x="0" y="6" width="3" height="3" rx=".8"/><rect x="5" y="7" width="9" height="1.5" rx=".75"/><rect x="0" y="11" width="3" height="3" rx=".8"/><rect x="5" y="12" width="6" height="1.5" rx=".75"/></svg>`,
-  people:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><circle cx="5" cy="4" r="2.5"/><path d="M0 12c0-2.8 2.2-5 5-5s5 2.2 5 5H0z"/><circle cx="10.5" cy="4" r="2" opacity=".6"/><path d="M9 12c0-2 .8-3.7 2-4.8.3-.1.7-.2 1-.2 1.7 0 3 1.4 3 3H9z" opacity=".6"/></svg>`,
-  doc:`<svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="1" width="10" height="12" rx="2"/><path d="M4.5 4.5h5M4.5 7h5M4.5 9.5h3" stroke-linecap="round"/></svg>`,
-  shield:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0.5L1 3v4.5c0 3 2.5 5.8 6 7 3.5-1.2 6-4 6-7V3L7 0.5z" opacity=".15"/><path d="M7 0.5L1 3v4.5c0 3 2.5 5.8 6 7 3.5-1.2 6-4 6-7V3L7 0.5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 7l1.8 1.8L9.5 5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-};
-
-function buildStats(){
-  const g=document.getElementById('stats-grid');
-  statsData.forEach((s,i)=>{
-    const div=document.createElement('div');
-    div.className=`sc ${s.c}`;
-    div.style.animationDelay=`${.05+i*.06}s`;
-    const v=s.c==='c5'?team.length:s.val;
-    div.innerHTML=`<div class="sc-ico" style="background:${s.icoBg};color:${s.icoColor};">${svgIco[s.ico]||''}</div><div class="sc-body"><div class="sc-val" id="sv-${i}">${v}</div><div class="sc-lbl">${s.lbl}</div><div class="sc-sub">${s.sub}</div>${s.bar!==null?`<div class="sc-bar"><div class="sc-bf" style="--w:${s.bar}%;background:${s.barColor};"></div></div>`:''}</div>`;
-    g.appendChild(div);
-  });
-  // counter animation
-  statsData.forEach((s,i)=>{
-    if(typeof s.target==='number'){
-      const el=document.getElementById('sv-'+i);
-      let cur=0;const step=s.target/55;
-      setTimeout(()=>{const t=setInterval(()=>{cur+=step;if(cur>=s.target){el.textContent=s.target;clearInterval(t);}else el.textContent=Math.floor(cur);},16);},200+i*60);
-    } else if(s.target==='team'){
-      const el=document.getElementById('sv-'+i);
-      let cur=0;const step=team.length/55;
-      setTimeout(()=>{const t=setInterval(()=>{cur+=step;if(cur>=team.length){el.textContent=team.length;clearInterval(t);}else el.textContent=Math.floor(cur);},16);},200+i*60);
-    }
+function renderLinks(){
+  const c=document.getElementById('links-list');if(!c)return;c.innerHTML='';
+  links.forEach(l=>{
+    const d=document.createElement('a');d.href=l.url;d.target='_blank';d.className='rlink';
+    d.innerHTML=`<div class="rlink-ico" style="background:${l.color}22;color:${l.color};">${l.name[0].toUpperCase()}</div><span class="rlink-nm">${l.name}</span><span class="rlink-arr">↗</span><button class="rlink-del" onclick="delLink(event,${l.id})" title="Remove">×</button>`;
+    c.appendChild(d);
   });
 }
+function showLinkForm(){document.getElementById('rp-link-form').style.display='block';document.getElementById('lnm').focus();}
+function hideLinkForm(){document.getElementById('rp-link-form').style.display='none';document.getElementById('lnm').value='';document.getElementById('lurl').value='';}
+function saveLink(){
+  const nm=document.getElementById('lnm').value.trim();const url=document.getElementById('lurl').value.trim();
+  if(!nm||!url)return;
+  const colors=['#9089ee','#5b92f5','#1ecb8e','#f0a535','#e85555'];
+  links.push({id:++lid,name:nm,url:url,color:colors[lid%colors.length]});
+  hideLinkForm();renderLinks();
+}
+function delLink(e,id){e.preventDefault();e.stopPropagation();links=links.filter(l=>l.id!==id);renderLinks();}
 
-// ─── TEAM RENDER ─────────────────────────────────────────────────────────────
-function getFiltered(){return teamFilter==='all'?team:team.filter(m=>m.dept===teamFilter);}
+// ─── TOOLS DATA (CRUD) ────────────────────────────────────────────────────
+let tid_=20;
+let tools=[
+  {id:1,name:'ClickUp',cat:'Boards',color:'#9089ee',bg:'rgba(144,137,238,.12)'},
+  {id:2,name:'Notion',cat:'Docs',color:'#bbb',bg:'rgba(255,255,255,.07)'},
+  {id:3,name:'Figma',cat:'Design',color:'#F24E1E',bg:'rgba(242,78,30,.1)'},
+  {id:4,name:'Drive',cat:'Files',color:'#5b92f5',bg:'rgba(91,146,245,.1)'},
+  {id:5,name:'Gather',cat:'Office',color:'#4A90D9',bg:'rgba(74,144,217,.1)'},
+  {id:6,name:'Motion',cat:'Calendar',color:'#6C47FF',bg:'rgba(108,71,255,.1)'},
+  {id:7,name:'GitHub',cat:'Code',color:'#bbb',bg:'rgba(255,255,255,.06)'},
+  {id:8,name:'Slack',cat:'Comms',color:'#aa55aa',bg:'rgba(170,85,170,.1)'},
+  {id:9,name:'Gmail',cat:'Email',color:'#EA4335',bg:'rgba(234,67,53,.1)'},
+  {id:10,name:'Claude',cat:'AI · LLM',color:'#D4A574',bg:'rgba(212,165,116,.1)'},
+  {id:11,name:'ChatGPT',cat:'AI · LLM',color:'#10A37F',bg:'rgba(16,163,127,.1)'},
+  {id:12,name:'Gemini',cat:'AI · Research',color:'#4285F4',bg:'rgba(66,133,244,.1)'},
+];
+function renderTools(){
+  const g=document.getElementById('tools-grid');if(!g)return;g.innerHTML='';
+  tools.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='tool';d.style.animationDelay=`${i*.04}s`;
+    d.innerHTML=`<div class="tool-ico" style="background:${t.bg};color:${t.color};">${t.name[0]}</div><div class="tool-nm">${t.name}</div><div class="tool-cat">${t.cat}</div><button class="tool-del" onclick="delTool(${t.id})" title="Remove">×</button>`;
+    g.appendChild(d);
+  });
+  const add=document.createElement('button');add.className='tool-add-btn';add.onclick=showToolForm;
+  add.innerHTML=`<div style="font-size:16px;color:rgba(255,255,255,.25);line-height:1;">+</div><div style="font-size:8px;color:var(--t3);">Add</div>`;
+  g.appendChild(add);
+}
+function showToolForm(){document.getElementById('rp-tool-form').style.display='block';document.getElementById('tnm').focus();}
+function hideToolForm(){document.getElementById('rp-tool-form').style.display='none';document.getElementById('tnm').value='';document.getElementById('tcat').value='';}
+function saveTool(){
+  const nm=document.getElementById('tnm').value.trim();const cat=document.getElementById('tcat').value.trim();
+  if(!nm)return;
+  tools.push({id:++tid_,name:nm,cat:cat||'Tool',color:'rgba(255,255,255,.5)',bg:'rgba(255,255,255,.06)'});
+  hideToolForm();renderTools();
+}
+function delTool(id){tools=tools.filter(t=>t.id!==id);renderTools();}
 
+// ─── RINGS ────────────────────────────────────────────────────────────────
+const ringsData=[
+  {c:'c0',label:'Active Phase',val:'Phase 0',sub:'Context Navigator',color:'#9089ee',pct:5},
+  {c:'c1',label:'Build Progress',val:'30%',sub:'Mar–Jun 2025',color:'#f0a535',pct:30},
+  {c:'c2',label:'Connectors',val:'1/7',sub:'IFC done · Revit next',color:'#1ecb8e',pct:14},
+  {c:'c3',label:'Agents Active',val:'1/6',sub:'J1 building · 5 queued',color:'#5b92f5',pct:17},
+  {c:'c4',label:'Board Epics',val:'44',sub:'80+ subtasks tracked',color:'#5b92f5',pct:60,counter:true,target:44},
+  {c:'c5',label:'Team Members',val:'',sub:'5 departments',color:'#1ecb8e',pct:100,dynamic:true},
+  {c:'c6',label:'Arch Docs',val:'13',sub:'All phases covered',color:'#9089ee',pct:100},
+  {c:'c7',label:'HITL Gates',val:'7',sub:'Approval checkpoints',color:'#f0a535',pct:100},
+];
+const ringTips=['Phase 0 of 4 MVP phases. Currently building the Trusted Context Navigator — hybrid retrieval over project sources.','30% complete as of April 2025. IFC connector done. Retrieval engine and provenance layer actively building.','1 of 7 connectors live: IFC 5D complete. Revit next (decision pending). DWG, Email, Chat, Drive, OneDrive follow.','1 of 6 LangGraph agents active: J1 Context Recovery building now. J3–J6 start in Phase 1–4.','44 epics tracked in ClickUp across all 5 MVP phases, with 80+ subtasks. Board is live and maintained by Laraib.','14 team members across Leadership, Product, Development, Design, and Marketing departments.','13 architecture documents covering all system layers — available in the Architecture Docs Google Drive folder.','7 human-in-the-loop checkpoints (H1–H7) defined. No external action executes without human approval.'];
+function buildRings(){
+  const g=document.getElementById('rings-grid');if(!g)return;
+  ringsData.forEach((s,i)=>{
+    const r=32,circ=2*Math.PI*r;
+    const v=s.dynamic?team.length:s.val;
+    const d=document.createElement('div');
+    d.className=`rc ${s.c}`;d.style.animationDelay=`${.05+i*.07}s`;d.style.animation='pop .5s ease both';
+    d.dataset.tip=ringTips[i];
+    d.innerHTML=`<div class="rw"><svg viewBox="0 0 80 80" width="68" height="68"><circle cx="40" cy="40" r="${r}" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6"/><circle id="ri-${i}" cx="40" cy="40" r="${r}" fill="none" stroke="${s.color}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" transform="rotate(-90 40 40)"/></svg><div class="rv" id="rv-${i}">${v}</div></div><div class="rl">${s.label}</div><div class="rs">${s.sub}</div>`;
+    g.appendChild(d);
+  });
+  setTimeout(()=>{
+    ringsData.forEach((s,i)=>{
+      const r=32,circ=2*Math.PI*r,off=circ*(1-s.pct/100);
+      const el=document.getElementById('ri-'+i);
+      if(!el)return;
+      el.style.transition='stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1)';
+      el.style.strokeDashoffset=off;
+      if(s.counter){
+        const el2=document.getElementById('rv-'+i);let cur=0;
+        const t=setInterval(()=>{cur++;el2.textContent=Math.min(cur,s.target);if(cur>=s.target)clearInterval(t);},30);
+      }
+    });
+  },600);
+}
+// ─── TIMELINE ────────────────────────────────────────────────────────────
+function animateTimeline(){
+  const bar=document.getElementById('pl');if(!bar)return;
+  const target=143;let cur=80;const t0=performance.now();
+  function step(now){
+    const p=Math.min((now-t0)/1600,1),e=1-Math.pow(1-p,3);
+    cur=80+(target-80)*e;bar.setAttribute('x2',cur);
+    if(p<1)requestAnimationFrame(step);
+  }
+  setTimeout(()=>requestAnimationFrame(step),800);
+}
+// ─── TOOLTIP ─────────────────────────────────────────────────────────────
+function initTips(){
+  const tt=document.getElementById('tt');
+  document.querySelectorAll('[data-tip]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{tt.textContent=el.dataset.tip;tt.style.display='block';});
+    el.addEventListener('mousemove',e=>{
+      const app=document.querySelector('.app');const r=app.getBoundingClientRect();
+      let lx=e.clientX-r.left+14,ly=e.clientY-r.top-10;
+      if(lx+210>r.width)lx=e.clientX-r.left-220;
+      tt.style.left=lx+'px';tt.style.top=ly+'px';
+    });
+    el.addEventListener('mouseleave',()=>{tt.style.display='none';});
+  });
+}
+// ─── TEAM ────────────────────────────────────────────────────────────────
 function renderTeam(){
-  const g=document.getElementById('team-grid');
-  if(!g)return;
-  g.innerHTML='';
-  const filtered=getFiltered();
-  if(!filtered.length){g.innerHTML=`<p style="font-size:12px;color:var(--t3);grid-column:1/-1;padding:1rem 0;">No members in this department yet.</p>`;return;}
-  filtered.forEach(m=>g.appendChild(buildMemberCard(m)));
-  renderSidebarTeam();
-  updateTeamCount();
+  const g=document.getElementById('team-grid');if(!g)return;g.innerHTML='';
+  const f=teamFilter==='all'?team:team.filter(m=>m.dept===teamFilter);
+  if(!f.length){g.innerHTML=`<p style="font-size:12px;color:var(--t3);grid-column:1/-1;">No members in this department.</p>`;return;}
+  f.forEach(m=>g.appendChild(buildCard(m)));renderSbTeam();updateCounts();
 }
-
-function buildMemberCard(m){
-  const col=dc[m.dept]||dc.development;
-  const div=document.createElement('div');
-  div.className='mc';div.id='mc-'+m.id;
-  div.innerHTML=`
-    <div class="mca">
-      <button class="mcb edb" onclick="editMember(${m.id})" title="Edit">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5l2.5 2.5L4 10.5H1.5V8L8 1.5z"/></svg>
-      </button>
-      <button class="mcb del" onclick="deleteMember(${m.id})" title="Delete">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h8M5 3V2h2v1M4 3v7h4V3"/></svg>
-      </button>
-    </div>
-    <div class="mct">
-      <div class="mcav" style="background:${col.bg};color:${col.tx};">${initials(m.name)}</div>
-      <div>
-        <div class="mcn">${m.name}</div>
-        <div class="mcr">${m.role}</div>
-        <span class="mcd" style="background:${col.bg};color:${col.tx};">${col.label}</span>
-      </div>
-    </div>`;
-  return div;
+function buildCard(m){
+  const col=dc[m.dept]||dc.development;const av=dav[m.dept]||'#1a2d45';
+  const d=document.createElement('div');d.className='mc';d.id='mc-'+m.id;
+  d.innerHTML=`<div class="mca"><button class="mcb edb" onclick="editMember(${m.id})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5l2.5 2.5L4 10.5H1.5V8L8 1.5z"/></svg></button><button class="mcb del" onclick="deleteMember(${m.id})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h8M5 3V2h2v1M4 3v7h4V3"/></svg></button></div><div class="mct"><div class="mcav" style="background:${av};color:${col.tx};">${ini(m.name)}</div><div><div class="mcn">${m.name}</div><div class="mcr">${m.role}</div><span class="mcd" style="background:${col.bg};color:${col.tx};">${col.label}</span></div></div>`;
+  return d;
 }
-
 function editMember(id){
   const m=team.find(x=>x.id===id);if(!m)return;
-  const col=dc[m.dept]||dc.development;
-  const card=document.getElementById('mc-'+id);
-  card.innerHTML=`<div class="me">
-    <div class="el">Full name</div><input class="ef" id="enm-${id}" value="${m.name}" type="text"/>
-    <div class="el">Role / Designation</div><input class="ef" id="erl-${id}" value="${m.role}" type="text"/>
-    <div class="el">Department</div>
-    <select class="ef" id="edp-${id}">${Object.entries(dc).map(([k,v])=>`<option value="${k}"${k===m.dept?' selected':''}>${v.label}</option>`).join('')}</select>
-    <div class="fbr">
-      <button class="fb p" onclick="saveMember(${id})" style="padding:6px 0;">Save</button>
-      <button class="fb c" onclick="renderTeam()" style="padding:6px 0;">Cancel</button>
-    </div>
-  </div>`;
+  const c=document.getElementById('mc-'+id);
+  c.innerHTML=`<div class="me"><div class="el">Full name</div><input class="ef" id="enm-${id}" value="${m.name}" type="text"/><div class="el">Role</div><input class="ef" id="erl-${id}" value="${m.role}" type="text"/><div class="el">Department</div><select class="ef" id="edp-${id}">${Object.entries(dc).map(([k,v])=>`<option value="${k}"${k===m.dept?' selected':''}>${v.label}</option>`).join('')}</select><div class="fbr"><button class="fb p" onclick="saveMember(${id})" style="padding:7px 0;">Save</button><button class="fb c" onclick="renderTeam()" style="padding:7px 0;">Cancel</button></div></div>`;
   setTimeout(()=>document.getElementById('enm-'+id).focus(),50);
 }
-
 function saveMember(id){
   const m=team.find(x=>x.id===id);if(!m)return;
   m.name=document.getElementById('enm-'+id).value.trim()||m.name;
@@ -645,111 +866,73 @@ function saveMember(id){
   m.dept=document.getElementById('edp-'+id).value;
   renderTeam();
 }
-
 function deleteMember(id){
-  const card=document.getElementById('mc-'+id);
-  if(card){card.style.animation='fo .2s ease both';setTimeout(()=>{team=team.filter(x=>x.id!==id);renderTeam();},200);}
+  const c=document.getElementById('mc-'+id);
+  if(c){c.style.animation='fo .18s ease both';setTimeout(()=>{team=team.filter(x=>x.id!==id);renderTeam();},180);}
 }
-
-function showAddMember(){
-  const f=document.getElementById('add-member-form');
-  f.style.display='block';
-  setTimeout(()=>document.getElementById('nm-inp').focus(),50);
-}
+function showAddMember(){const f=document.getElementById('add-member-form');f.style.display='block';setTimeout(()=>document.getElementById('nm-inp').focus(),50);}
 function hideAddMember(){document.getElementById('add-member-form').style.display='none';}
-
 function saveNewMember(){
-  const nm=document.getElementById('nm-inp').value.trim();
-  const rl=document.getElementById('rl-inp').value.trim();
-  const dp=document.getElementById('dp-inp').value;
-  if(!nm){document.getElementById('nm-inp').style.borderColor='#E24B4A';return;}
+  const nm=document.getElementById('nm-inp').value.trim();const rl=document.getElementById('rl-inp').value.trim();const dp=document.getElementById('dp-inp').value;
+  if(!nm){document.getElementById('nm-inp').style.borderColor='#e85555';return;}
   team.push({id:++nid,name:nm,role:rl||'Team Member',dept:dp});
-  document.getElementById('nm-inp').value='';
-  document.getElementById('rl-inp').value='';
+  document.getElementById('nm-inp').value='';document.getElementById('rl-inp').value='';
   document.getElementById('nm-inp').style.borderColor='';
-  hideAddMember();
-  renderTeam();
+  hideAddMember();renderTeam();
 }
-
-function filterTeam(f,btn){
-  teamFilter=f;
-  document.querySelectorAll('.dfb').forEach(b=>b.classList.remove('on'));
-  if(btn)btn.classList.add('on');
-  renderTeam();
+function filterTeam(f,btn){teamFilter=f;document.querySelectorAll('.dfb').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');renderTeam();}
+function updateCounts(){
+  const el=document.getElementById('team-count-sb');if(el)el.textContent=`${team.length} members`;
+  const ht=document.getElementById('hero-team');if(ht)ht.textContent=team.length;
+  const rv=document.getElementById('rv-5');if(rv)rv.textContent=team.length;
 }
-
-function updateTeamCount(){
-  const el=document.getElementById('team-count-sb');
-  if(el)el.textContent=`${team.length} members`;
-  // update stat card
-  const sv=document.getElementById('sv-5');
-  if(sv)sv.textContent=team.length;
-}
-
-function renderSidebarTeam(){
-  const list=document.getElementById('sb-team-list');
-  if(!list)return;
-  list.innerHTML='';
+function renderSbTeam(){
+  const list=document.getElementById('sb-team-list');if(!list)return;list.innerHTML='';
   team.forEach(m=>{
-    const col=dc[m.dept]||dc.development;
-    const div=document.createElement('div');div.className='sbm';
-    div.innerHTML=`<div class="sbav" style="background:${col.bg};color:${col.tx};">${initials(m.name)}</div><div><div class="sbmn">${m.name}</div><div class="sbmr">${m.role}</div></div>`;
-    list.appendChild(div);
+    const col=dc[m.dept]||dc.development;const av=dav[m.dept]||'#1a2d45';
+    const d=document.createElement('div');d.className='sbm';
+    d.innerHTML=`<div class="sbav" style="background:${av};color:${col.tx};">${ini(m.name)}</div><div><div class="sbmn">${m.name}</div><div class="sbmr">${m.role}</div></div>`;
+    list.appendChild(d);
   });
 }
-
-// ─── NAV ────────────────────────────────────────────────────────────────────
+// ─── NAV ─────────────────────────────────────────────────────────────────
 function sw(id){
   document.querySelectorAll('.sb-it').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  const t=document.getElementById('tile-'+id);
-  const p=document.getElementById('panel-'+id);
+  const t=document.getElementById('tile-'+id);const p=document.getElementById('panel-'+id);
   if(t)t.classList.add('on');
   if(p){p.classList.add('on');p.scrollIntoView({behavior:'smooth',block:'nearest'});}
   if(id==='team')renderTeam();
 }
-
-// ─── ADD DEPT ────────────────────────────────────────────────────────────────
+// ─── ADD DEPT ────────────────────────────────────────────────────────────
 function showAdd(){document.getElementById('add-btn').style.display='none';const f=document.getElementById('add-form');f.style.display='block';document.getElementById('add-inp').focus();}
 function cancelAdd(){document.getElementById('add-form').style.display='none';document.getElementById('add-btn').style.display='flex';document.getElementById('add-inp').value='';}
 function addKey(e){if(e.key==='Enter')confirmAdd();if(e.key==='Escape')cancelAdd();}
 function confirmAdd(){
   const nm=document.getElementById('add-inp').value.trim();if(!nm)return;
-  const key='dept-'+Date.now();
-  const sb=document.querySelector('.sb');const addBtn=document.getElementById('add-btn');
+  const key='dept-'+Date.now();const sb=document.querySelector('.sb');const addBtn=document.getElementById('add-btn');
   const tile=document.createElement('div');tile.className='sb-it';tile.id='tile-'+key;tile.onclick=()=>sw(key);
-  tile.innerHTML=`<div class="sb-ico" style="background:#f0f0ee;color:#888;" id="ico-${key}">${nm[0].toUpperCase()}</div><div><div style="font-size:12px;" id="sbnm-${key}">${nm}</div><div style="font-size:9px;color:var(--t3);">New department</div></div>`;
+  tile.dataset.tip=`${nm} department — custom section added by your team.`;
+  tile.innerHTML=`<div class="sb-ico" style="background:rgba(255,255,255,.07);color:var(--t2);">${nm[0].toUpperCase()}</div><div><div style="font-size:12px;" id="sbnm-${key}">${nm}</div><div style="font-size:9px;color:var(--t3);">New</div></div>`;
   sb.insertBefore(tile,addBtn);
   const panel=document.createElement('div');panel.id='panel-'+key;panel.className='panel';
   panel.innerHTML=buildCustomPanel(key,nm);
   document.getElementById('panel-team').insertAdjacentElement('afterend',panel);
   document.getElementById('add-inp').value='';cancelAdd();sw(key);
+  initTips();
 }
-
 function buildCustomPanel(key,nm){
-  return `<div class="pi"><div class="phdr"><div id="tw-${key}"><span style="font-size:14px;font-weight:500;" id="dt-${key}">${nm}</span></div><div style="display:flex;gap:6px;"><button class="dab" onclick="startRename('${key}')">Rename</button><button class="dab danger" onclick="deleteDept('${key}')">Delete</button></div></div><div id="bks-${key}" class="bks"><p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed var(--b2);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p></div><div class="btb"><button class="bbt" onclick="addBlock('${key}','note')">+ Note</button><button class="bbt" onclick="addBlock('${key}','task')">+ Task</button><button class="bbt" onclick="addBlock('${key}','link')">+ Link</button><button class="bbt" onclick="addBlock('${key}','section')">+ Section</button></div></div>`;
+  return `<div class="pi"><div class="phdr"><div id="tw-${key}"><span style="font-size:15px;font-weight:500;" id="dt-${key}">${nm}</span></div><div style="display:flex;gap:6px;"><button class="dab" onclick="startRename('${key}')">Rename</button><button class="dab danger" onclick="deleteDept('${key}')">Delete</button></div></div><div id="bks-${key}" class="bks"><p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed rgba(255,255,255,.12);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p></div><div class="btb"><button class="bbt" onclick="addBlock('${key}','note')">+ Note</button><button class="bbt" onclick="addBlock('${key}','task')">+ Task</button><button class="bbt" onclick="addBlock('${key}','link')">+ Link</button><button class="bbt" onclick="addBlock('${key}','section')">+ Section</button></div></div>`;
 }
-
-function startRename(key){
-  const wrap=document.getElementById('tw-'+key);
-  const cur=document.getElementById('dt-'+key).textContent;
-  wrap.innerHTML=`<input class="rin" id="ri-${key}" value="${cur}" onkeydown="rKey(event,'${key}')" onblur="saveRename('${key}')"/>`;
-  const inp=document.getElementById('ri-'+key);inp.focus();inp.select();
-}
-function rKey(e,key){if(e.key==='Enter'){e.preventDefault();saveRename(key);}if(e.key==='Escape')cancelRename(key);}
-function cancelRename(key){const inp=document.getElementById('ri-'+key);if(!inp)return;const orig=inp.defaultValue;document.getElementById('tw-'+key).innerHTML=`<span style="font-size:14px;font-weight:500;" id="dt-${key}">${orig}</span>`;}
-function saveRename(key){
-  const inp=document.getElementById('ri-'+key);if(!inp)return;
-  const nm=inp.value.trim()||inp.defaultValue;
-  document.getElementById('tw-'+key).innerHTML=`<span style="font-size:14px;font-weight:500;" id="dt-${key}">${nm}</span>`;
-  const sbnm=document.getElementById('sbnm-'+key);if(sbnm)sbnm.textContent=nm;
-  const ico=document.getElementById('ico-'+key);if(ico)ico.textContent=nm[0].toUpperCase();
-}
-function deleteDept(key){
-  const tile=document.getElementById('tile-'+key);const panel=document.getElementById('panel-'+key);
-  if(panel){panel.style.animation='fo .2s ease both';setTimeout(()=>panel.remove(),200);}
-  if(tile){tile.style.opacity='0';tile.style.transition='opacity .2s';setTimeout(()=>tile.remove(),200);}
-  sw('product');
+function startRename(key){const w=document.getElementById('tw-'+key);const cur=document.getElementById('dt-'+key).textContent;w.innerHTML=`<input class="rin" id="ri-${key}" value="${cur}" onkeydown="rKey(event,'${key}')" onblur="saveRename('${key}')"/>`;const i=document.getElementById('ri-'+key);i.focus();i.select();}
+function rKey(e,k){if(e.key==='Enter'){e.preventDefault();saveRename(k);}if(e.key==='Escape')cancelRen(k);}
+function cancelRen(k){const i=document.getElementById('ri-'+k);if(!i)return;const o=i.defaultValue;document.getElementById('tw-'+k).innerHTML=`<span style="font-size:15px;font-weight:500;" id="dt-${k}">${o}</span>`;}
+function saveRename(k){const i=document.getElementById('ri-'+k);if(!i)return;const nm=i.value.trim()||i.defaultValue;document.getElementById('tw-'+k).innerHTML=`<span style="font-size:15px;font-weight:500;" id="dt-${k}">${nm}</span>`;const s=document.getElementById('sbnm-'+k);if(s)s.textContent=nm;}
+function deleteDept(k){
+  const t=document.getElementById('tile-'+k);const p=document.getElementById('panel-'+k);
+  if(p){p.style.animation='fo .2s ease both';setTimeout(()=>p.remove(),200);}
+  if(t){t.style.opacity='0';t.style.transition='opacity .2s';setTimeout(()=>t.remove(),200);}
+  sw('overview');
 }
 function addBlock(key,type){
   const c=document.getElementById('bks-'+key);const emp=document.getElementById('emp-'+key);if(emp)emp.remove();
@@ -762,36 +945,19 @@ function addBlock(key,type){
 }
 function deleteBlock(bId,key){
   const b=document.getElementById(bId);if(!b)return;b.style.animation='fo .15s ease both';
-  setTimeout(()=>{b.remove();const c=document.getElementById('bks-'+key);if(c&&!c.querySelector('.bk'))c.innerHTML=`<p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed var(--b2);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p>`;},150);
+  setTimeout(()=>{b.remove();const c=document.getElementById('bks-'+key);if(c&&!c.querySelector('.bk'))c.innerHTML=`<p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed rgba(255,255,255,.12);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p>`;},150);
 }
-
-// ─── INIT ────────────────────────────────────────────────────────────────────
-buildStats();
-renderSidebarTeam();
-</script>
-<style>
-.atl{color:#fff;font-size:20px;font-weight:300;letter-spacing:.6px;line-height:1;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;}
-.ato{position:relative;display:inline-block;}
-.atc{position:absolute;width:6.5px;height:6.5px;border:1.5px solid rgba(255,255,255,.85);border-radius:50%;top:-5px;right:-2px;}
-</style>
-<script>
+// ─── FAVICON ─────────────────────────────────────────────────────────────
 (function(){
-  const c=document.createElement('canvas');c.width=64;c.height=64;
-  const x=c.getContext('2d');
-  const rr=12;
-  x.beginPath();x.moveTo(rr,0);x.lineTo(64-rr,0);x.quadraticCurveTo(64,0,64,rr);x.lineTo(64,64-rr);x.quadraticCurveTo(64,64,64-rr,64);x.lineTo(rr,64);x.quadraticCurveTo(0,64,0,64-rr);x.lineTo(0,rr);x.quadraticCurveTo(0,0,rr,0);x.closePath();
-  x.fillStyle='#2b4a70';x.fill();
-  x.fillStyle='#fff';
-  x.font='300 40px -apple-system,BlinkMacSystemFont,Helvetica,sans-serif';
-  x.textBaseline='middle';
-  x.fillText('a',10,36);
-  x.beginPath();x.arc(51,13,7,0,Math.PI*2);
-  x.strokeStyle='rgba(255,255,255,.88)';x.lineWidth=2.5;x.stroke();
+  const c=document.createElement('canvas');c.width=64;c.height=64;const x=c.getContext('2d');
+  const rr=12;x.beginPath();x.moveTo(rr,0);x.lineTo(64-rr,0);x.quadraticCurveTo(64,0,64,rr);x.lineTo(64,64-rr);x.quadraticCurveTo(64,64,64-rr,64);x.lineTo(rr,64);x.quadraticCurveTo(0,64,0,64-rr);x.lineTo(0,rr);x.quadraticCurveTo(0,0,rr,0);x.closePath();
+  x.fillStyle='#0c1d32';x.fill();x.fillStyle='#fff';x.font='300 40px -apple-system,Helvetica,sans-serif';x.textBaseline='middle';x.fillText('a',10,36);
+  x.beginPath();x.arc(51,13,7,0,Math.PI*2);x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=2.5;x.stroke();
   const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');
-  const ex=document.querySelector('link[rel="icon"]');
-  if(ex)ex.remove();
-  document.head.appendChild(l);
+  const ex=document.querySelector('link[rel="icon"]');if(ex)ex.remove();document.head.appendChild(l);
 })();
+// ─── INIT ─────────────────────────────────────────────────────────────────
+buildRings();animateTimeline();renderSbTeam();renderLinks();renderTools();initTips();
 </script>
 </body>
 </html>
