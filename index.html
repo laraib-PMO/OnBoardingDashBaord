@@ -279,6 +279,9 @@ a{text-decoration:none;color:inherit;}
   </div>
   <div class="sb-div"></div>
   <div class="sb-sec">Team</div>
+  <button class="sb-add" onclick="sw('team');showAddMember();" style="margin-bottom:6px;">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>Add team member
+  </button>
   <div id="sb-team-list"></div>
 </aside>
 
@@ -623,6 +626,8 @@ a{text-decoration:none;color:inherit;}
   <div class="pi">
     <div class="phdr">
       <span class="pttl">Team</span>
+    </div>
+    <div style="margin-bottom:1rem;">
       <button class="amb" onclick="showAddMember()">
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>Add member
       </button>
@@ -696,11 +701,11 @@ let team=[
   {id:3,name:'Laraib',role:'Program Manager',dept:'product'},
   {id:4,name:'Mesude Gökpınar',role:'Product Intern',dept:'product'},
   {id:5,name:'Talha Mubeen',role:'System Architect',dept:'development'},
-  {id:6,name:'Soo Ling Lim',role:'Developer',dept:'development'},
+  {id:6,name:'Soo Ling Lim',role:'CSO',dept:'leadership'},
   {id:7,name:'Murat Tut',role:'Full Stack Developer',dept:'development'},
   {id:8,name:'Burak Çetin',role:'AI Intern',dept:'development'},
   {id:9,name:'Developer 6',role:'Developer (Incoming)',dept:'development'},
-  {id:10,name:'Tunch',role:'Designer',dept:'design'},
+  {id:10,name:'Tunch',role:'Lead Product Designer',dept:'design'},
   {id:11,name:'Gamzang',role:'Designer',dept:'design'},
   {id:12,name:'New Joiner',role:'Designer (Incoming)',dept:'design'},
   {id:13,name:'Claire',role:'Marketing',dept:'marketing'},
