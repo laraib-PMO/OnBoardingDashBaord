@@ -6,749 +6,792 @@
 <title>Attimo · Internal</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#f3f3f0;--card:#fff;--border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.2);--t1:#111;--t2:#555;--t3:#999;--r:10px;--rs:7px;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;min-height:100vh;}
-h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+:root{--bg:#f4f4f2;--card:#fff;--b:rgba(0,0,0,.1);--b2:rgba(0,0,0,.2);--t1:#111;--t2:#555;--t3:#999;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;}
 a{text-decoration:none;color:inherit;}
-
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{from{opacity:0}to{opacity:1}}
 @keyframes grow{from{width:0}to{width:var(--w,0%)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes si{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
 @keyframes pop{0%{transform:scale(.95);opacity:0}100%{transform:scale(1);opacity:1}}
-
-/* HEADER */
-.hdr{background:#0c0c0c;padding:0 1.25rem;height:54px;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:200;animation:fadeIn .4s ease;}
-.logo-wrap{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.logosvg{display:block;}
-.wordmark{color:#fff;font-size:16px;font-weight:500;letter-spacing:-.4px;}
-.hdr-divider{width:0.5px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0;}
-.hdr-links{display:flex;gap:6px;flex:1;}
-.hl{display:flex;align-items:center;gap:5px;padding:4px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;font-size:11px;color:rgba(255,255,255,.7);cursor:pointer;transition:border-color .15s,background .15s;}
-.hl:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.07);color:#fff;}
-.hl-d{width:6px;height:6px;border-radius:50%;}
-.hdr-badge{margin-left:auto;font-size:10px;color:rgba(255,255,255,.4);white-space:nowrap;}
-
-/* LAYOUT */
-.layout{display:flex;align-items:flex-start;min-height:calc(100vh - 54px);}
-
+@keyframes sd{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fo{to{opacity:0;transform:scale(.95)}}
+@keyframes lift{to{transform:translateY(-2px)}}
+@keyframes ripple{0%{transform:scale(0);opacity:.4}100%{transform:scale(3);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(127,119,221,.25)}50%{box-shadow:0 0 0 4px rgba(127,119,221,.08)}}
+.hdr{height:54px;background:#0c0c0c;padding:0 1.25rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:200;animation:fi .4s ease;}
+.lw{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.wm{color:#fff;font-size:16px;font-weight:500;letter-spacing:-.4px;}
+.hdiv{width:.5px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0;}
+.hlinks{display:flex;gap:6px;flex:1;}
+.hl{display:flex;align-items:center;gap:5px;padding:4px 10px;border:.5px solid rgba(255,255,255,.15);border-radius:6px;font-size:11px;color:rgba(255,255,255,.7);cursor:pointer;transition:all .15s;}
+.hl:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;}
+.hbadge{margin-left:auto;font-size:10px;color:rgba(255,255,255,.35);white-space:nowrap;}
+.live{width:6px;height:6px;border-radius:50%;background:#1D9E75;animation:pulse 2s infinite;flex-shrink:0;}
+.layout{display:flex;min-height:calc(100vh - 54px);}
 /* SIDEBAR */
-.sidebar{width:210px;flex-shrink:0;background:var(--card);border-right:0.5px solid var(--border);position:sticky;top:54px;max-height:calc(100vh - 54px);overflow-y:auto;padding:1rem .85rem;display:flex;flex-direction:column;gap:4px;animation:slideIn .4s ease both;}
-.sb-section{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);padding:8px 6px 4px;margin-top:4px;}
-.sb-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:var(--rs);cursor:pointer;font-size:12px;color:var(--t2);transition:background .12s,color .12s;border:0.5px solid transparent;}
-.sb-item:hover{background:var(--bg);color:var(--t1);}
-.sb-item.on{background:var(--bg);color:var(--t1);font-weight:500;border-color:var(--border);}
-.sb-ico{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
-.sb-add{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:var(--rs);cursor:pointer;font-size:12px;color:var(--t3);border:0.5px dashed var(--border2);font-family:inherit;background:transparent;width:100%;transition:background .12s;margin-top:2px;}
+.sb{width:214px;flex-shrink:0;background:var(--card);border-right:.5px solid var(--b);position:sticky;top:54px;max-height:calc(100vh - 54px);overflow-y:auto;padding:.85rem;display:flex;flex-direction:column;gap:3px;animation:si .4s ease both;}
+.sb-sec{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);padding:7px 5px 3px;margin-top:3px;}
+.sb-it{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--t2);transition:background .12s,color .12s;border:.5px solid transparent;}
+.sb-it:hover{background:var(--bg);color:var(--t1);}
+.sb-it.on{background:var(--bg);color:var(--t1);font-weight:500;border-color:var(--b);animation:glow 3s ease infinite;}
+.sb-ico{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-div{height:.5px;background:var(--b);margin:6px 0;}
+.sb-add{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:7px;cursor:pointer;font-size:11px;color:var(--t3);border:.5px dashed var(--b2);font-family:inherit;background:transparent;width:100%;transition:background .12s;margin-top:2px;}
 .sb-add:hover{background:var(--bg);}
-.sb-divider{height:0.5px;background:var(--border);margin:8px 0;}
-.sb-member{display:flex;align-items:center;gap:7px;padding:5px 6px;border-radius:var(--rs);}
-.sb-av{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;}
-.sb-mn{font-size:11px;font-weight:500;line-height:1.2;}
-.sb-mr{font-size:9px;color:var(--t3);line-height:1.2;}
-
+.adf{display:none;padding:5px 3px;animation:sd .2s ease both;}
+.adf input,.adf select{width:100%;font-size:11px;padding:5px 7px;border:.5px solid var(--b2);border-radius:5px;outline:none;font-family:inherit;background:var(--bg);color:var(--t1);margin-bottom:4px;}
+.adf input:focus,.adf select:focus{border-color:#7F77DD;}
+.fbr{display:flex;gap:4px;}
+.fb{flex:1;font-size:10px;padding:5px 0;border:none;border-radius:5px;cursor:pointer;font-family:inherit;transition:opacity .12s;}
+.fb:hover{opacity:.82;}
+.fb.p{background:#7F77DD;color:#fff;}
+.fb.c{background:var(--bg);color:var(--t2);border:.5px solid var(--b2);}
+.sbm{display:flex;align-items:center;gap:7px;padding:4px 5px;border-radius:7px;transition:background .12s;cursor:default;}
+.sbm:hover{background:var(--bg);}
+.sbav{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;}
+.sbmn{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sbmr{font-size:9px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* CONTENT */
-.content{flex:1;min-width:0;padding:1rem;animation:fadeUp .45s ease both;}
-
-/* METRIC CARDS */
-.metrics{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin-bottom:1rem;}
-@media(max-width:900px){.metrics{grid-template-columns:repeat(4,1fr);}}
-.mc{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:.85rem .9rem;position:relative;overflow:hidden;animation:pop .5s ease both;}
-.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;}
-.mc.c0::before{background:#7F77DD;} .mc.c1::before{background:#1D9E75;} .mc.c2::before{background:#EF9F27;} .mc.c3::before{background:#E24B4A;}
-.mc.c4::before{background:#185FA5;} .mc.c5::before{background:#534AB7;} .mc.c6::before{background:#0F6E56;} .mc.c7::before{background:#854F0B;}
-.mc-val{font-size:20px;font-weight:500;letter-spacing:-.6px;line-height:1;}
-.mc-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-top:5px;}
-
-/* GRID */
-.dash-grid{display:grid;grid-template-columns:1fr 300px;gap:8px;margin-bottom:1rem;}
-@media(max-width:800px){.dash-grid{grid-template-columns:1fr;}}
-
-/* PHASE CARD */
-.card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);}
-.card-hdr{padding:.85rem 1rem;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.card-title{font-size:12px;font-weight:500;}
-.card-sub{font-size:10px;color:var(--t3);}
+.content{flex:1;min-width:0;padding:1rem;animation:fu .45s ease both;}
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1rem;}
+@media(max-width:860px){.sg{grid-template-columns:repeat(2,1fr);}}
+.sc{background:var(--card);border:.5px solid var(--b);border-radius:10px;padding:.9rem;display:flex;align-items:flex-start;gap:10px;overflow:hidden;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;animation:pop .5s ease both;cursor:default;}
+.sc:hover{transform:translateY(-2px);border-color:var(--b2);box-shadow:0 4px 14px rgba(0,0,0,.07);}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;}
+.sc.c0::before{background:#7F77DD;}.sc.c1::before{background:#EF9F27;}.sc.c2::before{background:#1D9E75;}.sc.c3::before{background:#E24B4A;}
+.sc.c4::before{background:#185FA5;}.sc.c5::before{background:#0F6E56;}.sc.c6::before{background:#534AB7;}.sc.c7::before{background:#854F0B;}
+.sc-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sc-body{flex:1;min-width:0;}
+.sc-val{font-size:18px;font-weight:500;letter-spacing:-.5px;line-height:1;margin-bottom:2px;}
+.sc-lbl{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--t2);margin-bottom:2px;}
+.sc-sub{font-size:10px;color:var(--t3);line-height:1.35;}
+.sc-bar{height:3px;background:var(--bg);border-radius:3px;margin-top:6px;overflow:hidden;}
+.sc-bf{height:100%;border-radius:3px;animation:grow .9s ease both;animation-delay:.6s;}
+/* CARD */
+.card{background:var(--card);border:.5px solid var(--b);border-radius:10px;}
+.card-hdr{padding:.85rem 1rem;border-bottom:.5px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-size:12px;font-weight:500;}
+.cs{font-size:10px;color:var(--t3);}
 .card-body{padding:.85rem 1rem;}
-.ph-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid rgba(0,0,0,.05);}
-.ph-row:last-child{border-bottom:none;padding-bottom:0;}
-.ph-n{font-size:9px;font-weight:500;color:var(--t3);width:48px;flex-shrink:0;text-transform:uppercase;letter-spacing:.3px;}
-.ph-name{font-size:11px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ph-bar-w{width:70px;height:4px;background:var(--bg);border-radius:4px;overflow:hidden;flex-shrink:0;}
-.ph-bar{height:100%;border-radius:4px;animation:grow .9s ease both;animation-delay:.5s;}
+.dg{display:grid;grid-template-columns:1fr 295px;gap:8px;margin-bottom:1rem;}
+@media(max-width:800px){.dg{grid-template-columns:1fr;}}
+.phr{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid rgba(0,0,0,.05);}
+.phr:last-child{border-bottom:none;padding-bottom:0;}
+.phn{font-size:9px;font-weight:500;color:var(--t3);width:48px;flex-shrink:0;text-transform:uppercase;}
+.phnm{font-size:11px;flex:1;min-width:0;}
+.phbw{width:70px;height:4px;background:var(--bg);border-radius:4px;overflow:hidden;flex-shrink:0;}
+.phb{height:100%;border-radius:4px;animation:grow .9s ease both;}
 .pill{font-size:9px;padding:2px 7px;border-radius:100px;flex-shrink:0;}
-.p-prog{background:#FAEEDA;color:#854F0B;} .p-next{background:#EEEDFE;color:#534AB7;} .p-wait{background:#f3f3f0;color:var(--t3);}
-
-/* WHAT BUILDING */
-.wb-section{padding:.85rem 1rem;border-top:0.5px solid var(--border);}
-.wb-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:6px;}
-.wb-row{display:flex;align-items:flex-start;gap:7px;padding:5px 7px;background:var(--bg);border-radius:6px;font-size:11px;line-height:1.4;margin-bottom:3px;}
-.wb-row:last-child{margin-bottom:0;}
+.pp{background:#FAEEDA;color:#854F0B;}.pn{background:#EEEDFE;color:#534AB7;}.pw{background:#f3f3f0;color:var(--t3);}
+.wb{padding:.85rem 1rem;border-top:.5px solid var(--b);}
+.wbl{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.wbr{display:flex;align-items:flex-start;gap:7px;padding:5px 7px;background:var(--bg);border-radius:6px;font-size:11px;line-height:1.4;margin-bottom:3px;animation:si .35s ease both;}
+.wbr:last-child{margin-bottom:0;}
 .wd{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px;}
-.wd-done{background:#1D9E75;} .wd-prog{background:#EF9F27;animation:pulse 1.8s infinite;} .wd-next{background:#7F77DD;} .wd-wait{background:#ccc;}
-
-/* SIDE CARDS */
-.side-stack{display:flex;flex-direction:column;gap:8px;}
-
-/* QUICK LINKS */
-.ql-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background .12s;font-size:12px;}
-.ql-item:last-child{border-bottom:none;}
-.ql-item:hover{background:var(--bg);}
-.ql-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.ql-nm{font-weight:500;font-size:12px;} .ql-sub{font-size:10px;color:var(--t3);}
-.ql-arr{margin-left:auto;font-size:13px;color:var(--t3);}
-
-/* TOOLS */
-.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:.85rem;padding-top:.5rem;}
-.tool{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border-radius:7px;cursor:default;transition:background .12s;animation:fadeUp .5s ease both;}
-.tool:hover{background:var(--bg);}
-.tool-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
-.tool-nm{font-size:9px;font-weight:500;text-align:center;color:var(--t2);}
-.tool-cat{font-size:8px;color:var(--t3);text-align:center;}
-
-/* FLOW */
-.flow-row{display:flex;overflow-x:auto;}
-.fn{flex:1;min-width:130px;padding:.9rem .85rem;border-right:0.5px solid rgba(0,0,0,.07);transition:filter .15s;}
+.wdn{background:#1D9E75;}.wdp{background:#EF9F27;animation:pulse 1.8s infinite;}.wdx{background:#7F77DD;}.wdw{background:#ccc;}
+.ss{display:flex;flex-direction:column;gap:8px;}
+.qlk{display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:.5px solid var(--b);cursor:pointer;transition:background .15s;font-size:12px;position:relative;overflow:hidden;}
+.qlk::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(0,0,0,.04);border-radius:50%;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+.qlk:hover::after{width:200px;height:200px;}
+.qlk:last-child{border-bottom:none;}
+.qlk:hover{background:var(--bg);}
+.qi{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qn{font-weight:500;font-size:12px;}.qs{font-size:10px;color:var(--t3);}
+.qa{margin-left:auto;font-size:13px;color:var(--t3);}
+.tgrd{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:.85rem;padding-top:.5rem;}
+.tl{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border-radius:7px;transition:background .12s,transform .2s;animation:fu .5s ease both;}
+.tl:hover{background:var(--bg);transform:translateY(-1px);}
+.tlico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+.tln{font-size:9px;font-weight:500;text-align:center;color:var(--t2);}
+.tlc{font-size:8px;color:var(--t3);text-align:center;}
+.flow{display:flex;overflow-x:auto;}
+.fn{flex:1;min-width:130px;padding:.9rem .85rem;border-right:.5px solid rgba(0,0,0,.07);transition:filter .15s,transform .2s;}
 .fn:last-child{border-right:none;}
-.fn:hover{filter:brightness(.96);}
-.fn-n{font-size:9px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px;}
-.fn-t{font-size:12px;font-weight:600;margin-bottom:4px;}
-.fn-d{font-size:10px;line-height:1.5;}
-.fn-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
-.ftag{font-size:9px;padding:1px 5px;border-radius:3px;border:0.5px solid rgba(0,0,0,.1);}
-
+.fn:hover{filter:brightness(.97);transform:translateY(-1px);}
+.fnn{font-size:9px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px;}
+.fnt{font-size:12px;font-weight:600;margin-bottom:4px;}
+.fnd{font-size:10px;line-height:1.5;}
+.ftags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
+.ftg{font-size:9px;padding:1px 5px;border-radius:3px;border:.5px solid rgba(0,0,0,.1);}
 /* PANELS */
 .panel{display:none;animation:pop .3s ease both;}
 .panel.on{display:block;}
-.panel-inner{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:1.1rem;}
-.p-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
-.p-ttl{font-size:14px;font-weight:500;}
+.pi{background:var(--card);border:.5px solid var(--b);border-radius:10px;padding:1.1rem;}
+.phdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.pttl{font-size:14px;font-weight:500;}
 .sub{margin-top:1.1rem;}
-.sublbl{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:6px;}
+.slbl{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:6px;}
 .rows{display:flex;flex-direction:column;gap:4px;}
-.row{display:flex;align-items:flex-start;gap:8px;padding:6px 9px;background:var(--bg);border-radius:6px;font-size:12px;line-height:1.4;animation:slideIn .3s ease both;}
+.row{display:flex;align-items:flex-start;gap:8px;padding:6px 9px;background:var(--bg);border-radius:6px;font-size:12px;line-height:1.4;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}
 @media(max-width:700px){.g2,.g3{grid-template-columns:1fr;}}
-.mini{padding:9px 11px;background:var(--bg);border-radius:7px;border:0.5px solid var(--border);}
-.mini-id{font-size:9px;font-weight:500;color:#534AB7;margin-bottom:2px;}
-.mini-nm{font-size:12px;font-weight:500;margin-bottom:2px;}
-.mini-d{font-size:11px;color:var(--t3);line-height:1.35;}
+.mini{padding:9px 11px;background:var(--bg);border-radius:7px;border:.5px solid var(--b);}
+.mid{font-size:9px;font-weight:500;color:#534AB7;margin-bottom:2px;}
+.mnm{font-size:12px;font-weight:500;margin-bottom:2px;}
+.md{font-size:11px;color:var(--t3);line-height:1.35;}
 .mbox{font-size:12px;color:var(--t2);line-height:1.65;background:var(--bg);padding:10px 12px;border-radius:7px;}
 .tags{display:flex;flex-wrap:wrap;gap:5px;}
-.tag{font-size:11px;padding:3px 8px;border:0.5px solid var(--border);border-radius:5px;background:var(--bg);color:var(--t2);}
-.tag.w{background:#FAEEDA;color:#854F0B;border-color:#FAC775;}
-
-/* TEAM SECTION */
-.team-section{margin-top:1rem;}
-.team-dept-row{margin-bottom:.85rem;}
-.td-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:6px;}
-.trow{display:flex;flex-wrap:wrap;gap:5px;}
-.mbr{display:flex;align-items:center;gap:7px;padding:6px 10px;background:var(--card);border:0.5px solid var(--border);border-radius:8px;transition:border-color .12s;}
-.mbr:hover{border-color:var(--border2);}
-.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;}
-.m-nm{font-size:11px;font-weight:500;} .m-rl{font-size:9px;color:var(--t3);}
-
-/* LIVE */
-.live{width:6px;height:6px;border-radius:50%;background:#1D9E75;animation:pulse 2s infinite;flex-shrink:0;}
-
-/* DEPT EDITOR */
-.dept-action-btn{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;border:0.5px solid var(--border2);background:var(--bg);color:var(--t2);transition:background .12s;}
-.dept-action-btn:hover{background:#e8e8e5;}
-.dept-action-btn.danger{border-color:#F09595;color:#A32D2D;}
-.dept-action-btn.danger:hover{background:#FCEBEB;}
-.block-toolbar{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;}
-.block-btn{font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit;border:0.5px dashed var(--border2);background:transparent;color:var(--t2);transition:background .12s,border-color .12s,color .12s;}
-.block-btn:hover{background:var(--bg);border-color:#7F77DD;color:#534AB7;}
-.blocks-container{display:flex;flex-direction:column;gap:6px;}
-.content-block{border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--bg);position:relative;animation:fadeUp .25s ease both;}
-.content-block:hover .block-del{opacity:1;}
-.block-del{position:absolute;top:6px;right:8px;background:none;border:none;cursor:pointer;font-size:16px;color:var(--t3);opacity:0;transition:opacity .15s,color .15s;line-height:1;padding:0 2px;}
-.block-del:hover{color:#A32D2D;}
-.block-type-tag{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);font-weight:500;margin-bottom:5px;display:block;}
-.block-editable{font-size:12px;line-height:1.55;color:var(--t2);outline:none;min-height:22px;cursor:text;word-break:break-word;}
-.block-editable:focus{color:var(--t1);}
-.block-editable:empty::before{content:attr(placeholder);color:var(--t3);}
-.block-task-row{display:flex;align-items:center;gap:8px;}
-.task-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;}
-.task-dot.done{background:#1D9E75;border-color:#1D9E75;}
-.task-dot.done::after{content:'✓';font-size:8px;color:#fff;line-height:1;}
-.rename-input{font-size:14px;font-weight:500;border:none;border-bottom:1.5px solid #7F77DD;outline:none;background:transparent;font-family:inherit;color:var(--t1);min-width:180px;}
-.section-block{border:none!important;background:transparent!important;padding:6px 0!important;border-bottom:0.5px solid var(--border)!important;border-radius:0!important;}
-.section-heading{font-size:13px;font-weight:600;outline:none;color:var(--t1);padding-right:24px;}
-.section-heading:empty::before{content:attr(placeholder);color:var(--t3);font-weight:400;}
-.link-row{display:flex;align-items:center;gap:8px;margin-top:4px;}
-.link-field{font-size:12px;border:none;outline:none;background:transparent;font-family:inherit;border-bottom:0.5px solid var(--border2);padding:2px 0;color:var(--t2);}
-.link-field:focus{border-color:#7F77DD;color:var(--t1);}
-.link-field::placeholder{color:var(--t3);}
-.link-field.url{color:#534AB7;flex:1;}
-@keyframes fadeOut{to{opacity:0;transform:scale(.97)}}
+.tag{font-size:11px;padding:3px 8px;border:.5px solid var(--b);border-radius:5px;background:var(--bg);color:var(--t2);}
+.tw{background:#FAEEDA;color:#854F0B;border-color:#FAC775;}
+/* TEAM PANEL */
+.dfilter{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;}
+.dfb{font-size:11px;padding:3px 10px;border:.5px solid var(--b);border-radius:100px;cursor:pointer;background:transparent;color:var(--t2);font-family:inherit;transition:all .15s;}
+.dfb:hover{border-color:var(--b2);}
+.dfb.on{background:#111;color:#fff;border-color:#111;}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
+.mc{background:var(--bg);border:.5px solid var(--b);border-radius:10px;padding:12px 14px;position:relative;transition:border-color .15s,transform .2s,box-shadow .2s;animation:pop .3s ease both;}
+.mc:hover{border-color:var(--b2);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.06);}
+.mc:hover .mca{opacity:1;}
+.mct{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.mcav{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;transition:transform .2s;}
+.mc:hover .mcav{transform:scale(1.06);}
+.mcn{font-size:13px;font-weight:500;margin-bottom:2px;}
+.mcr{font-size:11px;color:var(--t2);margin-bottom:5px;}
+.mcd{font-size:9px;padding:2px 7px;border-radius:100px;font-weight:500;}
+.mca{position:absolute;top:10px;right:10px;display:flex;gap:4px;opacity:0;transition:opacity .15s;}
+.mcb{width:26px;height:26px;border-radius:6px;border:.5px solid var(--b);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.mcb:hover{border-color:var(--b2);}
+.mcb.del:hover{background:#FCEBEB;border-color:#F09595;color:#A32D2D;}
+.mcb.edb:hover{background:#EEEDFE;border-color:#AFA9EC;color:#534AB7;}
+.me{background:var(--card);border:1.5px solid #7F77DD;border-radius:10px;padding:14px;animation:sd .2s ease both;}
+.ef{width:100%;font-size:12px;padding:6px 8px;border:.5px solid var(--b2);border-radius:6px;outline:none;font-family:inherit;background:var(--bg);color:var(--t1);margin-bottom:6px;}
+.ef:focus{border-color:#7F77DD;}
+.el{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;}
+.er{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.amf{background:var(--bg);border:1.5px dashed #7F77DD;border-radius:10px;padding:14px;margin-bottom:10px;animation:sd .25s ease both;}
+.amtitle{font-size:12px;font-weight:500;margin-bottom:10px;color:#534AB7;}
+.amb{font-size:11px;padding:5px 12px;background:#111;color:#fff;border:none;border-radius:7px;cursor:pointer;font-family:inherit;transition:opacity .15s;display:inline-flex;align-items:center;gap:5px;}
+.amb:hover{opacity:.82;}
+/* CUSTOM DEPT */
+.dab{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;border:.5px solid var(--b2);background:var(--bg);color:var(--t2);transition:all .12s;}
+.dab:hover{background:#e8e8e5;}
+.dab.danger{border-color:#F09595;color:#A32D2D;}
+.dab.danger:hover{background:#FCEBEB;}
+.btb{margin-top:10px;padding-top:10px;border-top:.5px solid var(--b);display:flex;gap:6px;flex-wrap:wrap;}
+.bbt{font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit;border:.5px dashed var(--b2);background:transparent;color:var(--t2);transition:all .12s;}
+.bbt:hover{background:var(--bg);border-color:#7F77DD;color:#534AB7;}
+.bks{display:flex;flex-direction:column;gap:6px;}
+.bk{border:.5px solid var(--b);border-radius:8px;padding:10px 12px;background:var(--bg);position:relative;animation:fu .25s ease both;}
+.bk:hover .bkd{opacity:1;}
+.bkd{position:absolute;top:6px;right:8px;background:none;border:none;cursor:pointer;font-size:16px;color:var(--t3);opacity:0;transition:opacity .15s;line-height:1;padding:0 2px;}
+.bkd:hover{color:#A32D2D;}
+.btag{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);font-weight:500;margin-bottom:5px;display:block;}
+.bed{font-size:12px;line-height:1.55;color:var(--t2);outline:none;min-height:22px;word-break:break-word;}
+.bed:focus{color:var(--t1);}
+.bed:empty::before{content:attr(placeholder);color:var(--t3);}
+.tdr{display:flex;align-items:center;gap:8px;}
+.tdot{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--b2);cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.tdot.done{background:#1D9E75;border-color:#1D9E75;}
+.tdot.done::after{content:'';width:4px;height:7px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:block;}
+.sbk{border:none!important;background:transparent!important;padding:6px 0!important;border-bottom:.5px solid var(--b)!important;border-radius:0!important;}
+.sh{font-size:13px;font-weight:600;outline:none;color:var(--t1);}
+.sh:empty::before{content:attr(placeholder);color:var(--t3);font-weight:400;}
+.lr{display:flex;align-items:center;gap:8px;margin-top:4px;}
+.lf{font-size:12px;border:none;outline:none;background:transparent;font-family:inherit;border-bottom:.5px solid var(--b2);padding:2px 0;color:var(--t2);}
+.lf:focus{border-color:#7F77DD;color:var(--t1);}
+.lf::placeholder{color:var(--t3);}
+.lfu{color:#534AB7;flex:1;}
+.rin{font-size:14px;font-weight:500;border:none;border-bottom:1.5px solid #7F77DD;outline:none;background:transparent;font-family:inherit;color:var(--t1);min-width:180px;}
 </style>
 </head>
 <body>
-<h2 class="sr-only">Attimo internal source of truth dashboard.</h2>
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Attimo internal dashboard</h2>
 
 <!-- HEADER -->
 <header class="hdr">
-  <div class="logo-wrap">
-    <svg class="logosvg" width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <rect x="1" y="1" width="9" height="9" rx="2.5" fill="white"/>
-      <rect x="12" y="1" width="9" height="9" rx="2.5" fill="white" opacity=".5"/>
-      <rect x="1" y="12" width="9" height="9" rx="2.5" fill="white" opacity=".5"/>
-      <rect x="12" y="12" width="9" height="9" rx="2.5" fill="white" opacity=".2"/>
-    </svg>
-    <span class="wordmark">attimo</span>
+  <div class="lw">
+    <span class="atl">attim<span class="ato">o<span class="atc"></span></span></span>
   </div>
-  <div class="hdr-divider"></div>
-  <div class="hdr-links">
-    <a href="https://app.clickup.com/90182492115/v/l/f/901813315551" target="_blank" class="hl">
-      <div class="live"></div>ClickUp Board
-    </a>
+  <div class="hdiv"></div>
+  <div class="hlinks">
+    <a href="https://app.clickup.com/90182492115/v/l/f/901813315551" target="_blank" class="hl"><div class="live"></div>ClickUp Board</a>
     <a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="hl">
-      <div class="hl-d" style="background:#4A90D9;"></div>Architecture Docs (13)
+      <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3.5" fill="#185FA5"/></svg>
+      Architecture Docs
     </a>
   </div>
-  <span class="hdr-badge">Internal · MVP Phase 0 · v0.1</span>
+  <span class="hbadge">Internal · MVP Phase 0 · v0.1</span>
 </header>
 
-<!-- LAYOUT -->
 <div class="layout">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-section">Navigation</div>
-    <div class="sb-item on" id="tile-product" onclick="sw('product')">
-      <div class="sb-ico" style="background:#EEEDFE;color:#534AB7;">P</div>
-      <div><div style="font-size:12px;">Product</div><div style="font-size:9px;color:var(--t3);">5 phases · 44 epics</div></div>
+<!-- SIDEBAR -->
+<aside class="sb" id="sidebar">
+  <div class="sb-sec">Navigation</div>
+  <div class="sb-it on" id="tile-product" onclick="sw('product')">
+    <div class="sb-ico" style="background:#EEEDFE;color:#534AB7;" id="ico-product">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x=".5" y=".5" width="4.5" height="4.5" rx="1.2"/><rect x="7" y=".5" width="4.5" height="4.5" rx="1.2" opacity=".5"/><rect x=".5" y="7" width="4.5" height="4.5" rx="1.2" opacity=".5"/><rect x="7" y="7" width="4.5" height="4.5" rx="1.2" opacity=".2"/></svg>
     </div>
-    <div class="sb-item" id="tile-dev" onclick="sw('dev')">
-      <div class="sb-ico" style="background:#E6F1FB;color:#185FA5;">D</div>
-      <div><div style="font-size:12px;">Development</div><div style="font-size:9px;color:var(--t3);">Architecture · Build</div></div>
+    <div><div style="font-size:12px;" id="sbnm-product">Product</div><div style="font-size:9px;color:var(--t3);">5 phases · 44 epics</div></div>
+  </div>
+  <div class="sb-it" id="tile-dev" onclick="sw('dev')">
+    <div class="sb-ico" style="background:#E6F1FB;color:#185FA5;">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x="0" y="9" width="3" height="3" rx=".8"/><rect x="4.5" y="5" width="3" height="7" rx=".8"/><rect x="9" y="1" width="3" height="11" rx=".8"/></svg>
     </div>
-    <div class="sb-item" id="tile-design" onclick="sw('design')">
-      <div class="sb-ico" style="background:#FBEAF0;color:#993556;">Ds</div>
-      <div><div style="font-size:12px;">Design</div><div style="font-size:9px;color:var(--t3);">UI · Screens</div></div>
+    <div><div style="font-size:12px;" id="sbnm-dev">Development</div><div style="font-size:9px;color:var(--t3);">Architecture · Build</div></div>
+  </div>
+  <div class="sb-it" id="tile-design" onclick="sw('design')">
+    <div class="sb-ico" style="background:#FBEAF0;color:#993556;">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><path d="M6 2v8M2 6h8"/></svg>
     </div>
-    <div class="sb-item" id="tile-marketing" onclick="sw('marketing')">
-      <div class="sb-ico" style="background:#EAF3DE;color:#3B6D11;">M</div>
-      <div><div style="font-size:12px;">Marketing</div><div style="font-size:9px;color:var(--t3);">Turkey + EU · AEC</div></div>
+    <div><div style="font-size:12px;" id="sbnm-design">Design</div><div style="font-size:9px;color:var(--t3);">UI · Screens</div></div>
+  </div>
+  <div class="sb-it" id="tile-marketing" onclick="sw('marketing')">
+    <div class="sb-ico" style="background:#EAF3DE;color:#3B6D11;">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M1 9L5 4l2.5 2.5L9 3l2 6H1z" opacity=".7"/><circle cx="9.5" cy="2.5" r="1.5"/></svg>
     </div>
-    <button class="sb-add" id="add-btn" onclick="showAddInput()"><span style="font-size:14px;">+</span> Add department</button>
-<div id="add-form" style="display:none;padding:6px 4px;animation:fadeUp .2s ease both;">
-  <input id="add-input" type="text" placeholder="Department name…" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid #7F77DD;border-radius:6px;outline:none;font-family:inherit;background:var(--bg);color:var(--t1);" onkeydown="handleAddKey(event)"/>
-  <div style="display:flex;gap:4px;margin-top:5px;">
-    <button onclick="confirmAdd()" style="flex:1;font-size:11px;padding:5px 0;background:#7F77DD;color:#fff;border:none;border-radius:5px;cursor:pointer;font-family:inherit;">Add</button>
-    <button onclick="cancelAdd()" style="flex:1;font-size:11px;padding:5px 0;background:var(--bg);color:var(--t2);border:0.5px solid var(--border2);border-radius:5px;cursor:pointer;font-family:inherit;">Cancel</button>
+    <div><div style="font-size:12px;" id="sbnm-marketing">Marketing</div><div style="font-size:9px;color:var(--t3);">Turkey + EU · AEC</div></div>
+  </div>
+  <div class="sb-it" id="tile-team" onclick="sw('team')">
+    <div class="sb-ico" style="background:#F1EFE8;color:#5F5E5A;">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4.5" cy="3.5" r="2.2"/><path d="M0 10.5c0-2.5 2-4.5 4.5-4.5S9 8 9 10.5H0z"/><circle cx="9" cy="3.5" r="1.8" opacity=".5"/><path d="M7.5 10.5c0-1.7.7-3.2 1.8-4.3.2-.1.5-.2.7-.2 1.7 0 3 1.4 3 3.5H7.5z" opacity=".5"/></svg>
+    </div>
+    <div><div style="font-size:12px;" id="sbnm-team">Team</div><div style="font-size:9px;color:var(--t3);" id="team-count-sb">14 members</div></div>
+  </div>
+  <button class="sb-add" id="add-btn" onclick="showAdd()">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>
+    Add department
+  </button>
+  <div class="adf" id="add-form">
+    <input id="add-inp" type="text" placeholder="Department name…" onkeydown="addKey(event)"/>
+    <div class="fbr">
+      <button class="fb p" onclick="confirmAdd()">Add</button>
+      <button class="fb c" onclick="cancelAdd()">Cancel</button>
+    </div>
+  </div>
+  <div class="sb-div"></div>
+  <div class="sb-sec">Team</div>
+  <div id="sb-team-list"></div>
+</aside>
+
+<!-- CONTENT -->
+<main class="content">
+
+<!-- STATS -->
+<div class="sg" id="stats-grid"></div>
+
+<!-- DASH GRID -->
+<div class="dg" style="animation:fu .5s ease both;animation-delay:.2s;">
+  <div class="card">
+    <div class="card-hdr">
+      <span class="ct" style="display:flex;align-items:center;gap:6px;">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round"><path d="M6 1v10M1 6h10"/><circle cx="6" cy="6" r="5"/></svg>
+        MVP Build Progress
+      </span>
+      <span class="cs">Phase 0 active — 30% complete</span>
+    </div>
+    <div class="card-body">
+      <div class="phr"><span class="phn">Phase 0</span><span class="phnm">Trusted Context Navigator</span><div class="phbw"><div class="phb" style="--w:30%;background:#EF9F27;animation-delay:.5s;"></div></div><span class="pill pp">In Progress</span></div>
+      <div class="phr"><span class="phn">Phase 1</span><span class="phnm">Accepted State & Change Lineage</span><div class="phbw"><div class="phb" style="--w:0%;background:#7F77DD;"></div></div><span class="pill pn">Up Next</span></div>
+      <div class="phr"><span class="phn">Phase 2</span><span class="phnm">Channel Capture & Signal Structuring</span><div class="phbw"><div class="phb" style="--w:0%;background:#aaa;"></div></div><span class="pill pw">Queued</span></div>
+      <div class="phr"><span class="phn">Phase 3</span><span class="phnm">Source-Linked Obligation Orchestrator</span><div class="phbw"><div class="phb" style="--w:0%;background:#aaa;"></div></div><span class="pill pw">Queued</span></div>
+      <div class="phr"><span class="phn">Phase 4</span><span class="phnm">Evidence Ledger & External Readiness</span><div class="phbw"><div class="phb" style="--w:0%;background:#aaa;"></div></div><span class="pill pw">Queued</span></div>
+    </div>
+    <div class="wb">
+      <div class="wbl">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="#EF9F27"><circle cx="4" cy="4" r="4"/></svg>
+        Building right now
+      </div>
+      <div class="wbr"><span class="wd wdn"></span>IFC 5D connector — complete</div>
+      <div class="wbr" style="animation-delay:.05s"><span class="wd wdp"></span>Hybrid retrieval engine (BM25 + vector) — building</div>
+      <div class="wbr" style="animation-delay:.1s"><span class="wd wdp"></span>Provenance layer — building</div>
+      <div class="wbr" style="animation-delay:.15s"><span class="wd wdx"></span>Context compression + "why this result" — next</div>
+      <div class="wbr" style="animation-delay:.2s"><span class="wd wdx"></span>Trusted results UI — next</div>
+      <div class="wbr" style="animation-delay:.25s"><span class="wd wdw"></span>Revit connector — pending decision</div>
+    </div>
+  </div>
+  <div class="ss">
+    <div class="card">
+      <div class="card-hdr" style="padding:.75rem .9rem;"><span class="ct">Quick Access</span></div>
+      <a href="https://app.clickup.com/90182492115/v/l/f/901813315551" target="_blank" class="qlk">
+        <div class="qi" style="background:#7B68EE1a;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="#7F77DD"><circle cx="7" cy="7" r="6"/><path d="M4 7l2 2 4-4" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="qn">ClickUp Board</div><div class="qs">44 epics · 80+ subtasks</div></div>
+        <span class="qa">↗</span>
+      </a>
+      <a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="qlk">
+        <div class="qi" style="background:#185FA51a;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="#185FA5"><rect x="2" y="1" width="10" height="12" rx="2" opacity=".25"/><rect x="2" y="1" width="10" height="12" rx="2" fill="none" stroke="#185FA5" stroke-width="1.5"/><rect x="4" y="4.5" width="6" height="1.2" rx=".6"/><rect x="4" y="7" width="6" height="1.2" rx=".6"/><rect x="4" y="9.5" width="4" height="1.2" rx=".6"/></svg>
+        </div>
+        <div><div class="qn">Architecture Docs</div><div class="qs">13 documents · All phases</div></div>
+        <span class="qa">↗</span>
+      </a>
+    </div>
+    <div class="card">
+      <div class="card-hdr" style="padding:.75rem .9rem;"><span class="ct">Tools We Use</span><span class="cs" id="tool-count">11 tools</span></div>
+      <div class="tgrd" style="grid-template-columns:repeat(4,1fr);">
+        <div class="tl" style="animation-delay:.3s;"><div class="tlico" style="background:#7B68EE1a;"><svg width="14" height="14" viewBox="0 0 14 14" fill="#7F77DD"><circle cx="7" cy="7" r="6"/><path d="M4 7l2 2 4-4" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="tln">ClickUp</div><div class="tlc">Boards</div></div>
+        <div class="tl" style="animation-delay:.35s;"><div class="tlico" style="background:#1111110f;"><svg width="14" height="14" viewBox="0 0 14 14" fill="#333"><rect x="2" y="2" width="10" height="10" rx="2"/><rect x="4" y="5" width="6" height="1.2" rx=".6" fill="#fff"/><rect x="4" y="7.5" width="4" height="1.2" rx=".6" fill="#fff"/></svg></div><div class="tln">Notion</div><div class="tlc">Docs</div></div>
+        <div class="tl" style="animation-delay:.4s;"><div class="tlico" style="background:#F24E1E14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" fill="#F24E1E" opacity=".2"/><circle cx="4.5" cy="7" r="2.5" stroke="#F24E1E" stroke-width="1.3"/><circle cx="9.5" cy="7" r="2.5" stroke="#F24E1E" stroke-width="1.3"/></svg></div><div class="tln">Figma</div><div class="tlc">Design</div></div>
+        <div class="tl" style="animation-delay:.45s;"><div class="tlico" style="background:#185FA514;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5L7 2l5 3v5l-5 3-5-3V5z" stroke="#185FA5" stroke-width="1.3"/><path d="M2 5l5 3M7 8v5M12 5l-5 3" stroke="#185FA5" stroke-width="1.3" opacity=".5"/></svg></div><div class="tln">Drive</div><div class="tlc">Files</div></div>
+        <div class="tl" style="animation-delay:.5s;"><div class="tlico" style="background:#4A90D914;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#4A90D9" stroke-width="1.3"/><circle cx="7" cy="7" r="2" fill="#4A90D9" opacity=".4"/><circle cx="7" cy="7" r=".8" fill="#4A90D9"/></svg></div><div class="tln">Gather</div><div class="tlc">Virtual Office</div></div>
+        <div class="tl" style="animation-delay:.55s;"><div class="tlico" style="background:#6C47FF14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="#6C47FF"><path d="M7 1L2 5v4l5 4 5-4V5L7 1z" opacity=".2"/><path d="M7 1L2 5v4l5 4 5-4V5L7 1z" fill="none" stroke="#6C47FF" stroke-width="1.3"/><circle cx="7" cy="7" r="1.5"/></svg></div><div class="tln">Motion</div><div class="tlc">AI Calendar</div></div>
+        <div class="tl" style="animation-delay:.6s;"><div class="tlico" style="background:#1111110f;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C3.7 1 1 3.7 1 7c0 2.7 1.7 5 4.1 5.8.3.1.4-.1.4-.3V11c-1.7.4-2.1-.8-2.1-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.6 0 1 .6 1 .6.6 1 1.5.7 1.9.5 0-.4.2-.7.4-.9-1.4-.2-2.9-.7-2.9-3.1 0-.7.2-1.3.6-1.7-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.7.6.5-.1 1-.2 1.5-.2s1 .1 1.5.2c1.1-.8 1.7-.6 1.7-.6.4.9.1 1.5.1 1.7.4.4.6 1 .6 1.7 0 2.4-1.5 2.9-2.9 3.1.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3C11.3 12 13 9.7 13 7c0-3.3-2.7-6-6-6z" fill="#333"/></svg></div><div class="tln">GitHub</div><div class="tlc">Code</div></div>
+        <div class="tl" style="animation-delay:.65s;"><div class="tlico" style="background:#4A154B14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="2" stroke="#4A154B" stroke-width="1.3"/><path d="M4 6h6M4 8.5h4" stroke="#4A154B" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="tln">Slack</div><div class="tlc">Comms</div></div>
+
+        <div style="grid-column:1/-1;height:.5px;background:var(--b);margin:4px 0;"></div>
+        <div style="grid-column:1/-1;font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);padding:2px 4px;">AI Tools</div>
+
+        <div class="tl" style="animation-delay:.7s;"><div class="tlico" style="background:#D4A57414;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4 1.5 1.5 4 1.5 7S4 12.5 7 12.5 12.5 10 12.5 7 10 1.5 7 1.5z" stroke="#C97B2A" stroke-width="1.3"/><path d="M4 7c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3" stroke="#C97B2A" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="7" r="1.2" fill="#C97B2A"/></svg></div><div class="tln">Claude</div><div class="tlc">AI · Primary LLM</div></div>
+        <div class="tl" style="animation-delay:.75s;"><div class="tlico" style="background:#10A37F14;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#10A37F" stroke-width="1.3"/><path d="M4.5 9V5l2.5 2.5L9.5 5v4" stroke="#10A37F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="tln">ChatGPT</div><div class="tlc">AI · Writing</div></div>
+        <div class="tl" style="animation-delay:.8s;"><div class="tlico" style="background:#4285F414;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2C4.2 2 2 4.2 2 7s2.2 5 5 5 5-2.2 5-5" stroke="#4285F4" stroke-width="1.3" stroke-linecap="round"/><path d="M9 2.5L12 5.5M9 5.5L12 2.5" stroke="#EA4335" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="tln">Gemini</div><div class="tlc">AI · Research</div></div>
+      </div>
+    </div>
   </div>
 </div>
 
-    <div class="sb-divider"></div>
-    <div class="sb-section">Team</div>
+<!-- HOW IT WORKS -->
+<div class="card" style="margin-bottom:1rem;overflow:hidden;animation:fu .5s ease both;animation-delay:.3s;">
+  <div class="card-hdr"><span class="ct">How it works</span><span class="cs">The 5-step product flow</span></div>
+  <div class="flow">
+    <div class="fn" style="background:#EEEDFE;"><div class="fnn" style="color:#534AB7;">01 · Capture</div><div class="fnt" style="color:#3C3489;">Signal Sources</div><div class="fnd" style="color:#534AB7;">All project signals from existing channels — no migration needed</div><div class="ftags"><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">Email</span><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">BIM</span><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">Voice</span><span class="ftg" style="background:rgba(83,74,183,.12);color:#534AB7;border-color:rgba(83,74,183,.2);">Photos</span></div></div>
+    <div class="fn" style="background:#E1F5EE;"><div class="fnn" style="color:#0F6E56;">02 · Structure</div><div class="fnt" style="color:#085041;">Classify & Link</div><div class="fnd" style="color:#0F6E56;">Each signal becomes a decision, obligation, deviation, or evidence — auto-linked to its project</div></div>
+    <div class="fn" style="background:#FAEEDA;"><div class="fnn" style="color:#854F0B;">03 · Process</div><div class="fnt" style="color:#633806;">AI Orchestration</div><div class="fnd" style="color:#854F0B;">6 specialized AI agents over a triple-store extract relationships and meaning from every signal</div></div>
+    <div class="fn" style="background:#E6F1FB;"><div class="fnn" style="color:#185FA5;">04 · Govern</div><div class="fnt" style="color:#0C447C;">Human Approval</div><div class="fnd" style="color:#185FA5;">7 human-in-the-loop gates. No external or contractual action executes without a human approving</div></div>
+    <div class="fn" style="background:#EAF3DE;"><div class="fnn" style="color:#3B6D11;">05 · Deliver</div><div class="fnt" style="color:#27500A;">Evidence Packages</div><div class="fnd" style="color:#3B6D11;">Audit-ready packages with full provenance for disputes, audits, and handovers</div></div>
+  </div>
+</div>
 
-    <div class="sb-member">
-      <div class="sb-av" style="background:#111;color:#fff;">EM</div>
-      <div><div class="sb-mn">Efehan Maleri</div><div class="sb-mr">CEO & Co-Founder</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#E6F1FB;color:#185FA5;">SA</div>
-      <div><div class="sb-mn">Syed Osama Ali</div><div class="sb-mr">CTO</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#EEEDFE;color:#534AB7;">L</div>
-      <div><div class="sb-mn">Laraib</div><div class="sb-mr">Program Manager</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#E1F5EE;color:#0F6E56;">TM</div>
-      <div><div class="sb-mn">Talha Mubeen</div><div class="sb-mr">System Architect</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#E1F5EE;color:#0F6E56;">SL</div>
-      <div><div class="sb-mn">Soo Ling Lim</div><div class="sb-mr">Developer</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#E1F5EE;color:#0F6E56;">MT</div>
-      <div><div class="sb-mn">Murat Tut</div><div class="sb-mr">Full Stack Dev</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#E1F5EE;color:#0F6E56;">BC</div>
-      <div><div class="sb-mn">Burak Çetin</div><div class="sb-mr">AI Intern</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#f0f0ee;color:#888;">D6</div>
-      <div><div class="sb-mn">Developer 6</div><div class="sb-mr">Incoming</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#EEEDFE;color:#534AB7;">MG</div>
-      <div><div class="sb-mn">Mesude Gökpınar</div><div class="sb-mr">Product Intern</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#FBEAF0;color:#993556;">T</div>
-      <div><div class="sb-mn">Tunch</div><div class="sb-mr">Designer</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#FBEAF0;color:#993556;">G</div>
-      <div><div class="sb-mn">Gamzang</div><div class="sb-mr">Designer</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#EAF3DE;color:#3B6D11;">C</div>
-      <div><div class="sb-mn">Claire</div><div class="sb-mr">Marketing</div></div>
-    </div>
-    <div class="sb-member">
-      <div class="sb-av" style="background:#EAF3DE;color:#3B6D11;">BS</div>
-      <div><div class="sb-mn">Buse Coşkun</div><div class="sb-mr">Marketing</div></div>
-    </div>
-  </aside>
-
-  <!-- CONTENT -->
-  <main class="content">
-
-    <!-- METRICS -->
-    <div class="metrics">
-      <div class="mc c0" style="animation-delay:.05s"><div class="mc-val" style="color:#7F77DD;" data-target="0" data-suffix=" of 4">0 of 4</div><div class="mc-lbl">Current Phase</div></div>
-      <div class="mc c1" style="animation-delay:.1s"><div class="mc-val" style="color:#1D9E75;" data-target="1">0</div><div class="mc-lbl">Connectors Done</div></div>
-      <div class="mc c2" style="animation-delay:.15s"><div class="mc-val" style="color:#EF9F27;" data-target="6">0</div><div class="mc-lbl">AI Agents</div></div>
-      <div class="mc c3" style="animation-delay:.2s"><div class="mc-val" data-target="44">0</div><div class="mc-lbl">Epics on Board</div></div>
-      <div class="mc c4" style="animation-delay:.25s"><div class="mc-val" data-target="13">0</div><div class="mc-lbl">Arch Docs</div></div>
-      <div class="mc c5" style="animation-delay:.3s"><div class="mc-val" data-target="7">0</div><div class="mc-lbl">HITL Gates</div></div>
-      <div class="mc c6" style="animation-delay:.35s"><div class="mc-val" data-target="3">0</div><div class="mc-lbl">Data Stores</div></div>
-      <div class="mc c7" style="animation-delay:.4s"><div class="mc-val" data-target="16">0</div><div class="mc-lbl">Team</div></div>
-    </div>
-
-    <!-- DASH GRID -->
-    <div class="dash-grid" style="animation:fadeUp .5s ease both;animation-delay:.2s;">
-      <!-- PHASES -->
-      <div class="card">
-        <div class="card-hdr">
-          <span class="card-title">MVP Build Progress</span>
-          <span class="card-sub">Phase 0 active — 30% complete</span>
-        </div>
-        <div class="card-body" style="padding-bottom:.5rem;">
-          <div class="ph-row">
-            <span class="ph-n">Phase 0</span>
-            <span class="ph-name">Trusted Context Navigator</span>
-            <div class="ph-bar-w"><div class="ph-bar" style="--w:30%;background:#EF9F27;"></div></div>
-            <span class="pill p-prog">In Progress</span>
-          </div>
-          <div class="ph-row">
-            <span class="ph-n">Phase 1</span>
-            <span class="ph-name">Accepted State & Change Lineage</span>
-            <div class="ph-bar-w"><div class="ph-bar" style="--w:0%;background:#7F77DD;"></div></div>
-            <span class="pill p-next">Up Next</span>
-          </div>
-          <div class="ph-row">
-            <span class="ph-n">Phase 2</span>
-            <span class="ph-name">Channel Capture & Signal Structuring</span>
-            <div class="ph-bar-w"><div class="ph-bar" style="--w:0%;background:#aaa;"></div></div>
-            <span class="pill p-wait">Queued</span>
-          </div>
-          <div class="ph-row">
-            <span class="ph-n">Phase 3</span>
-            <span class="ph-name">Source-Linked Obligation Orchestrator</span>
-            <div class="ph-bar-w"><div class="ph-bar" style="--w:0%;background:#aaa;"></div></div>
-            <span class="pill p-wait">Queued</span>
-          </div>
-          <div class="ph-row">
-            <span class="ph-n">Phase 4</span>
-            <span class="ph-name">Evidence Ledger & External Readiness</span>
-            <div class="ph-bar-w"><div class="ph-bar" style="--w:0%;background:#aaa;"></div></div>
-            <span class="pill p-wait">Queued</span>
-          </div>
-        </div>
-        <div class="wb-section">
-          <div class="wb-lbl">Building right now</div>
-          <div class="wb-row"><span class="wd wd-done"></span>IFC 5D connector — complete</div>
-          <div class="wb-row"><span class="wd wd-prog"></span>Hybrid retrieval engine (BM25 + vector) — building</div>
-          <div class="wb-row"><span class="wd wd-prog"></span>Provenance layer — building</div>
-          <div class="wb-row"><span class="wd wd-next"></span>Context compression + "why this result" — next</div>
-          <div class="wb-row"><span class="wd wd-next"></span>Trusted results UI — next</div>
-          <div class="wb-row"><span class="wd wd-wait"></span>Revit connector — pending decision</div>
-        </div>
-      </div>
-
-      <!-- SIDE STACK -->
-      <div class="side-stack">
-        <div class="card">
-          <div class="card-hdr" style="padding:.75rem .9rem;"><span class="card-title">Quick Access</span></div>
-          <a href="https://app.clickup.com/90182492115/v/l/f/901813315551" target="_blank" class="ql-item">
-            <div class="ql-ico" style="background:#7B68EE20;">🎯</div>
-            <div><div class="ql-nm">ClickUp Board</div><div class="ql-sub">44 epics · 80+ subtasks</div></div>
-            <span class="ql-arr">↗</span>
-          </a>
-          <a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="ql-item">
-            <div class="ql-ico" style="background:#185FA520;">📐</div>
-            <div><div class="ql-nm">Architecture Docs</div><div class="ql-sub">13 documents · All phases</div></div>
-            <span class="ql-arr">↗</span>
-          </a>
-        </div>
-        <div class="card">
-          <div class="card-hdr" style="padding:.75rem .9rem;"><span class="card-title">Tools We Use</span></div>
-          <div class="tools-grid">
-            <div class="tool" style="animation-delay:.3s;"><div class="tool-ico" style="background:#7B68EE15;">🎯</div><div class="tool-nm">ClickUp</div><div class="tool-cat">Boards</div></div>
-            <div class="tool" style="animation-delay:.35s;"><div class="tool-ico" style="background:#11111115;">📝</div><div class="tool-nm">Notion</div><div class="tool-cat">Docs</div></div>
-            <div class="tool" style="animation-delay:.4s;"><div class="tool-ico" style="background:#F24E1E15;">🎨</div><div class="tool-nm">Figma</div><div class="tool-cat">Design</div></div>
-            <div class="tool" style="animation-delay:.45s;"><div class="tool-ico" style="background:#185FA515;">📁</div><div class="tool-nm">Drive</div><div class="tool-cat">Files</div></div>
-            <div class="tool" style="animation-delay:.5s;"><div class="tool-ico" style="background:#4A90D915;">🌐</div><div class="tool-nm">Gather</div><div class="tool-cat">Virtual Office</div></div>
-            <div class="tool" style="animation-delay:.55s;"><div class="tool-ico" style="background:#6C47FF15;">⚡</div><div class="tool-nm">Motion</div><div class="tool-cat">AI Calendar</div></div>
-            <div class="tool" style="animation-delay:.6s;"><div class="tool-ico" style="background:#11111115;">🐙</div><div class="tool-nm">GitHub</div><div class="tool-cat">Code</div></div>
-            <div class="tool" style="animation-delay:.65s;"><div class="tool-ico" style="background:#4A154B15;">💬</div><div class="tool-nm">Slack</div><div class="tool-cat">Comms</div></div>
-          </div>
-        </div>
+<!-- PRODUCT PANEL -->
+<div id="panel-product" class="panel on">
+  <div class="pi">
+    <div class="phdr"><span class="pttl">Product</span><span class="pill pp" style="padding:3px 10px;">Phase 0 active</span></div>
+    <p class="mbox">Attimo is not a task manager and not a chatbot. It is a governed, evidence-native coordination layer. Every output cites its source. Every action is approval-gated. Every decision is logged immutably.</p>
+    <div class="sub"><div class="slbl">8 core user stories</div>
+      <div class="g2">
+        <div class="mini"><div class="mid">US1</div><div class="mnm">Recover context</div><div class="md">Find the right info from vague or partial memory</div></div>
+        <div class="mini"><div class="mid">US2</div><div class="mnm">Check accepted state</div><div class="md">What is the current approved version?</div></div>
+        <div class="mini"><div class="mid">US3</div><div class="mnm">Track obligations</div><div class="md">What do we owe, to whom, by when?</div></div>
+        <div class="mini"><div class="mid">US4</div><div class="mnm">Generate report</div><div class="md">Produce a site audit report from field evidence</div></div>
+        <div class="mini"><div class="mid">US5</div><div class="mnm">Capture field signal</div><div class="md">Photo or voice from site — auto-structured</div></div>
+        <div class="mini"><div class="mid">US6</div><div class="mnm">Review and approve</div><div class="md">Approve obligation closure or state changes</div></div>
+        <div class="mini"><div class="mid">US7</div><div class="mnm">Monitor deadlines</div><div class="md">Alerts before obligations go overdue</div></div>
+        <div class="mini"><div class="mid">US8</div><div class="mnm">Connect channels</div><div class="md">Link email, drive, messaging for auto-ingestion</div></div>
       </div>
     </div>
+    <div class="sub"><div class="slbl">Non-negotiable rules</div>
+      <div class="rows">
+        <div class="row"><span class="wd wdx"></span>State engine is always deterministic rules — never AI</div>
+        <div class="row"><span class="wd wdx"></span>Deviation detection is always a graph query — never AI</div>
+        <div class="row"><span class="wd wdx"></span>Every external or contractual action requires human approval before it executes</div>
+        <div class="row"><span class="wd wdx"></span>Every derived output carries provenance — no silent AI decisions, ever</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <!-- HOW IT WORKS -->
-    <div class="card" style="margin-bottom:1rem;animation:fadeUp .5s ease both;animation-delay:.3s;overflow:hidden;">
-      <div class="card-hdr"><span class="card-title">How it works</span><span class="card-sub">The 5-step product flow</span></div>
-      <div class="flow-row">
-        <div class="fn" style="background:#EEEDFE;">
-          <div class="fn-n" style="color:#534AB7;">01 · Capture</div>
-          <div class="fn-t" style="color:#3C3489;">Signal Sources</div>
-          <div class="fn-d" style="color:#534AB7;">All project signals from existing channels — no migration needed</div>
-          <div class="fn-tags">
-            <span class="ftag" style="background:rgba(83,74,183,.12);border-color:rgba(83,74,183,.2);color:#534AB7;">Email</span>
-            <span class="ftag" style="background:rgba(83,74,183,.12);border-color:rgba(83,74,183,.2);color:#534AB7;">BIM</span>
-            <span class="ftag" style="background:rgba(83,74,183,.12);border-color:rgba(83,74,183,.2);color:#534AB7;">Voice</span>
-            <span class="ftag" style="background:rgba(83,74,183,.12);border-color:rgba(83,74,183,.2);color:#534AB7;">Photos</span>
-            <span class="ftag" style="background:rgba(83,74,183,.12);border-color:rgba(83,74,183,.2);color:#534AB7;">Files</span>
-          </div>
+<!-- DEV PANEL -->
+<div id="panel-dev" class="panel">
+  <div class="pi">
+    <div class="phdr"><span class="pttl">Development</span><a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="hl" style="font-size:11px;border-color:var(--b2);color:var(--t2);">Architecture Docs ↗</a></div>
+    <div class="slbl">System layers</div>
+    <div class="rows">
+      <div class="row"><span class="wd wdx"></span><strong>Presentation</strong> — Next.js 15 SSR, React, Tailwind CSS, shadcn/ui</div>
+      <div class="row"><span class="wd wdx"></span><strong>API</strong> — FastAPI (REST + WebSocket), OAuth 2.0, JWT auth, OpenAPI docs</div>
+      <div class="row"><span class="wd wdx"></span><strong>Orchestration</strong> — LangGraph state machine, PostgreSQL checkpoints, interrupt() HITL gates</div>
+      <div class="row"><span class="wd wdx"></span><strong>Data</strong> — PostgreSQL 16 (relational) + Neo4j (graph + provenance) + Qdrant (vector search)</div>
+      <div class="row"><span class="wd wdx"></span><strong>Workers</strong> — ARQ async workers over Redis. Parse → chunk → embed → index pipeline</div>
+      <div class="row"><span class="wd wdx"></span><strong>Storage</strong> — S3/MinIO for raw files, photos, audio, exports</div>
+      <div class="row"><span class="wd wdx"></span><strong>Ingress</strong> — Traefik (TLS 1.3, rate limiting). Dev: Docker Compose. Prod: Kubernetes</div>
+    </div>
+    <div class="sub"><div class="slbl">Triple store</div>
+      <div class="g3">
+        <div class="mini"><div class="mid">PostgreSQL 16</div><div class="mnm">Relational</div><div class="md">Obligations, audit log, users, RBAC, reports, tokens, LangGraph checkpoints</div></div>
+        <div class="mini"><div class="mid">Neo4j 5</div><div class="mnm">Graph + Provenance</div><div class="md">Projects, documents, revision chains, correspondence threads, approval nodes, deviation edges</div></div>
+        <div class="mini"><div class="mid">Qdrant</div><div class="mnm">Vector Search</div><div class="md">Document chunks, email bodies, voice transcripts, photo captions — tenant-filtered</div></div>
+      </div>
+    </div>
+    <div class="sub"><div class="slbl">6 AI agents</div>
+      <div class="g3">
+        <div class="mini" style="border-color:rgba(239,159,39,.4);"><div class="mid">J1 · Phase 0 — Building</div><div class="mnm">Context Recovery</div><div class="md">Hybrid retrieval, provenance, context compression, "why this result"</div></div>
+        <div class="mini"><div class="mid">J2 · Post-MVP</div><div class="mnm">Scope Clarity</div><div class="md">Spec analysis for scope conflicts and gaps</div></div>
+        <div class="mini"><div class="mid">J3 · Phase 1</div><div class="mnm">State Agent</div><div class="md">assert_state = rules engine only. Never AI. Reads/writes Neo4j revision chains</div></div>
+        <div class="mini"><div class="mid">J4 · Phase 2</div><div class="mnm">Field Signal</div><div class="md">Vision AI for photos, STT for voice. Deviation = graph query, never AI</div></div>
+        <div class="mini"><div class="mid">J5 · Phase 3</div><div class="mnm">Obligation Tracker</div><div class="md">Extracts obligations, links to source, tracks through to closure</div></div>
+        <div class="mini"><div class="mid">J6 · Phase 4</div><div class="mnm">Report Generator</div><div class="md">PDF/DOCX with provenance footer on every page</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DESIGN PANEL -->
+<div id="panel-design" class="panel">
+  <div class="pi">
+    <div class="phdr"><span class="pttl">Design</span><span style="font-size:11px;color:var(--t3);">UI · Screens · User types</span></div>
+    <p class="mbox">Every screen must make provenance and source visible. Users should always understand why they see something and where it came from. No raw file dumps. No unexplained results.</p>
+    <div class="sub"><div class="slbl">Phase 0 — design now</div>
+      <div class="rows">
+        <div class="row"><span class="wd wdx"></span><strong>Trusted Results UI</strong> — Ranked results showing: what it is, why it was returned, where it came from, its status.</div>
+        <div class="row"><span class="wd wdw"></span><strong>Ask Attimo input</strong> — Query entry. Feel of asking a colleague, not running a search query.</div>
+        <div class="row"><span class="wd wdw"></span><strong>Provenance drawer</strong> — Expands a result to show the full source chain: document → revision → approval → person.</div>
+      </div>
+    </div>
+    <div class="sub"><div class="slbl">6 user-type dashboards — post-MVP</div>
+      <div class="g2">
+        <div class="mini"><div class="mnm">Project Lead / Architect-PM</div><div class="md">Approval inbox, deadlines, workload, project health</div></div>
+        <div class="mini"><div class="mnm">Site Coordinator / Field Lead</div><div class="md">Signal history, quick capture, deviation flags</div></div>
+        <div class="mini"><div class="mnm">Reviewer / Client Rep</div><div class="md">Review queue, state changes, document snapshot</div></div>
+        <div class="mini"><div class="mnm">Contracts / Finance</div><div class="md">Obligation overview, deadline calendar, evidence</div></div>
+        <div class="mini"><div class="mnm">Audit / Inspection Consultant</div><div class="md">Report workspace, evidence gallery, citation index</div></div>
+        <div class="mini"><div class="mnm">New Joiner / External</div><div class="md">Onboarding checklist, guided queries, contributions</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARKETING PANEL -->
+<div id="panel-marketing" class="panel">
+  <div class="pi">
+    <div class="phdr"><span class="pttl">Marketing</span><span style="font-size:11px;color:var(--t3);">AEC · Turkey + European markets</span></div>
+    <div class="g2">
+      <div><div class="slbl">The problem</div><div class="mbox">Construction projects generate thousands of signals that are never captured or linked to decisions. When disputes or audits happen, nobody has a single source of truth.</div></div>
+      <div><div class="slbl">The solution</div><div class="mbox">A coordination layer on top of existing tools. Connects fragmented signals into governed, traceable records — without forcing migration.</div></div>
+    </div>
+    <div class="sub"><div class="slbl">What it is not</div><div class="tags"><span class="tag tw">Not a task manager</span><span class="tag tw">Not a chatbot</span><span class="tag tw">Not a document manager</span><span class="tag tw">Not a PM tool</span><span class="tag tw">Not a migration project</span></div></div>
+    <div class="sub"><div class="slbl">5 value propositions</div>
+      <div class="rows">
+        <div class="row"><span class="wd wdx"></span>Find any project context in seconds — with proof of why it was returned</div>
+        <div class="row"><span class="wd wdx"></span>Always know the current approved version of any document or decision</div>
+        <div class="row"><span class="wd wdx"></span>Capture field signals automatically — photo, voice, text — without office software</div>
+        <div class="row"><span class="wd wdx"></span>Track every obligation with its source clause attached through to closure</div>
+        <div class="row"><span class="wd wdx"></span>Export audit-ready evidence packages for disputes, handovers, and claims instantly</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM PANEL -->
+<div id="panel-team" class="panel">
+  <div class="pi">
+    <div class="phdr">
+      <span class="pttl">Team</span>
+      <button class="amb" onclick="showAddMember()">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg>
+        Add member
+      </button>
+    </div>
+    <div class="dfilter" id="dept-filter">
+      <button class="dfb on" onclick="filterTeam('all',this)">All</button>
+      <button class="dfb" onclick="filterTeam('leadership',this)">Leadership</button>
+      <button class="dfb" onclick="filterTeam('product',this)">Product</button>
+      <button class="dfb" onclick="filterTeam('development',this)">Development</button>
+      <button class="dfb" onclick="filterTeam('design',this)">Design</button>
+      <button class="dfb" onclick="filterTeam('marketing',this)">Marketing</button>
+    </div>
+    <div id="add-member-form" style="display:none;">
+      <div class="amf">
+        <div class="amtitle">Add new team member</div>
+        <div class="er" style="margin-bottom:6px;">
+          <div><div class="el">Full name</div><input class="ef" id="nm-inp" type="text" placeholder="e.g. Sarah Chen"/></div>
+          <div><div class="el">Role / Designation</div><input class="ef" id="rl-inp" type="text" placeholder="e.g. Frontend Engineer"/></div>
         </div>
-        <div class="fn" style="background:#E1F5EE;">
-          <div class="fn-n" style="color:#0F6E56;">02 · Structure</div>
-          <div class="fn-t" style="color:#085041;">Classify & Link</div>
-          <div class="fn-d" style="color:#0F6E56;">Each signal becomes a decision, obligation, deviation, or evidence — auto-linked to its project</div>
+        <div><div class="el">Department</div>
+          <select class="ef" id="dp-inp">
+            <option value="leadership">Leadership</option>
+            <option value="product">Product</option>
+            <option value="development" selected>Development</option>
+            <option value="design">Design</option>
+            <option value="marketing">Marketing</option>
+          </select>
         </div>
-        <div class="fn" style="background:#FAEEDA;">
-          <div class="fn-n" style="color:#854F0B;">03 · Process</div>
-          <div class="fn-t" style="color:#633806;">AI Orchestration</div>
-          <div class="fn-d" style="color:#854F0B;">6 specialized AI agents over a triple-store extract meaning and relationships from every signal</div>
-        </div>
-        <div class="fn" style="background:#E6F1FB;">
-          <div class="fn-n" style="color:#185FA5;">04 · Govern</div>
-          <div class="fn-t" style="color:#0C447C;">Human Approval</div>
-          <div class="fn-d" style="color:#185FA5;">7 human-in-the-loop gates. No external or contractual action executes without a human approving</div>
-        </div>
-        <div class="fn" style="background:#EAF3DE;">
-          <div class="fn-n" style="color:#3B6D11;">05 · Deliver</div>
-          <div class="fn-t" style="color:#27500A;">Evidence Packages</div>
-          <div class="fn-d" style="color:#3B6D11;">Audit-ready packages with full provenance for disputes, audits, and handovers</div>
+        <div class="fbr" style="margin-top:4px;">
+          <button class="fb p" onclick="saveNewMember()" style="padding:6px 0;">Save member</button>
+          <button class="fb c" onclick="hideAddMember()" style="padding:6px 0;">Cancel</button>
         </div>
       </div>
     </div>
+    <div class="tgrid" id="team-grid"></div>
+  </div>
+</div>
 
-    <!-- DEPT PANELS -->
-    <div id="panel-product" class="panel on">
-      <div class="panel-inner">
-        <div class="p-hdr"><span class="p-ttl">Product</span><span class="pill p-prog" style="padding:3px 10px;">Phase 0 active</span></div>
-        <p class="mbox">Attimo is not a task manager and not a chatbot. It is a governed, evidence-native coordination layer. Every output cites its source. Every action is approval-gated. Every decision is logged immutably.</p>
-        <div class="sub"><div class="sublbl">8 core user stories</div>
-          <div class="g2">
-            <div class="mini"><div class="mini-id">US1</div><div class="mini-nm">Recover context</div><div class="mini-d">Find the right info from vague or partial memory</div></div>
-            <div class="mini"><div class="mini-id">US2</div><div class="mini-nm">Check accepted state</div><div class="mini-d">What is the current approved version?</div></div>
-            <div class="mini"><div class="mini-id">US3</div><div class="mini-nm">Track obligations</div><div class="mini-d">What do we owe, to whom, by when?</div></div>
-            <div class="mini"><div class="mini-id">US4</div><div class="mini-nm">Generate report</div><div class="mini-d">Produce a site audit report from field evidence</div></div>
-            <div class="mini"><div class="mini-id">US5</div><div class="mini-nm">Capture field signal</div><div class="mini-d">Photo or voice from site — auto-structured</div></div>
-            <div class="mini"><div class="mini-id">US6</div><div class="mini-nm">Review and approve</div><div class="mini-d">Approve obligation closure or state changes</div></div>
-            <div class="mini"><div class="mini-id">US7</div><div class="mini-nm">Monitor deadlines</div><div class="mini-d">Alerts before obligations go overdue</div></div>
-            <div class="mini"><div class="mini-id">US8</div><div class="mini-nm">Connect channels</div><div class="mini-d">Link email, drive, messaging for auto-ingestion</div></div>
-          </div>
-        </div>
-        <div class="sub"><div class="sublbl">Non-negotiable rules</div>
-          <div class="rows">
-            <div class="row"><span class="wd wd-next"></span>State engine is always deterministic rules — never AI</div>
-            <div class="row"><span class="wd wd-next"></span>Deviation detection is always a graph query — never AI</div>
-            <div class="row"><span class="wd wd-next"></span>Every external or contractual action requires human approval before it executes</div>
-            <div class="row"><span class="wd wd-next"></span>Every derived output carries provenance — no silent AI decisions, ever</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="panel-dev" class="panel">
-      <div class="panel-inner">
-        <div class="p-hdr">
-          <span class="p-ttl">Development</span>
-          <a href="https://drive.google.com/drive/folders/113coDMmb2hw7YnwPm72RjiSyb8z7CH-i" target="_blank" class="hl" style="font-size:11px;border-color:var(--border2);color:var(--t2);">Architecture Docs ↗</a>
-        </div>
-        <div class="sublbl">System layers</div>
-        <div class="rows">
-          <div class="row"><span class="wd wd-next"></span><strong>Presentation</strong> — Next.js 15 SSR, React, Tailwind CSS, shadcn/ui</div>
-          <div class="row"><span class="wd wd-next"></span><strong>API</strong> — FastAPI (REST + WebSocket), OAuth 2.0, JWT auth, OpenAPI docs</div>
-          <div class="row"><span class="wd wd-next"></span><strong>Orchestration</strong> — LangGraph state machine, PostgreSQL checkpoints, interrupt() HITL gates</div>
-          <div class="row"><span class="wd wd-next"></span><strong>Data</strong> — PostgreSQL 16 (relational) + Neo4j (graph + provenance) + Qdrant (vector search)</div>
-          <div class="row"><span class="wd wd-next"></span><strong>Workers</strong> — ARQ async workers over Redis. Parse → chunk → embed → index pipeline</div>
-          <div class="row"><span class="wd wd-next"></span><strong>Storage</strong> — S3/MinIO for raw files, photos, audio, exports</div>
-          <div class="row"><span class="wd wd-next"></span><strong>Ingress</strong> — Traefik (TLS 1.3, rate limiting). Dev: Docker Compose. Prod: Kubernetes</div>
-        </div>
-        <div class="sub"><div class="sublbl">Triple store</div>
-          <div class="g3">
-            <div class="mini"><div class="mini-id">PostgreSQL 16</div><div class="mini-nm">Relational</div><div class="mini-d">Obligations, audit log, users, RBAC, reports, tokens, LangGraph checkpoints</div></div>
-            <div class="mini"><div class="mini-id">Neo4j 5</div><div class="mini-nm">Graph + Provenance</div><div class="mini-d">Projects, documents, revision chains, correspondence threads, approval nodes, deviation edges</div></div>
-            <div class="mini"><div class="mini-id">Qdrant</div><div class="mini-nm">Vector Search</div><div class="mini-d">Document chunks, email bodies, voice transcripts, photo captions — mandatory tenant filter</div></div>
-          </div>
-        </div>
-        <div class="sub"><div class="sublbl">6 AI agents</div>
-          <div class="g3">
-            <div class="mini" style="border-color:rgba(239,159,39,.4);"><div class="mini-id">J1 · Phase 0 — Building</div><div class="mini-nm">Context Recovery</div><div class="mini-d">Hybrid retrieval, provenance, context compression, "why this result"</div></div>
-            <div class="mini"><div class="mini-id">J2 · Post-MVP</div><div class="mini-nm">Scope Clarity</div><div class="mini-d">Spec analysis for scope conflicts and gaps</div></div>
-            <div class="mini"><div class="mini-id">J3 · Phase 1</div><div class="mini-nm">State Agent</div><div class="mini-d">assert_state = rules engine only. Never AI. Reads/writes Neo4j revision chains</div></div>
-            <div class="mini"><div class="mini-id">J4 · Phase 2</div><div class="mini-nm">Field Signal</div><div class="mini-d">Vision AI for photos, STT for voice. Deviation = graph query, never AI</div></div>
-            <div class="mini"><div class="mini-id">J5 · Phase 3</div><div class="mini-nm">Obligation Tracker</div><div class="mini-d">Extracts obligations, links to source, tracks through to closure</div></div>
-            <div class="mini"><div class="mini-id">J6 · Phase 4</div><div class="mini-nm">Report Generator</div><div class="mini-d">PDF/DOCX with provenance footer on every page</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="panel-design" class="panel">
-      <div class="panel-inner">
-        <div class="p-hdr"><span class="p-ttl">Design</span><span style="font-size:11px;color:var(--t3);">UI · Screens · User types</span></div>
-        <p class="mbox">Every screen must make provenance and source visible. Users should always understand why they see something and where it came from. No raw file dumps. No unexplained results.</p>
-        <div class="sub"><div class="sublbl">Phase 0 — design now</div>
-          <div class="rows">
-            <div class="row"><span class="wd wd-next"></span><strong>Trusted Results UI</strong> — Ranked results showing: what it is, why it was returned, where it came from, its status.</div>
-            <div class="row"><span class="wd wd-wait"></span><strong>Ask Attimo input</strong> — Query entry. Feel of asking a colleague, not running a search query.</div>
-            <div class="row"><span class="wd wd-wait"></span><strong>Provenance drawer</strong> — Expands a result to show the full source chain: document → revision → approval → person.</div>
-          </div>
-        </div>
-        <div class="sub"><div class="sublbl">Phase 1–2 — upcoming screens</div>
-          <div class="rows">
-            <div class="row"><span class="wd wd-wait"></span><strong>HITL approval screens</strong> — 7 checkpoint types. Draft-first pattern for high-impact items.</div>
-            <div class="row"><span class="wd wd-wait"></span><strong>Field signal capture</strong> — Ultra-light mobile view. Photo, voice, text. Minimal friction.</div>
-            <div class="row"><span class="wd wd-wait"></span><strong>Obligation review UI</strong> — Confirm, edit, or reject extracted obligations from correspondence.</div>
-            <div class="row"><span class="wd wd-wait"></span><strong>Document state timeline</strong> — Revision chain: accepted, pending, superseded.</div>
-          </div>
-        </div>
-        <div class="sub"><div class="sublbl">6 user-type dashboards — post-MVP</div>
-          <div class="g2">
-            <div class="mini"><div class="mini-nm">Project Lead / Architect-PM</div><div class="mini-d">Approval inbox, deadlines, workload, project health</div></div>
-            <div class="mini"><div class="mini-nm">Site Coordinator / Field Lead</div><div class="mini-d">Signal history, quick capture, deviation flags</div></div>
-            <div class="mini"><div class="mini-nm">Reviewer / Client Rep</div><div class="mini-d">Review queue, state changes, document snapshot</div></div>
-            <div class="mini"><div class="mini-nm">Contracts / Finance</div><div class="mini-d">Obligation overview, deadline calendar, evidence</div></div>
-            <div class="mini"><div class="mini-nm">Audit / Inspection Consultant</div><div class="mini-d">Report workspace, evidence gallery, citation index</div></div>
-            <div class="mini"><div class="mini-nm">New Joiner / External</div><div class="mini-d">Onboarding checklist, guided queries, contributions</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="panel-marketing" class="panel">
-      <div class="panel-inner">
-        <div class="p-hdr"><span class="p-ttl">Marketing</span><span style="font-size:11px;color:var(--t3);">AEC · Turkey + European markets</span></div>
-        <div class="g2">
-          <div><div class="sublbl">The problem</div><div class="mbox">Construction projects generate thousands of signals that are never captured or linked to decisions. When disputes or audits happen, nobody has a single source of truth.</div></div>
-          <div><div class="sublbl">The solution</div><div class="mbox">A coordination layer on top of existing tools. Connects fragmented signals into governed, traceable records — without forcing migration.</div></div>
-        </div>
-        <div class="sub"><div class="sublbl">What it is not</div>
-          <div class="tags"><span class="tag w">Not a task manager</span><span class="tag w">Not a chatbot</span><span class="tag w">Not a document manager</span><span class="tag w">Not a PM tool</span><span class="tag w">Not a migration project</span></div>
-        </div>
-        <div class="sub"><div class="sublbl">Target markets</div>
-          <div class="g2">
-            <div class="mini"><div class="mini-nm">Turkey AEC — Primary</div><div class="mini-d">Architecture, Engineering, Construction. High project volume, fragmented field coordination, strong need for dispute evidence.</div></div>
-            <div class="mini"><div class="mini-nm">EU AEC — Secondary</div><div class="mini-d">European firms with regulatory compliance, documentation standards, and handover evidence obligations.</div></div>
-          </div>
-        </div>
-        <div class="sub"><div class="sublbl">5 value propositions</div>
-          <div class="rows">
-            <div class="row"><span class="wd wd-next"></span>Find any project context in seconds — with proof of why it was returned</div>
-            <div class="row"><span class="wd wd-next"></span>Always know the current approved version of any document or decision</div>
-            <div class="row"><span class="wd wd-next"></span>Capture field signals automatically — photo, voice, text — without office software</div>
-            <div class="row"><span class="wd wd-next"></span>Track every obligation with its source clause attached through to closure</div>
-            <div class="row"><span class="wd wd-next"></span>Export audit-ready evidence packages for disputes, handovers, and claims instantly</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
+</main>
 </div>
 
 <script>
-// ADD DEPT INLINE
-function showAddInput(){
-  document.getElementById('add-btn').style.display='none';
-  const f=document.getElementById('add-form');
-  f.style.display='block';
-  document.getElementById('add-input').focus();
-}
-function cancelAdd(){
-  document.getElementById('add-form').style.display='none';
-  document.getElementById('add-btn').style.display='flex';
-  document.getElementById('add-input').value='';
-}
-function handleAddKey(e){
-  if(e.key==='Enter')confirmAdd();
-  if(e.key==='Escape')cancelAdd();
-}
-function confirmAdd(){
-  const nm=document.getElementById('add-input').value.trim();
-  if(!nm){document.getElementById('add-input').focus();return;}
-  const key='dept-'+Date.now();
-  const sidebar=document.querySelector('.sidebar');
-  const addBtn=document.getElementById('add-btn');
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const dc={leadership:{bg:'#111',tx:'#fff',label:'Leadership'},product:{bg:'#EEEDFE',tx:'#534AB7',label:'Product'},development:{bg:'#E1F5EE',tx:'#0F6E56',label:'Development'},design:{bg:'#FBEAF0',tx:'#993556',label:'Design'},marketing:{bg:'#EAF3DE',tx:'#3B6D11',label:'Marketing'}};
+let nid=100;
+let team=[
+  {id:1,name:'Efehan Maleri',role:'CEO & Co-Founder',dept:'leadership'},
+  {id:2,name:'Syed Osama Ali',role:'CTO',dept:'leadership'},
+  {id:3,name:'Laraib',role:'Program Manager',dept:'product'},
+  {id:4,name:'Mesude Gökpınar',role:'Product Intern',dept:'product'},
+  {id:5,name:'Talha Mubeen',role:'System Architect',dept:'development'},
+  {id:6,name:'Soo Ling Lim',role:'Developer',dept:'development'},
+  {id:7,name:'Murat Tut',role:'Full Stack Developer',dept:'development'},
+  {id:8,name:'Burak Çetin',role:'AI Intern',dept:'development'},
+  {id:9,name:'Developer 6',role:'Developer',dept:'development'},
+  {id:10,name:'Tunch',role:'Designer',dept:'design'},
+  {id:11,name:'Gamzang',role:'Designer',dept:'design'},
+  {id:12,name:'New Joiner',role:'Designer (Incoming)',dept:'design'},
+  {id:13,name:'Claire',role:'Marketing',dept:'marketing'},
+  {id:14,name:'Buse Suche Coşkun',role:'Marketing',dept:'marketing'}
+];
+let teamFilter='all';
 
-  // Sidebar tile
-  const tile=document.createElement('div');
-  tile.className='sb-item';tile.id='tile-'+key;tile.onclick=()=>sw(key);
-  tile.innerHTML=`<div class="sb-ico" style="background:#f0f0ee;color:#888;" id="ico-${key}">${nm[0].toUpperCase()}</div><div><div class="sb-dept-nm" id="sbnm-${key}" style="font-size:12px;">${nm}</div><div style="font-size:9px;color:var(--t3);">Department</div></div>`;
-  sidebar.insertBefore(tile,addBtn);
+function initials(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();}
 
-  // Panel
-  const panel=document.createElement('div');
-  panel.id='panel-'+key;panel.className='panel';
-  panel.innerHTML=buildDeptPanel(key,nm);
-  document.getElementById('panel-marketing').insertAdjacentElement('afterend',panel);
+// ─── STATS ──────────────────────────────────────────────────────────────────
+const statsData=[
+  {c:'c0',val:'Phase 0',lbl:'Active Phase',sub:'Trusted Context Navigator',bar:null,icoColor:'#534AB7',icoBg:'#EEEDFE',ico:'phase',target:null},
+  {c:'c1',val:'30%',lbl:'Build Progress',sub:'Phase 0 of 4 total phases',bar:30,barColor:'#EF9F27',icoColor:'#854F0B',icoBg:'#FAEEDA',ico:'bar',target:null},
+  {c:'c2',val:'1 / 7',lbl:'Connectors Live',sub:'IFC done · Revit next in queue',bar:null,icoColor:'#1D9E75',icoBg:'#E1F5EE',ico:'plug',target:null},
+  {c:'c3',val:'1 / 6',lbl:'Agents Active',sub:'J1 building now · 5 queued',bar:null,icoColor:'#E24B4A',icoBg:'#FCEBEB',ico:'agent',target:null},
+  {c:'c4',val:'44',lbl:'Board Epics',sub:'80+ subtasks tracked in ClickUp',bar:null,icoColor:'#185FA5',icoBg:'#E6F1FB',ico:'list',target:44},
+  {c:'c5',val:'',lbl:'Team Members',sub:'5 departments · 1 incoming',bar:null,icoColor:'#0F6E56',icoBg:'#E1F5EE',ico:'people',target:'team'},
+  {c:'c6',val:'13',lbl:'Arch Docs',sub:'All 5 phases documented',bar:null,icoColor:'#534AB7',icoBg:'#EEEDFE',ico:'doc',target:13},
+  {c:'c7',val:'7',lbl:'HITL Gates',sub:'Human approval checkpoints',bar:null,icoColor:'#854F0B',icoBg:'#FAEEDA',ico:'shield',target:7}
+];
+const svgIco={
+  phase:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x=".5" y=".5" width="5.5" height="5.5" rx="1.5"/><rect x="8" y=".5" width="5.5" height="5.5" rx="1.5" opacity=".5"/><rect x=".5" y="8" width="5.5" height="5.5" rx="1.5" opacity=".5"/><rect x="8" y="8" width="5.5" height="5.5" rx="1.5" opacity=".2"/></svg>`,
+  bar:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="8" width="3" height="6" rx="1"/><rect x="5" y="4" width="3" height="10" rx="1"/><rect x="10" y="0" width="3" height="14" rx="1"/></svg>`,
+  plug:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="3.5" y="0" width="2" height="4" rx="1"/><rect x="8.5" y="0" width="2" height="4" rx="1"/><rect x="1.5" y="3" width="11" height="6" rx="2"/><rect x="5" y="9" width="4" height="5" rx="1"/></svg>`,
+  agent:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="2" y="3" width="10" height="8" rx="2"/><circle cx="5" cy="7" r="1.2"/><circle cx="9" cy="7" r="1.2"/><rect x="5.5" y="0.5" width="3" height="2.5" rx="1"/><rect x=".5" y="5" width="1.5" height="4" rx=".75" opacity=".5"/><rect x="12" y="5" width="1.5" height="4" rx=".75" opacity=".5"/></svg>`,
+  list:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="1" width="3" height="3" rx=".8"/><rect x="5" y="2" width="9" height="1.5" rx=".75"/><rect x="0" y="6" width="3" height="3" rx=".8"/><rect x="5" y="7" width="9" height="1.5" rx=".75"/><rect x="0" y="11" width="3" height="3" rx=".8"/><rect x="5" y="12" width="6" height="1.5" rx=".75"/></svg>`,
+  people:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><circle cx="5" cy="4" r="2.5"/><path d="M0 12c0-2.8 2.2-5 5-5s5 2.2 5 5H0z"/><circle cx="10.5" cy="4" r="2" opacity=".6"/><path d="M9 12c0-2 .8-3.7 2-4.8.3-.1.7-.2 1-.2 1.7 0 3 1.4 3 3H9z" opacity=".6"/></svg>`,
+  doc:`<svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="1" width="10" height="12" rx="2"/><path d="M4.5 4.5h5M4.5 7h5M4.5 9.5h3" stroke-linecap="round"/></svg>`,
+  shield:`<svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0.5L1 3v4.5c0 3 2.5 5.8 6 7 3.5-1.2 6-4 6-7V3L7 0.5z" opacity=".15"/><path d="M7 0.5L1 3v4.5c0 3 2.5 5.8 6 7 3.5-1.2 6-4 6-7V3L7 0.5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 7l1.8 1.8L9.5 5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+};
 
-  document.getElementById('add-input').value='';
-  cancelAdd();
-  sw(key);
+function buildStats(){
+  const g=document.getElementById('stats-grid');
+  statsData.forEach((s,i)=>{
+    const div=document.createElement('div');
+    div.className=`sc ${s.c}`;
+    div.style.animationDelay=`${.05+i*.06}s`;
+    const v=s.c==='c5'?team.length:s.val;
+    div.innerHTML=`<div class="sc-ico" style="background:${s.icoBg};color:${s.icoColor};">${svgIco[s.ico]||''}</div><div class="sc-body"><div class="sc-val" id="sv-${i}">${v}</div><div class="sc-lbl">${s.lbl}</div><div class="sc-sub">${s.sub}</div>${s.bar!==null?`<div class="sc-bar"><div class="sc-bf" style="--w:${s.bar}%;background:${s.barColor};"></div></div>`:''}</div>`;
+    g.appendChild(div);
+  });
+  // counter animation
+  statsData.forEach((s,i)=>{
+    if(typeof s.target==='number'){
+      const el=document.getElementById('sv-'+i);
+      let cur=0;const step=s.target/55;
+      setTimeout(()=>{const t=setInterval(()=>{cur+=step;if(cur>=s.target){el.textContent=s.target;clearInterval(t);}else el.textContent=Math.floor(cur);},16);},200+i*60);
+    } else if(s.target==='team'){
+      const el=document.getElementById('sv-'+i);
+      let cur=0;const step=team.length/55;
+      setTimeout(()=>{const t=setInterval(()=>{cur+=step;if(cur>=team.length){el.textContent=team.length;clearInterval(t);}else el.textContent=Math.floor(cur);},16);},200+i*60);
+    }
+  });
 }
 
-// BUILD DEPT PANEL
-function buildDeptPanel(key,nm){
-  return `<div class="panel-inner">
-    <div class="p-hdr">
-      <div id="title-wrap-${key}"><span class="p-ttl" id="dept-title-${key}">${nm}</span></div>
-      <div style="display:flex;gap:6px;">
-        <button class="dept-action-btn" onclick="startRename('${key}')">✏️ Rename</button>
-        <button class="dept-action-btn danger" onclick="deleteDept('${key}')">🗑 Delete</button>
+// ─── TEAM RENDER ─────────────────────────────────────────────────────────────
+function getFiltered(){return teamFilter==='all'?team:team.filter(m=>m.dept===teamFilter);}
+
+function renderTeam(){
+  const g=document.getElementById('team-grid');
+  if(!g)return;
+  g.innerHTML='';
+  const filtered=getFiltered();
+  if(!filtered.length){g.innerHTML=`<p style="font-size:12px;color:var(--t3);grid-column:1/-1;padding:1rem 0;">No members in this department yet.</p>`;return;}
+  filtered.forEach(m=>g.appendChild(buildMemberCard(m)));
+  renderSidebarTeam();
+  updateTeamCount();
+}
+
+function buildMemberCard(m){
+  const col=dc[m.dept]||dc.development;
+  const div=document.createElement('div');
+  div.className='mc';div.id='mc-'+m.id;
+  div.innerHTML=`
+    <div class="mca">
+      <button class="mcb edb" onclick="editMember(${m.id})" title="Edit">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5l2.5 2.5L4 10.5H1.5V8L8 1.5z"/></svg>
+      </button>
+      <button class="mcb del" onclick="deleteMember(${m.id})" title="Delete">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h8M5 3V2h2v1M4 3v7h4V3"/></svg>
+      </button>
+    </div>
+    <div class="mct">
+      <div class="mcav" style="background:${col.bg};color:${col.tx};">${initials(m.name)}</div>
+      <div>
+        <div class="mcn">${m.name}</div>
+        <div class="mcr">${m.role}</div>
+        <span class="mcd" style="background:${col.bg};color:${col.tx};">${col.label}</span>
       </div>
-    </div>
-    <div id="blocks-${key}" class="blocks-container">
-      <p id="empty-${key}" class="mbox" style="color:var(--t3);font-size:11px;border:0.5px dashed var(--border2);background:transparent;">This department is empty — add your first block below using the toolbar.</p>
-    </div>
-    <div class="block-toolbar">
-      <button class="block-btn" onclick="addBlock('${key}','note')">+ Note</button>
-      <button class="block-btn" onclick="addBlock('${key}','task')">+ Task</button>
-      <button class="block-btn" onclick="addBlock('${key}','link')">+ Link</button>
-      <button class="block-btn" onclick="addBlock('${key}','section')">+ Section header</button>
+    </div>`;
+  return div;
+}
+
+function editMember(id){
+  const m=team.find(x=>x.id===id);if(!m)return;
+  const col=dc[m.dept]||dc.development;
+  const card=document.getElementById('mc-'+id);
+  card.innerHTML=`<div class="me">
+    <div class="el">Full name</div><input class="ef" id="enm-${id}" value="${m.name}" type="text"/>
+    <div class="el">Role / Designation</div><input class="ef" id="erl-${id}" value="${m.role}" type="text"/>
+    <div class="el">Department</div>
+    <select class="ef" id="edp-${id}">${Object.entries(dc).map(([k,v])=>`<option value="${k}"${k===m.dept?' selected':''}>${v.label}</option>`).join('')}</select>
+    <div class="fbr">
+      <button class="fb p" onclick="saveMember(${id})" style="padding:6px 0;">Save</button>
+      <button class="fb c" onclick="renderTeam()" style="padding:6px 0;">Cancel</button>
     </div>
   </div>`;
+  setTimeout(()=>document.getElementById('enm-'+id).focus(),50);
 }
 
-// RENAME
-function startRename(key){
-  const wrap=document.getElementById('title-wrap-'+key);
-  const current=document.getElementById('dept-title-'+key).textContent;
-  wrap.innerHTML=`<input class="rename-input" id="rinp-${key}" value="${current}" placeholder="Department name…" onkeydown="handleRenameKey(event,'${key}')" onblur="saveRename('${key}')" />`;
-  const inp=document.getElementById('rinp-'+key);
-  inp.focus();inp.select();
-}
-function handleRenameKey(e,key){
-  if(e.key==='Enter'){e.preventDefault();saveRename(key);}
-  if(e.key==='Escape'){cancelRename(key);}
-}
-function cancelRename(key){
-  const inp=document.getElementById('rinp-'+key);
-  if(!inp)return;
-  const orig=inp.defaultValue;
-  document.getElementById('title-wrap-'+key).innerHTML=`<span class="p-ttl" id="dept-title-${key}">${orig}</span>`;
-}
-function saveRename(key){
-  const inp=document.getElementById('rinp-'+key);
-  if(!inp)return;
-  const newNm=(inp.value.trim())||inp.defaultValue;
-  document.getElementById('title-wrap-'+key).innerHTML=`<span class="p-ttl" id="dept-title-${key}">${newNm}</span>`;
-  // Update sidebar label & icon
-  const sbnm=document.getElementById('sbnm-'+key);
-  if(sbnm)sbnm.textContent=newNm;
-  const ico=document.getElementById('ico-'+key);
-  if(ico)ico.textContent=newNm[0].toUpperCase();
+function saveMember(id){
+  const m=team.find(x=>x.id===id);if(!m)return;
+  m.name=document.getElementById('enm-'+id).value.trim()||m.name;
+  m.role=document.getElementById('erl-'+id).value.trim()||m.role;
+  m.dept=document.getElementById('edp-'+id).value;
+  renderTeam();
 }
 
-// DELETE DEPT
-function deleteDept(key){
-  const tile=document.getElementById('tile-'+key);
-  const panel=document.getElementById('panel-'+key);
-  if(panel){panel.style.animation='fadeOut .2s ease both';setTimeout(()=>panel.remove(),200);}
-  if(tile){tile.style.opacity='0';tile.style.transition='opacity .2s';setTimeout(()=>tile.remove(),200);}
-  sw('product');
+function deleteMember(id){
+  const card=document.getElementById('mc-'+id);
+  if(card){card.style.animation='fo .2s ease both';setTimeout(()=>{team=team.filter(x=>x.id!==id);renderTeam();},200);}
 }
 
-// ADD BLOCK
-function addBlock(key,type){
-  const container=document.getElementById('blocks-'+key);
-  const empty=document.getElementById('empty-'+key);
-  if(empty)empty.remove();
-  const bId='blk-'+Date.now();
-  const div=document.createElement('div');
-  div.id=bId;div.className='content-block';
-  const del=`<button class="block-del" onclick="deleteBlock('${bId}','${key}')" title="Remove">×</button>`;
+function showAddMember(){
+  const f=document.getElementById('add-member-form');
+  f.style.display='block';
+  setTimeout(()=>document.getElementById('nm-inp').focus(),50);
+}
+function hideAddMember(){document.getElementById('add-member-form').style.display='none';}
 
-  if(type==='note'){
-    div.innerHTML=`${del}<span class="block-type-tag">📝 Note</span><div class="block-editable" contenteditable="true" placeholder="Write something…"></div>`;
-    container.appendChild(div);
-    setTimeout(()=>div.querySelector('.block-editable').focus(),50);
-
-  } else if(type==='task'){
-    div.innerHTML=`${del}<span class="block-type-tag">✓ Task</span>
-      <div class="block-task-row">
-        <div class="task-dot" onclick="this.classList.toggle('done')" title="Mark done"></div>
-        <div class="block-editable" contenteditable="true" placeholder="Task description…" style="flex:1;"></div>
-      </div>`;
-    container.appendChild(div);
-    setTimeout(()=>div.querySelector('.block-editable').focus(),50);
-
-  } else if(type==='link'){
-    div.innerHTML=`${del}<span class="block-type-tag">🔗 Link</span>
-      <div class="link-row">
-        <input class="link-field" type="text" placeholder="Label…" style="width:35%;" />
-        <span style="color:var(--t3);font-size:12px;">→</span>
-        <input class="link-field url" type="url" placeholder="https://…" />
-      </div>`;
-    container.appendChild(div);
-    setTimeout(()=>div.querySelectorAll('.link-field')[0].focus(),50);
-
-  } else if(type==='section'){
-    div.className='content-block section-block';
-    div.innerHTML=`${del}<div class="section-heading" contenteditable="true" placeholder="Section header…"></div>`;
-    container.appendChild(div);
-    setTimeout(()=>div.querySelector('.section-heading').focus(),50);
-  }
+function saveNewMember(){
+  const nm=document.getElementById('nm-inp').value.trim();
+  const rl=document.getElementById('rl-inp').value.trim();
+  const dp=document.getElementById('dp-inp').value;
+  if(!nm){document.getElementById('nm-inp').style.borderColor='#E24B4A';return;}
+  team.push({id:++nid,name:nm,role:rl||'Team Member',dept:dp});
+  document.getElementById('nm-inp').value='';
+  document.getElementById('rl-inp').value='';
+  document.getElementById('nm-inp').style.borderColor='';
+  hideAddMember();
+  renderTeam();
 }
 
-// DELETE BLOCK
-function deleteBlock(bId,key){
-  const block=document.getElementById(bId);
-  if(!block)return;
-  block.style.animation='fadeOut .15s ease both';
-  setTimeout(()=>{
-    block.remove();
-    const c=document.getElementById('blocks-'+key);
-    if(c&&!c.querySelector('.content-block')){
-      c.innerHTML=`<p id="empty-${key}" class="mbox" style="color:var(--t3);font-size:11px;border:0.5px dashed var(--border2);background:transparent;">This department is empty — add your first block below using the toolbar.</p>`;
-    }
-  },150);
+function filterTeam(f,btn){
+  teamFilter=f;
+  document.querySelectorAll('.dfb').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  renderTeam();
 }
 
-// COUNTER ANIMATION
-document.querySelectorAll('[data-target]').forEach((el,i)=>{
-  const target=parseInt(el.dataset.target);
-  const suffix=el.dataset.suffix||'';
-  if(target===0){el.textContent='0'+suffix;return;}
-  setTimeout(()=>{
-    let s=0;
-    const step=target/55;
-    const t=setInterval(()=>{
-      s+=step;
-      if(s>=target){el.textContent=target+suffix;clearInterval(t);}
-      else el.textContent=Math.floor(s)+suffix;
-    },16);
-  },200+i*60);
-});
+function updateTeamCount(){
+  const el=document.getElementById('team-count-sb');
+  if(el)el.textContent=`${team.length} members`;
+  // update stat card
+  const sv=document.getElementById('sv-5');
+  if(sv)sv.textContent=team.length;
+}
 
-// DEPT SWITCH
+function renderSidebarTeam(){
+  const list=document.getElementById('sb-team-list');
+  if(!list)return;
+  list.innerHTML='';
+  team.forEach(m=>{
+    const col=dc[m.dept]||dc.development;
+    const div=document.createElement('div');div.className='sbm';
+    div.innerHTML=`<div class="sbav" style="background:${col.bg};color:${col.tx};">${initials(m.name)}</div><div><div class="sbmn">${m.name}</div><div class="sbmr">${m.role}</div></div>`;
+    list.appendChild(div);
+  });
+}
+
+// ─── NAV ────────────────────────────────────────────────────────────────────
 function sw(id){
-  document.querySelectorAll('.sb-item').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.sb-it').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   const t=document.getElementById('tile-'+id);
   const p=document.getElementById('panel-'+id);
   if(t)t.classList.add('on');
-  if(p)p.classList.add('on');
+  if(p){p.classList.add('on');p.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  if(id==='team')renderTeam();
 }
 
+// ─── ADD DEPT ────────────────────────────────────────────────────────────────
+function showAdd(){document.getElementById('add-btn').style.display='none';const f=document.getElementById('add-form');f.style.display='block';document.getElementById('add-inp').focus();}
+function cancelAdd(){document.getElementById('add-form').style.display='none';document.getElementById('add-btn').style.display='flex';document.getElementById('add-inp').value='';}
+function addKey(e){if(e.key==='Enter')confirmAdd();if(e.key==='Escape')cancelAdd();}
+function confirmAdd(){
+  const nm=document.getElementById('add-inp').value.trim();if(!nm)return;
+  const key='dept-'+Date.now();
+  const sb=document.querySelector('.sb');const addBtn=document.getElementById('add-btn');
+  const tile=document.createElement('div');tile.className='sb-it';tile.id='tile-'+key;tile.onclick=()=>sw(key);
+  tile.innerHTML=`<div class="sb-ico" style="background:#f0f0ee;color:#888;" id="ico-${key}">${nm[0].toUpperCase()}</div><div><div style="font-size:12px;" id="sbnm-${key}">${nm}</div><div style="font-size:9px;color:var(--t3);">New department</div></div>`;
+  sb.insertBefore(tile,addBtn);
+  const panel=document.createElement('div');panel.id='panel-'+key;panel.className='panel';
+  panel.innerHTML=buildCustomPanel(key,nm);
+  document.getElementById('panel-team').insertAdjacentElement('afterend',panel);
+  document.getElementById('add-inp').value='';cancelAdd();sw(key);
+}
 
+function buildCustomPanel(key,nm){
+  return `<div class="pi"><div class="phdr"><div id="tw-${key}"><span style="font-size:14px;font-weight:500;" id="dt-${key}">${nm}</span></div><div style="display:flex;gap:6px;"><button class="dab" onclick="startRename('${key}')">Rename</button><button class="dab danger" onclick="deleteDept('${key}')">Delete</button></div></div><div id="bks-${key}" class="bks"><p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed var(--b2);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p></div><div class="btb"><button class="bbt" onclick="addBlock('${key}','note')">+ Note</button><button class="bbt" onclick="addBlock('${key}','task')">+ Task</button><button class="bbt" onclick="addBlock('${key}','link')">+ Link</button><button class="bbt" onclick="addBlock('${key}','section')">+ Section</button></div></div>`;
+}
+
+function startRename(key){
+  const wrap=document.getElementById('tw-'+key);
+  const cur=document.getElementById('dt-'+key).textContent;
+  wrap.innerHTML=`<input class="rin" id="ri-${key}" value="${cur}" onkeydown="rKey(event,'${key}')" onblur="saveRename('${key}')"/>`;
+  const inp=document.getElementById('ri-'+key);inp.focus();inp.select();
+}
+function rKey(e,key){if(e.key==='Enter'){e.preventDefault();saveRename(key);}if(e.key==='Escape')cancelRename(key);}
+function cancelRename(key){const inp=document.getElementById('ri-'+key);if(!inp)return;const orig=inp.defaultValue;document.getElementById('tw-'+key).innerHTML=`<span style="font-size:14px;font-weight:500;" id="dt-${key}">${orig}</span>`;}
+function saveRename(key){
+  const inp=document.getElementById('ri-'+key);if(!inp)return;
+  const nm=inp.value.trim()||inp.defaultValue;
+  document.getElementById('tw-'+key).innerHTML=`<span style="font-size:14px;font-weight:500;" id="dt-${key}">${nm}</span>`;
+  const sbnm=document.getElementById('sbnm-'+key);if(sbnm)sbnm.textContent=nm;
+  const ico=document.getElementById('ico-'+key);if(ico)ico.textContent=nm[0].toUpperCase();
+}
+function deleteDept(key){
+  const tile=document.getElementById('tile-'+key);const panel=document.getElementById('panel-'+key);
+  if(panel){panel.style.animation='fo .2s ease both';setTimeout(()=>panel.remove(),200);}
+  if(tile){tile.style.opacity='0';tile.style.transition='opacity .2s';setTimeout(()=>tile.remove(),200);}
+  sw('product');
+}
+function addBlock(key,type){
+  const c=document.getElementById('bks-'+key);const emp=document.getElementById('emp-'+key);if(emp)emp.remove();
+  const bId='blk-'+Date.now();const div=document.createElement('div');div.id=bId;
+  const del=`<button class="bkd" onclick="deleteBlock('${bId}','${key}')">×</button>`;
+  if(type==='note'){div.className='bk';div.innerHTML=`${del}<span class="btag">Note</span><div class="bed" contenteditable="true" placeholder="Write something…"></div>`;c.appendChild(div);setTimeout(()=>div.querySelector('.bed').focus(),50);}
+  else if(type==='task'){div.className='bk';div.innerHTML=`${del}<span class="btag">Task</span><div class="tdr"><div class="tdot" onclick="this.classList.toggle('done')"></div><div class="bed" contenteditable="true" placeholder="Task description…" style="flex:1;"></div></div>`;c.appendChild(div);setTimeout(()=>div.querySelector('.bed').focus(),50);}
+  else if(type==='link'){div.className='bk';div.innerHTML=`${del}<span class="btag">Link</span><div class="lr"><input class="lf" type="text" placeholder="Label" style="width:35%;"/><span style="color:var(--t3);font-size:12px;">→</span><input class="lf lfu" type="url" placeholder="https://…"/></div>`;c.appendChild(div);setTimeout(()=>div.querySelectorAll('.lf')[0].focus(),50);}
+  else if(type==='section'){div.className='bk sbk';div.innerHTML=`${del}<div class="sh" contenteditable="true" placeholder="Section header…"></div>`;c.appendChild(div);setTimeout(()=>div.querySelector('.sh').focus(),50);}
+}
+function deleteBlock(bId,key){
+  const b=document.getElementById(bId);if(!b)return;b.style.animation='fo .15s ease both';
+  setTimeout(()=>{b.remove();const c=document.getElementById('bks-'+key);if(c&&!c.querySelector('.bk'))c.innerHTML=`<p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed var(--b2);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p>`;},150);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+buildStats();
+renderSidebarTeam();
+</script>
+<style>
+.atl{color:#fff;font-size:20px;font-weight:300;letter-spacing:.6px;line-height:1;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;}
+.ato{position:relative;display:inline-block;}
+.atc{position:absolute;width:6.5px;height:6.5px;border:1.5px solid rgba(255,255,255,.85);border-radius:50%;top:-5px;right:-2px;}
+</style>
+<script>
+(function(){
+  const c=document.createElement('canvas');c.width=64;c.height=64;
+  const x=c.getContext('2d');
+  const rr=12;
+  x.beginPath();x.moveTo(rr,0);x.lineTo(64-rr,0);x.quadraticCurveTo(64,0,64,rr);x.lineTo(64,64-rr);x.quadraticCurveTo(64,64,64-rr,64);x.lineTo(rr,64);x.quadraticCurveTo(0,64,0,64-rr);x.lineTo(0,rr);x.quadraticCurveTo(0,0,rr,0);x.closePath();
+  x.fillStyle='#2b4a70';x.fill();
+  x.fillStyle='#fff';
+  x.font='300 40px -apple-system,BlinkMacSystemFont,Helvetica,sans-serif';
+  x.textBaseline='middle';
+  x.fillText('a',10,36);
+  x.beginPath();x.arc(51,13,7,0,Math.PI*2);
+  x.strokeStyle='rgba(255,255,255,.88)';x.lineWidth=2.5;x.stroke();
+  const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');
+  const ex=document.querySelector('link[rel="icon"]');
+  if(ex)ex.remove();
+  document.head.appendChild(l);
+})();
 </script>
 </body>
 </html>
