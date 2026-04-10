@@ -264,6 +264,10 @@ a{text-decoration:none;color:inherit;}
     <div class="sb-ico" style="background:rgba(240,165,53,.12);color:var(--amber);"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4.5" cy="3.5" r="2.2"/><path d="M0 10.5c0-2.5 2-4.5 4.5-4.5S9 8 9 10.5H0z"/><circle cx="9.5" cy="3.5" r="1.7" opacity=".5"/><path d="M8 10.5c0-1.8.8-3.3 2-4.3.2-.1.4-.2.6-.2 1.5 0 2.6 1.3 2.6 3H8z" opacity=".5"/></svg></div>
     <div><div style="font-size:12px;">Team</div><div style="font-size:9px;color:var(--t3);" id="team-count-sb">14 members</div></div>
   </div>
+  <div class="sb-it" id="tile-raci" onclick="sw('raci')" data-tip="RACI Matrix: who is Responsible, Accountable, Consulted, and Informed across all activities. Editable per department.">
+    <div class="sb-ico" style="background:rgba(240,165,53,.12);color:var(--amber);"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="10" height="10" rx="1.5"/><path d="M1 4h10M4 4v7"/></svg></div>
+    <div><div style="font-size:12px;">RACI Matrix</div><div style="font-size:9px;color:var(--t3);">Who does what</div></div>
+  </div>
   <div class="sb-it" id="tile-gantt" onclick="sw('gantt')" data-tip="Gantt chart: visual project timeline across all phases. Coming soon.">
     <div class="sb-ico" style="background:rgba(91,146,245,.12);color:var(--blue);"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="2" width="10" height="2" rx=".5"/><rect x="3" y="5.5" width="7" height="2" rx=".5" opacity=".7"/><rect x="1" y="9" width="5" height="2" rx=".5" opacity=".4"/></svg></div>
     <div><div style="font-size:12px;">Gantt Chart</div><div style="font-size:9px;color:var(--t3);">Coming soon</div></div>
@@ -651,6 +655,72 @@ a{text-decoration:none;color:inherit;}
   </div>
 </div>
 
+<!-- RACI MATRIX -->
+<div id="panel-raci" class="panel">
+  <div class="pi">
+    <div class="phdr">
+      <span class="pttl">RACI Matrix</span>
+      <div style="display:flex;gap:7px;align-items:center;">
+        <button class="amb" onclick="showRaciAddRow()" style="font-size:11px;padding:5px 12px;"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg> Add row</button>
+        <button class="dab" onclick="showRaciAddCol()" style="font-size:10px;padding:4px 10px;">+ Add column</button>
+        <a href="https://app.clickup.com/t/86ex6cn5z" target="_blank" style="font-size:10px;color:var(--t3);border:.5px solid rgba(255,255,255,.1);padding:3px 9px;border-radius:6px;">ClickUp ↗</a>
+      </div>
+    </div>
+
+    <!-- Legend + hint -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.85rem;align-items:center;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:8px;border:.5px solid rgba(255,255,255,.06);">
+      <span style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;">Legend</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2);"><span style="font-size:10px;padding:1px 8px;border-radius:4px;background:rgba(91,146,245,.18);color:var(--blue);font-weight:700;">R</span>Responsible</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2);"><span style="font-size:10px;padding:1px 8px;border-radius:4px;background:rgba(240,165,53,.18);color:var(--amber);font-weight:700;">A</span>Accountable</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2);"><span style="font-size:10px;padding:1px 8px;border-radius:4px;background:rgba(30,203,142,.18);color:var(--teal);font-weight:700;">C</span>Consulted</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2);"><span style="font-size:10px;padding:1px 8px;border-radius:4px;background:rgba(144,137,238,.18);color:var(--purple);font-weight:700;">I</span>Informed</span>
+      <span style="font-size:9px;color:var(--t3);margin-left:auto;">Click cell → cycle R·A·C·I·clear &nbsp;|&nbsp; Click name to edit</span>
+    </div>
+
+    <!-- Dept filter tabs + add dept -->
+    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:.85rem;">
+      <div class="dfilter" id="raci-dept-filter" style="margin-bottom:0;flex:1;flex-wrap:wrap;"></div>
+      <button class="dab" onclick="showRaciAddDept()" style="font-size:10px;padding:3px 9px;flex-shrink:0;">+ Dept</button>
+    </div>
+    <div id="raci-dept-form" class="amf" style="display:none;margin-bottom:.75rem;">
+      <div class="amtitle">Add department tab</div>
+      <input class="ef" id="raci-dept-name" placeholder="e.g. Legal" onkeydown="if(event.key==='Enter')saveRaciDept();if(event.key==='Escape')hideRaciAddDept();"/>
+      <div class="fbr" style="margin-top:4px;"><button class="fb p" onclick="saveRaciDept()" style="padding:6px 0;">Add</button><button class="fb c" onclick="hideRaciAddDept()" style="padding:6px 0;">Cancel</button></div>
+    </div>
+
+    <!-- Add row form -->
+    <div id="raci-row-form" class="amf" style="display:none;margin-bottom:.85rem;">
+      <div class="amtitle" id="raci-row-form-title">Add activity row</div>
+      <input type="hidden" id="raci-edit-row-id" value=""/>
+      <div class="er" style="margin-bottom:6px;">
+        <div><div class="el">Activity / Task name</div><input class="ef" id="raci-act-name" placeholder="e.g. Revit Connector Build" onkeydown="if(event.key==='Escape')hideRaciAddRow();"/></div>
+        <div><div class="el">Department tag</div><select class="ef" id="raci-act-dept" style="cursor:pointer;"></select></div>
+      </div>
+      <div class="fbr"><button class="fb p" onclick="saveRaciRow()" style="padding:6px 0;">Save</button><button class="fb c" onclick="hideRaciAddRow()" style="padding:6px 0;">Cancel</button></div>
+    </div>
+
+    <!-- Add column form -->
+    <div id="raci-col-form" class="amf" style="display:none;margin-bottom:.85rem;">
+      <div class="amtitle">Add person column</div>
+      <div class="er" style="margin-bottom:6px;">
+        <div><div class="el">Short ID (2–3 letters)</div><input class="ef" id="raci-col-id" placeholder="e.g. NO" maxlength="3"/></div>
+        <div><div class="el">Full name</div><input class="ef" id="raci-col-name" placeholder="e.g. Nil Ozdamar"/></div>
+      </div>
+      <div class="er" style="margin-bottom:6px;">
+        <div><div class="el">Role / Title</div><input class="ef" id="raci-col-role" placeholder="e.g. Admin"/></div>
+        <div><div class="el">Department</div><select class="ef" id="raci-col-dept" style="cursor:pointer;"></select></div>
+      </div>
+      <div class="fbr"><button class="fb p" onclick="saveRaciCol()" style="padding:6px 0;">Add column</button><button class="fb c" onclick="hideRaciAddCol()" style="padding:6px 0;">Cancel</button></div>
+    </div>
+
+    <!-- Table -->
+    <div style="overflow-x:auto;border-radius:10px;border:.5px solid rgba(255,255,255,.07);background:rgba(0,0,0,.12);">
+      <table id="raci-table" style="border-collapse:collapse;width:100%;font-size:11px;"></table>
+    </div>
+    <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:right;">Hover row → delete button appears &nbsp;·&nbsp; Hover column header → remove column</div>
+  </div>
+</div>
+
 <!-- GANTT CHART -->
 <div id="panel-gantt" class="panel">
   <div class="pi">
@@ -1028,6 +1098,7 @@ function sw(id){
   if(t)t.classList.add('on');if(p){p.classList.add('on');document.querySelector('.content').scrollTop=0;}
   if(id==='team')renderTeam();
   if(id==='hr'){renderPositions();renderCapacity();renderChecklist();updateHrStats();}
+  if(id==='raci')renderRaci();
 }
 function showAdd(){document.getElementById('add-btn').style.display='none';const f=document.getElementById('add-form');f.style.display='block';document.getElementById('add-inp').focus();}
 function cancelAdd(){document.getElementById('add-form').style.display='none';document.getElementById('add-btn').style.display='flex';document.getElementById('add-inp').value='';}
@@ -1072,6 +1143,314 @@ function initSbDrag(){
   });
 }
 (function(){const c=document.createElement('canvas');c.width=64;c.height=64;const x=c.getContext('2d');const rr=12;x.beginPath();x.moveTo(rr,0);x.lineTo(64-rr,0);x.quadraticCurveTo(64,0,64,rr);x.lineTo(64,64-rr);x.quadraticCurveTo(64,64,64-rr,64);x.lineTo(rr,64);x.quadraticCurveTo(0,64,0,64-rr);x.lineTo(0,rr);x.quadraticCurveTo(0,0,rr,0);x.closePath();x.fillStyle='#0c1d32';x.fill();x.fillStyle='#fff';x.font='300 40px -apple-system,Helvetica,sans-serif';x.textBaseline='middle';x.fillText('a',10,36);x.beginPath();x.arc(51,13,7,0,Math.PI*2);x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=2.5;x.stroke();const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');const ex=document.querySelector('link[rel="icon"]');if(ex)ex.remove();document.head.appendChild(l);})();
+// ─── RACI DATA (from Notion Team Directory) ───────────────────────────────────
+let raciMembers=[
+  {id:'EM',name:'Efehan Maleri',   role:'CEO & Co-Founder',  dept:'leadership'},
+  {id:'SO',name:'Syed Osama Ali',  role:'CTO',               dept:'leadership'},
+  {id:'SL',name:'Soo Ling Lim',    role:'Chief Scientific Officer', dept:'leadership'},
+  {id:'L', name:'Laraib',          role:'Program Manager',   dept:'product'},
+  {id:'MG',name:'Mesude Gökpınar', role:'Product Intern',    dept:'product'},
+  {id:'TM',name:'Talha Mubeen',    role:'System Architect',  dept:'development'},
+  {id:'MT',name:'Murat Tut',       role:'Full Stack Developer', dept:'development'},
+  {id:'BC',name:'Burak Çetin',     role:'AI Intern',         dept:'development'},
+  {id:'T', name:'Tunch',           role:'Lead Product Designer', dept:'design'},
+  {id:'G', name:'Gamzang',         role:'Designer',          dept:'design'},
+  {id:'C', name:'Claire',          role:'Marketing',         dept:'marketing'},
+  {id:'BS',name:'Buse Suche Coşkun',role:'Marketing',        dept:'marketing'},
+];
+let raciDepts=[
+  {key:'all',       label:'All'},
+  {key:'leadership',label:'Leadership'},
+  {key:'product',   label:'Product'},
+  {key:'development',label:'Development'},
+  {key:'design',    label:'Design'},
+  {key:'marketing', label:'Marketing'},
+];
+const raciCycle=['R','A','C','I',''];
+const raciCellStyle={
+  R:{bg:'rgba(91,146,245,.2)', color:'#5b92f5'},
+  A:{bg:'rgba(240,165,53,.2)', color:'#f0a535'},
+  C:{bg:'rgba(30,203,142,.2)', color:'#1ecb8e'},
+  I:{bg:'rgba(144,137,238,.2)',color:'#9089ee'},
+  '': {bg:'rgba(255,255,255,.03)',color:'rgba(255,255,255,.12)'},
+};
+const raciDeptColor={
+  all:'var(--t3)',leadership:'#aaa9f5',product:'#9089ee',
+  development:'#5b92f5',design:'#e85555',marketing:'#1ecb8e',
+};
+const raciDeptLabel={
+  all:'All',leadership:'Lead',product:'Prod',
+  development:'Dev',design:'Design',marketing:'Mktg',
+};
+let raciRowId=20, raciDeptFilter='all';
+let raciRows=[
+  {id:1, name:'IFC 5D Connector',            dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:2, name:'Hybrid Retrieval Engine',      dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'',TM:'R',MT:'R',BC:'C',T:'',G:'',C:'',BS:''}},
+  {id:3, name:'Provenance Layer',             dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:4, name:'Revit Connector Decision',     dept:'development',
+   cells:{EM:'A',SO:'A',SL:'',L:'I',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:5, name:'DWG / AutoCAD Connector',      dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'',TM:'R',MT:'C',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:6, name:'Context Compression (J1)',     dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'',TM:'R',MT:'',BC:'R',T:'',G:'',C:'',BS:''}},
+  {id:7, name:'Trusted Results UI (Screen 1)',dept:'design',
+   cells:{EM:'I',SO:'C',SL:'',L:'A',MG:'C',TM:'C',MT:'',BC:'',T:'R',G:'C',C:'',BS:''}},
+  {id:8, name:'Provenance Drawer (Screen 2)', dept:'design',
+   cells:{EM:'I',SO:'C',SL:'',L:'A',MG:'',TM:'C',MT:'',BC:'',T:'R',G:'R',C:'',BS:''}},
+  {id:9, name:'Phase 0 Evaluation Pack',      dept:'product',
+   cells:{EM:'A',SO:'C',SL:'C',L:'R',MG:'C',TM:'C',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:10,name:'Sprint Planning (weekly)',      dept:'product',
+   cells:{EM:'A',SO:'C',SL:'',L:'R',MG:'I',TM:'I',MT:'I',BC:'I',T:'I',G:'I',C:'I',BS:'I'}},
+  {id:11,name:'Architecture Docs',            dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'',TM:'R',MT:'C',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:12,name:'RAID Log — Weekly Update',     dept:'product',
+   cells:{EM:'I',SO:'C',SL:'',L:'R',MG:'C',TM:'I',MT:'I',BC:'I',T:'I',G:'I',C:'I',BS:'I'}},
+  {id:13,name:'Marketing Strategy',           dept:'marketing',
+   cells:{EM:'A',SO:'I',SL:'',L:'I',MG:'C',TM:'',MT:'',BC:'',T:'',G:'',C:'R',BS:'R'}},
+  {id:14,name:'Product Roadmap',              dept:'product',
+   cells:{EM:'A',SO:'C',SL:'',L:'R',MG:'I',TM:'C',MT:'',BC:'',T:'I',G:'',C:'I',BS:'I'}},
+  {id:15,name:'ClickUp Board Maintenance',    dept:'product',
+   cells:{EM:'I',SO:'I',SL:'',L:'R',MG:'C',TM:'I',MT:'I',BC:'I',T:'I',G:'I',C:'I',BS:'I'}},
+  {id:16,name:'J3 State Agent (assert_state)',dept:'development',
+   cells:{EM:'I',SO:'R',SL:'C',L:'I',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:17,name:'Hiring & Onboarding',          dept:'all',
+   cells:{EM:'A',SO:'C',SL:'C',L:'R',MG:'C',TM:'',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
+  {id:18,name:'Website & Brand',              dept:'marketing',
+   cells:{EM:'A',SO:'I',SL:'',L:'I',MG:'C',TM:'',MT:'',BC:'',T:'R',G:'C',C:'R',BS:'C'}},
+];
+
+function getVisibleMembers(){
+  if(raciDeptFilter==='all') return raciMembers;
+  return raciMembers.filter(m=>m.dept==='leadership'||m.dept===raciDeptFilter);
+}
+function getFilteredRows(){
+  if(raciDeptFilter==='all') return raciRows;
+  return raciRows.filter(r=>r.dept===raciDeptFilter||r.dept==='all');
+}
+
+function renderRaciDeptTabs(){
+  const c=document.getElementById('raci-dept-filter');if(!c)return;
+  c.innerHTML='';
+  raciDepts.forEach(d=>{
+    const b=document.createElement('button');
+    b.className='dfb'+(raciDeptFilter===d.key?' on':'');
+    b.textContent=d.label;
+    b.onclick=()=>{raciDeptFilter=d.key;renderRaciDeptTabs();renderRaciTable();};
+    c.appendChild(b);
+  });
+}
+
+function populateDeptSelects(){
+  const opts=raciDepts.filter(d=>d.key!=='all').map(d=>`<option value="${d.key}">${d.label}</option>`).join('');
+  const s1=document.getElementById('raci-act-dept');
+  const s2=document.getElementById('raci-col-dept');
+  const allOpt='<option value="all">All / Cross-functional</option>';
+  if(s1)s1.innerHTML=allOpt+opts;
+  if(s2)s2.innerHTML=opts;
+}
+
+function renderRaciTable(){
+  const tbl=document.getElementById('raci-table');if(!tbl)return;
+  tbl.innerHTML='';
+  const visible=getVisibleMembers();
+  const rows=getFilteredRows();
+
+  // THEAD
+  const thead=document.createElement('thead');
+  const hr=document.createElement('tr');
+  hr.style.cssText='background:rgba(0,0,0,.25);';
+
+  // Activity cell
+  const thAct=document.createElement('th');
+  thAct.style.cssText='text-align:left;padding:9px 14px;font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);font-weight:500;min-width:210px;position:sticky;left:0;background:#0a121e;z-index:2;border-right:.5px solid rgba(255,255,255,.1);white-space:nowrap;';
+  thAct.textContent='Activity / Task';
+  hr.appendChild(thAct);
+
+  // Dept tag cell
+  const thDept=document.createElement('th');
+  thDept.style.cssText='text-align:center;padding:9px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);font-weight:500;width:56px;border-right:.5px solid rgba(255,255,255,.07);white-space:nowrap;';
+  thDept.textContent='Dept';
+  hr.appendChild(thDept);
+
+  // Member columns
+  visible.forEach(m=>{
+    const th=document.createElement('th');
+    th.style.cssText='text-align:center;padding:6px 3px;min-width:46px;border-right:.5px solid rgba(255,255,255,.04);position:relative;cursor:default;';
+    th.title=`${m.name} · ${m.role}`;
+    th.innerHTML=`
+      <div style="font-size:11px;font-weight:600;color:var(--t1);letter-spacing:.3px;">${m.id}</div>
+      <div style="font-size:7.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44px;margin:0 auto;">${m.role.split(' ')[0]}</div>
+      <div class="raci-col-del" data-mid="${m.id}" title="Remove column" style="display:none;position:absolute;top:2px;right:2px;font-size:10px;color:var(--red);cursor:pointer;line-height:1;padding:1px 3px;background:rgba(232,85,85,.15);border-radius:3px;">×</div>`;
+    th.addEventListener('mouseenter',()=>{const d=th.querySelector('.raci-col-del');if(d)d.style.display='block';});
+    th.addEventListener('mouseleave',()=>{const d=th.querySelector('.raci-col-del');if(d)d.style.display='none';});
+    const del=th.querySelector('.raci-col-del');
+    if(del)del.addEventListener('click',e=>{e.stopPropagation();removeRaciCol(m.id);});
+    hr.appendChild(th);
+  });
+
+  // Empty delete col
+  const thDel=document.createElement('th');thDel.style.cssText='width:28px;';hr.appendChild(thDel);
+  thead.appendChild(hr);tbl.appendChild(thead);
+
+  // TBODY
+  const tbody=document.createElement('tbody');
+  if(!rows.length){
+    const tr=document.createElement('tr');
+    const td=document.createElement('td');
+    td.colSpan=visible.length+3;
+    td.style.cssText='padding:28px;text-align:center;color:var(--t3);font-size:12px;';
+    td.textContent='No activities for this view — click "+ Add row" to add one.';
+    tr.appendChild(td);tbody.appendChild(tr);
+  }
+  rows.forEach((row,ri)=>{
+    const tr=document.createElement('tr');
+    tr.id='rrow-'+row.id;
+    tr.style.cssText='border-bottom:.5px solid rgba(255,255,255,.04);transition:background .12s;';
+    tr.addEventListener('mouseenter',()=>{tr.style.background='rgba(255,255,255,.025)';delBtn.style.opacity='1';});
+    tr.addEventListener('mouseleave',()=>{tr.style.background='transparent';delBtn.style.opacity='0';});
+
+    // Activity name (editable)
+    const tdName=document.createElement('td');
+    tdName.style.cssText='padding:7px 14px;border-right:.5px solid rgba(255,255,255,.1);position:sticky;left:0;background:#0a121e;z-index:1;';
+    const nameEl=document.createElement('div');
+    nameEl.contentEditable='true';
+    nameEl.style.cssText='font-size:12px;font-weight:500;color:var(--t1);outline:none;cursor:text;min-width:100px;';
+    nameEl.title='Click to edit';
+    nameEl.textContent=row.name;
+    nameEl.addEventListener('blur',()=>{if(nameEl.textContent.trim())row.name=nameEl.textContent.trim();});
+    nameEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nameEl.blur();}});
+    tdName.appendChild(nameEl);tr.appendChild(tdName);
+
+    // Dept tag
+    const tdDept=document.createElement('td');
+    tdDept.style.cssText='padding:7px 5px;text-align:center;border-right:.5px solid rgba(255,255,255,.07);';
+    const dLabel=raciDeptLabel[row.dept]||row.dept;
+    const dColor=raciDeptColor[row.dept]||'var(--t3)';
+    const dBg=row.dept==='all'?'rgba(255,255,255,.05)':`${dColor.replace(')',', .1)').replace('var(','rgba(').replace('#','')||'rgba(255,255,255,.05)'}`;
+    tdDept.innerHTML=`<span style="font-size:8px;padding:2px 6px;border-radius:4px;font-weight:500;color:${dColor};background:rgba(255,255,255,.06);white-space:nowrap;">${dLabel}</span>`;
+    tr.appendChild(tdDept);
+
+    // RACI cells
+    visible.forEach(m=>{
+      const val=row.cells[m.id]||'';
+      const s=raciCellStyle[val]||raciCellStyle[''];
+      const td=document.createElement('td');
+      td.style.cssText='padding:4px 3px;text-align:center;border-right:.5px solid rgba(255,255,255,.04);';
+      const cell=document.createElement('div');
+      cell.style.cssText=`width:34px;height:28px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700;background:${s.bg};color:${s.color};transition:all .12s;user-select:none;`;
+      cell.title=val?`${m.name}: ${val}`:m.name+' — click to assign';
+      cell.textContent=val;
+      cell.addEventListener('click',()=>{
+        const cur=row.cells[m.id]||'';
+        const idx=raciCycle.indexOf(cur);
+        row.cells[m.id]=raciCycle[(idx+1)%raciCycle.length];
+        const nv=row.cells[m.id];
+        const ns=raciCellStyle[nv]||raciCellStyle[''];
+        cell.textContent=nv;
+        cell.style.background=ns.bg;cell.style.color=ns.color;
+        cell.title=nv?`${m.name}: ${nv}`:m.name+' — click to assign';
+      });
+      cell.addEventListener('mouseenter',()=>cell.style.opacity='.72');
+      cell.addEventListener('mouseleave',()=>cell.style.opacity='1');
+      td.appendChild(cell);tr.appendChild(td);
+    });
+
+    // Delete row button
+    const tdDel=document.createElement('td');tdDel.style.cssText='padding:4px 6px;text-align:center;';
+    const delBtn=document.createElement('button');
+    delBtn.innerHTML='×';
+    delBtn.style.cssText='background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px;line-height:1;opacity:0;transition:opacity .15s;padding:0 2px;';
+    delBtn.title='Delete row';
+    delBtn.addEventListener('click',()=>{
+      tr.style.animation='fo .18s ease both';
+      setTimeout(()=>{raciRows=raciRows.filter(r=>r.id!==row.id);renderRaciTable();},180);
+    });
+    delBtn.addEventListener('mouseenter',()=>delBtn.style.color='#e85555');
+    delBtn.addEventListener('mouseleave',()=>delBtn.style.color='var(--t3)');
+    tdDel.appendChild(delBtn);tr.appendChild(tdDel);
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);
+}
+
+function renderRaci(){renderRaciDeptTabs();populateDeptSelects();renderRaciTable();}
+
+function showRaciAddRow(){
+  document.getElementById('raci-edit-row-id').value='';
+  document.getElementById('raci-row-form-title').textContent='Add activity row';
+  document.getElementById('raci-act-name').value='';
+  populateDeptSelects();
+  document.getElementById('raci-row-form').style.display='block';
+  setTimeout(()=>document.getElementById('raci-act-name').focus(),50);
+}
+function hideRaciAddRow(){
+  document.getElementById('raci-row-form').style.display='none';
+  document.getElementById('raci-act-name').value='';
+  document.getElementById('raci-edit-row-id').value='';
+}
+function saveRaciRow(){
+  const nameEl=document.getElementById('raci-act-name');
+  const name=(nameEl.value||'').trim();
+  if(!name){nameEl.style.borderColor='#e85555';return;}
+  nameEl.style.borderColor='';
+  const dept=document.getElementById('raci-act-dept').value||'all';
+  const editId=parseInt(document.getElementById('raci-edit-row-id').value||'0');
+  if(editId){
+    const r=raciRows.find(x=>x.id===editId);
+    if(r){r.name=name;r.dept=dept;}
+  } else {
+    const cells={};raciMembers.forEach(m=>cells[m.id]='');
+    raciRows.push({id:++raciRowId,name,dept,cells});
+  }
+  hideRaciAddRow();renderRaciTable();
+}
+
+function showRaciAddCol(){
+  populateDeptSelects();
+  document.getElementById('raci-col-form').style.display='block';
+  setTimeout(()=>document.getElementById('raci-col-id').focus(),50);
+}
+function hideRaciAddCol(){
+  document.getElementById('raci-col-form').style.display='none';
+  ['raci-col-id','raci-col-name','raci-col-role'].forEach(id=>document.getElementById(id).value='');
+}
+function saveRaciCol(){
+  const id=(document.getElementById('raci-col-id').value||'').trim().toUpperCase();
+  const name=(document.getElementById('raci-col-name').value||'').trim();
+  const role=(document.getElementById('raci-col-role').value||'').trim();
+  const dept=document.getElementById('raci-col-dept').value||'development';
+  if(!id||!name){
+    if(!id)document.getElementById('raci-col-id').style.borderColor='#e85555';
+    if(!name)document.getElementById('raci-col-name').style.borderColor='#e85555';
+    return;
+  }
+  if(raciMembers.find(m=>m.id===id)){alert(`ID "${id}" already exists. Use a different shortcode.`);return;}
+  raciMembers.push({id,name,role:role||'Team Member',dept});
+  raciRows.forEach(r=>{r.cells[id]='';});
+  hideRaciAddCol();renderRaciTable();
+}
+function removeRaciCol(mid){
+  raciMembers=raciMembers.filter(m=>m.id!==mid);
+  raciRows.forEach(r=>{delete r.cells[mid];});
+  renderRaciTable();
+}
+
+function showRaciAddDept(){document.getElementById('raci-dept-form').style.display='block';setTimeout(()=>document.getElementById('raci-dept-name').focus(),50);}
+function hideRaciAddDept(){document.getElementById('raci-dept-form').style.display='none';document.getElementById('raci-dept-name').value='';}
+function saveRaciDept(){
+  const name=(document.getElementById('raci-dept-name').value||'').trim();
+  if(!name)return;
+  const key=name.toLowerCase().replace(/\s+/g,'-');
+  if(raciDepts.find(d=>d.key===key)){hideRaciAddDept();return;}
+  raciDepts.push({key,label:name});
+  hideRaciAddDept();
+  populateDeptSelects();
+  renderRaciDeptTabs();
+}
+
 buildRings();animateTimeline();renderSbTeam();renderLinks();renderTools();initTips();initSbDrag();
 </script>
 </body>
