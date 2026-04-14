@@ -865,20 +865,20 @@ const availColors={available:'#1ecb8e',focus:'#f0a535',ooo:'#e85555',meeting:'#5
 const availLabels={available:'Available',focus:'Focus time',ooo:'Out of office',meeting:'In a meeting'};
 let nid=100,teamFilter='all',dragSrcId=null;
 let team=[
-  {id:1,name:'Efehan Maleri',role:'CEO & Co-Founder',dept:'leadership',type:'FT',avail:'available'},
-  {id:2,name:'Syed Osama Ali',role:'CTO',dept:'leadership',type:'FT',avail:'focus'},
-  {id:3,name:'Laraib',role:'Program Manager',dept:'product',type:'FT',avail:'available'},
-  {id:4,name:'Mesude Gökpınar',role:'Product Intern',dept:'product',type:'Intern',avail:'available'},
-  {id:5,name:'Talha Mubeen',role:'System Architect',dept:'development',type:'FT',avail:'focus'},
-  {id:6,name:'Soo Ling Lim',role:'CSO',dept:'leadership',type:'FT',avail:'available'},
-  {id:7,name:'Murat Tut',role:'Full Stack Developer',dept:'development',type:'FT',avail:'available'},
-  {id:8,name:'Burak Çetin',role:'AI Intern',dept:'development',type:'Intern',avail:'available'},
-  {id:9,name:'Developer 6',role:'Developer (Incoming)',dept:'development',type:'Incoming',avail:'ooo'},
-  {id:10,name:'Tunch',role:'Lead Product Designer',dept:'design',type:'Contractor',avail:'available'},
-  {id:11,name:'Gamzang',role:'Designer',dept:'design',type:'FT',avail:'available'},
-  {id:12,name:'New Joiner',role:'Designer (Incoming)',dept:'design',type:'Incoming',avail:'ooo'},
-  {id:13,name:'Claire',role:'Marketing',dept:'marketing',type:'FT',avail:'available'},
-  {id:14,name:'Buse Suche Coşkun',role:'Marketing',dept:'marketing',type:'FT',avail:'available'}
+  {id:1, name:'Efehan Maleri',     role:'Founder / CEO & CPO',                    dept:'leadership',  type:'FT',       avail:'available'},
+  {id:2, name:'Syed Osama Ali Shah',role:'CTO',                                    dept:'leadership',  type:'FT',       avail:'focus'},
+  {id:6, name:'Soo Ling Lim',       role:'Head of AI / Science',                   dept:'leadership',  type:'FT',       avail:'available'},
+  {id:3, name:'Laraib',             role:'Program Manager',                        dept:'product',     type:'FT',       avail:'available'},
+  {id:4, name:'Mesude Gökpınar',    role:'Product Ops / Research Ops Intern',      dept:'product',     type:'Intern',   avail:'available'},
+  {id:5, name:'Talha Mubeen',       role:'Principal Engineer — Platform & Arch',   dept:'development', type:'FT',       avail:'focus'},
+  {id:7, name:'Murat Tut',          role:'Full-Stack Engineer Intern',             dept:'development', type:'Intern',   avail:'available'},
+  {id:8, name:'Burak Çetin',        role:'AI Engineer Intern',                     dept:'development', type:'Intern',   avail:'available'},
+  {id:9, name:'Developer 6',        role:'Developer (Incoming)',                   dept:'development', type:'Incoming', avail:'ooo'},
+  {id:10,name:'Tunç Karadağ',       role:'Lead Product Designer (Consultant)',     dept:'design',      type:'Contractor',avail:'available'},
+  {id:11,name:'Gamze Savas',        role:'Lead UI/UX Product Designer',           dept:'design',      type:'FT',       avail:'available'},
+  {id:12,name:'New Joiner',         role:'Designer (Incoming)',                    dept:'design',      type:'Incoming', avail:'ooo'},
+  {id:13,name:'Claire Eskander',    role:'Head of GTM / Story / Distribution',    dept:'marketing',   type:'FT',       avail:'available'},
+  {id:14,name:'Buse Suche Coşkun',  role:'Digital Marketing Specialist Intern',   dept:'marketing',   type:'Intern',   avail:'available'},
 ];
 function ini(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();}
 
@@ -1111,7 +1111,7 @@ function confirmAdd(){
   sb.insertBefore(tile,addBtn);
   const panel=document.createElement('div');panel.id='panel-'+key;panel.className='panel';panel.innerHTML=buildCustomPanel(key,nm);
   document.getElementById('panel-hr').insertAdjacentElement('afterend',panel);
-  document.getElementById('add-inp').value='';cancelAdd();sw(key);initTips();initSbDrag();
+  document.getElementById('add-inp').value='';customDepts.push({key,name:nm});persist();cancelAdd();sw(key);initTips();initSbDrag();
 }
 function buildCustomPanel(key,nm){return `<div class="pi"><div class="phdr"><div id="tw-${key}"><span style="font-size:15px;font-weight:500;" id="dt-${key}">${nm}</span></div><div style="display:flex;gap:6px;"><button class="dab" onclick="startRename('${key}')">Rename</button><button class="dab danger" onclick="deleteDept('${key}')">Delete</button></div></div><div id="bks-${key}" class="bks"><p id="emp-${key}" style="font-size:11px;color:var(--t3);border:.5px dashed rgba(255,255,255,.12);background:transparent;padding:10px 12px;border-radius:7px;">Empty — add blocks below.</p></div><div class="btb"><button class="bbt" onclick="addBlock('${key}','note')">+ Note</button><button class="bbt" onclick="addBlock('${key}','task')">+ Task</button><button class="bbt" onclick="addBlock('${key}','link')">+ Link</button><button class="bbt" onclick="addBlock('${key}','section')">+ Section</button></div></div>`;}
 function startRename(key){const w=document.getElementById('tw-'+key);const cur=document.getElementById('dt-'+key).textContent;w.innerHTML=`<input class="rin" id="ri-${key}" value="${cur}" onkeydown="rKey(event,'${key}')" onblur="saveRename('${key}')"/>`;const i=document.getElementById('ri-'+key);i.focus();i.select();}
@@ -1145,18 +1145,18 @@ function initSbDrag(){
 (function(){const c=document.createElement('canvas');c.width=64;c.height=64;const x=c.getContext('2d');const rr=12;x.beginPath();x.moveTo(rr,0);x.lineTo(64-rr,0);x.quadraticCurveTo(64,0,64,rr);x.lineTo(64,64-rr);x.quadraticCurveTo(64,64,64-rr,64);x.lineTo(rr,64);x.quadraticCurveTo(0,64,0,64-rr);x.lineTo(0,rr);x.quadraticCurveTo(0,0,rr,0);x.closePath();x.fillStyle='#0c1d32';x.fill();x.fillStyle='#fff';x.font='300 40px -apple-system,Helvetica,sans-serif';x.textBaseline='middle';x.fillText('a',10,36);x.beginPath();x.arc(51,13,7,0,Math.PI*2);x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=2.5;x.stroke();const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href=c.toDataURL('image/png');const ex=document.querySelector('link[rel="icon"]');if(ex)ex.remove();document.head.appendChild(l);})();
 // ─── RACI DATA (from Notion Team Directory) ───────────────────────────────────
 let raciMembers=[
-  {id:'EM',name:'Efehan Maleri',   role:'CEO & Co-Founder',  dept:'leadership'},
-  {id:'SO',name:'Syed Osama Ali',  role:'CTO',               dept:'leadership'},
-  {id:'SL',name:'Soo Ling Lim',    role:'Chief Scientific Officer', dept:'leadership'},
-  {id:'L', name:'Laraib',          role:'Program Manager',   dept:'product'},
-  {id:'MG',name:'Mesude Gökpınar', role:'Product Intern',    dept:'product'},
-  {id:'TM',name:'Talha Mubeen',    role:'System Architect',  dept:'development'},
-  {id:'MT',name:'Murat Tut',       role:'Full Stack Developer', dept:'development'},
-  {id:'BC',name:'Burak Çetin',     role:'AI Intern',         dept:'development'},
-  {id:'T', name:'Tunch',           role:'Lead Product Designer', dept:'design'},
-  {id:'G', name:'Gamzang',         role:'Designer',          dept:'design'},
-  {id:'C', name:'Claire',          role:'Marketing',         dept:'marketing'},
-  {id:'BS',name:'Buse Suche Coşkun',role:'Marketing',        dept:'marketing'},
+  {id:'EM',name:'Efehan Maleri',     role:'Founder / CEO & CPO',               dept:'leadership'},
+  {id:'SO',name:'Syed Osama Ali Shah',role:'CTO',                              dept:'leadership'},
+  {id:'SL',name:'Soo Ling Lim',      role:'Head of AI / Science',              dept:'leadership'},
+  {id:'L', name:'Laraib',            role:'Program Manager',                   dept:'product'},
+  {id:'MG',name:'Mesude Gökpınar',   role:'Product Ops Intern',                dept:'product'},
+  {id:'TM',name:'Talha Mubeen',      role:'Principal Engineer',                dept:'development'},
+  {id:'MT',name:'Murat Tut',         role:'Full-Stack Intern',                 dept:'development'},
+  {id:'BC',name:'Burak Çetin',       role:'AI Engineer Intern',                dept:'development'},
+  {id:'TK',name:'Tunç Karadağ',      role:'Lead Designer (Consultant)',        dept:'design'},
+  {id:'GS',name:'Gamze Savas',       role:'Lead UI/UX Designer',              dept:'design'},
+  {id:'CE',name:'Claire Eskander',   role:'Head of GTM',                       dept:'marketing'},
+  {id:'BS',name:'Buse Suche Coşkun', role:'Marketing Intern',                  dept:'marketing'},
 ];
 let raciDepts=[
   {key:'all',       label:'All'},
@@ -1184,42 +1184,46 @@ const raciDeptLabel={
 };
 let raciRowId=20, raciDeptFilter='all';
 let raciRows=[
-  {id:1, name:'IFC 5D Connector',            dept:'development',
-   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:2, name:'Hybrid Retrieval Engine',      dept:'development',
-   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'',TM:'R',MT:'R',BC:'C',T:'',G:'',C:'',BS:''}},
-  {id:3, name:'Provenance Layer',             dept:'development',
-   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:4, name:'Revit Connector Decision',     dept:'development',
-   cells:{EM:'A',SO:'A',SL:'',L:'I',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:5, name:'DWG / AutoCAD Connector',      dept:'development',
-   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'',TM:'R',MT:'C',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:6, name:'Context Compression (J1)',     dept:'development',
-   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'',TM:'R',MT:'',BC:'R',T:'',G:'',C:'',BS:''}},
-  {id:7, name:'Trusted Results UI (Screen 1)',dept:'design',
-   cells:{EM:'I',SO:'C',SL:'',L:'A',MG:'C',TM:'C',MT:'',BC:'',T:'R',G:'C',C:'',BS:''}},
-  {id:8, name:'Provenance Drawer (Screen 2)', dept:'design',
-   cells:{EM:'I',SO:'C',SL:'',L:'A',MG:'',TM:'C',MT:'',BC:'',T:'R',G:'R',C:'',BS:''}},
-  {id:9, name:'Phase 0 Evaluation Pack',      dept:'product',
-   cells:{EM:'A',SO:'C',SL:'C',L:'R',MG:'C',TM:'C',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:10,name:'Sprint Planning (weekly)',      dept:'product',
-   cells:{EM:'A',SO:'C',SL:'',L:'R',MG:'I',TM:'I',MT:'I',BC:'I',T:'I',G:'I',C:'I',BS:'I'}},
-  {id:11,name:'Architecture Docs',            dept:'development',
-   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'',TM:'R',MT:'C',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:12,name:'RAID Log — Weekly Update',     dept:'product',
-   cells:{EM:'I',SO:'C',SL:'',L:'R',MG:'C',TM:'I',MT:'I',BC:'I',T:'I',G:'I',C:'I',BS:'I'}},
-  {id:13,name:'Marketing Strategy',           dept:'marketing',
-   cells:{EM:'A',SO:'I',SL:'',L:'I',MG:'C',TM:'',MT:'',BC:'',T:'',G:'',C:'R',BS:'R'}},
-  {id:14,name:'Product Roadmap',              dept:'product',
-   cells:{EM:'A',SO:'C',SL:'',L:'R',MG:'I',TM:'C',MT:'',BC:'',T:'I',G:'',C:'I',BS:'I'}},
-  {id:15,name:'ClickUp Board Maintenance',    dept:'product',
-   cells:{EM:'I',SO:'I',SL:'',L:'R',MG:'C',TM:'I',MT:'I',BC:'I',T:'I',G:'I',C:'I',BS:'I'}},
-  {id:16,name:'J3 State Agent (assert_state)',dept:'development',
-   cells:{EM:'I',SO:'R',SL:'C',L:'I',MG:'',TM:'R',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:17,name:'Hiring & Onboarding',          dept:'all',
-   cells:{EM:'A',SO:'C',SL:'C',L:'R',MG:'C',TM:'',MT:'',BC:'',T:'',G:'',C:'',BS:''}},
-  {id:18,name:'Website & Brand',              dept:'marketing',
-   cells:{EM:'A',SO:'I',SL:'',L:'I',MG:'C',TM:'',MT:'',BC:'',T:'R',G:'C',C:'R',BS:'C'}},
+  {id:1, name:'IFC 5D Connector',             dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'', TM:'R',MT:'',  BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:2, name:'Hybrid Retrieval Engine',       dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'', TM:'R',MT:'R', BC:'C',TK:'', GS:'', CE:'', BS:''}},
+  {id:3, name:'Provenance Layer',              dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'', TM:'R',MT:'',  BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:4, name:'Revit Connector Decision',      dept:'development',
+   cells:{EM:'A',SO:'A',SL:'C',L:'I',MG:'', TM:'R',MT:'',  BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:5, name:'DWG / AutoCAD Connector',       dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'', TM:'R',MT:'C', BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:6, name:'Context Compression (J1)',      dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'C',MG:'', TM:'R',MT:'',  BC:'R',TK:'', GS:'', CE:'', BS:''}},
+  {id:7, name:'Trusted Results UI (Screen 1)', dept:'design',
+   cells:{EM:'I',SO:'C',SL:'', L:'A',MG:'C',TM:'C',MT:'',  BC:'', TK:'A',GS:'R',CE:'', BS:''}},
+  {id:8, name:'Provenance Drawer (Screen 2)',  dept:'design',
+   cells:{EM:'I',SO:'C',SL:'', L:'A',MG:'', TM:'C',MT:'',  BC:'', TK:'C',GS:'R',CE:'', BS:''}},
+  {id:9, name:'Phase 0 Evaluation Pack',       dept:'product',
+   cells:{EM:'A',SO:'C',SL:'C',L:'R',MG:'C',TM:'C',MT:'',  BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:10,name:'Sprint Planning (weekly)',       dept:'product',
+   cells:{EM:'A',SO:'C',SL:'', L:'R',MG:'I',TM:'I',MT:'I', BC:'I',TK:'I',GS:'I',CE:'I',BS:'I'}},
+  {id:11,name:'Architecture Docs',             dept:'development',
+   cells:{EM:'I',SO:'A',SL:'C',L:'I',MG:'', TM:'R',MT:'C', BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:12,name:'RAID Log — Weekly Update',      dept:'product',
+   cells:{EM:'I',SO:'C',SL:'', L:'R',MG:'C',TM:'I',MT:'I', BC:'I',TK:'I',GS:'I',CE:'I',BS:'I'}},
+  {id:13,name:'Marketing Strategy',            dept:'marketing',
+   cells:{EM:'A',SO:'I',SL:'C',L:'I',MG:'C',TM:'',  MT:'', BC:'', TK:'', GS:'', CE:'R',BS:'R'}},
+  {id:14,name:'Product Roadmap',               dept:'product',
+   cells:{EM:'A',SO:'C',SL:'C',L:'R',MG:'I',TM:'C',MT:'',  BC:'', TK:'I',GS:'I',CE:'I',BS:'I'}},
+  {id:15,name:'ClickUp Board Maintenance',     dept:'product',
+   cells:{EM:'I',SO:'I',SL:'', L:'R',MG:'C',TM:'I',MT:'I', BC:'I',TK:'I',GS:'I',CE:'I',BS:'I'}},
+  {id:16,name:'J3 State Agent (assert_state)', dept:'development',
+   cells:{EM:'I',SO:'R',SL:'C',L:'I',MG:'', TM:'R',MT:'',  BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:17,name:'Hiring & Onboarding',           dept:'all',
+   cells:{EM:'A',SO:'C',SL:'C',L:'R',MG:'C',TM:'',  MT:'', BC:'', TK:'', GS:'', CE:'', BS:''}},
+  {id:18,name:'Website & Brand',               dept:'marketing',
+   cells:{EM:'A',SO:'I',SL:'C',L:'I',MG:'C',TM:'',  MT:'', BC:'', TK:'R',GS:'C',CE:'R',BS:'C'}},
+  {id:19,name:'GTM Strategy & Distribution',   dept:'marketing',
+   cells:{EM:'A',SO:'I',SL:'C',L:'I',MG:'I',TM:'',  MT:'', BC:'', TK:'', GS:'', CE:'R',BS:'C'}},
+  {id:20,name:'AI Research & Science Oversight',dept:'development',
+   cells:{EM:'I',SO:'C',SL:'R',L:'I',MG:'', TM:'C',MT:'',  BC:'C',TK:'', GS:'', CE:'', BS:''}},
 ];
 
 function getVisibleMembers(){
@@ -1451,7 +1455,106 @@ function saveRaciDept(){
   renderRaciDeptTabs();
 }
 
-buildRings();animateTimeline();renderSbTeam();renderLinks();renderTools();initTips();initSbDrag();
+// ─── PERSISTENCE ──────────────────────────────────────────────────────────────
+let customDepts=[];
+const PFX='att_v3_';
+function persist(){
+  try{
+    localStorage.setItem(PFX+'team',      JSON.stringify(team));
+    localStorage.setItem(PFX+'links',     JSON.stringify(links));
+    localStorage.setItem(PFX+'tools',     JSON.stringify(tools));
+    localStorage.setItem(PFX+'positions', JSON.stringify(positions));
+    localStorage.setItem(PFX+'checklist', JSON.stringify(checklist));
+    localStorage.setItem(PFX+'raciRows',  JSON.stringify(raciRows));
+    localStorage.setItem(PFX+'raciMembers',JSON.stringify(raciMembers));
+    localStorage.setItem(PFX+'raciDepts', JSON.stringify(raciDepts));
+    localStorage.setItem(PFX+'customDepts',JSON.stringify(customDepts));
+    localStorage.setItem(PFX+'nid',       nid);
+    localStorage.setItem(PFX+'posId',     posId);
+    localStorage.setItem(PFX+'ckId',      ckId);
+    localStorage.setItem(PFX+'lid',       lid);
+    localStorage.setItem(PFX+'tid',       tid_);
+    localStorage.setItem(PFX+'raciRowId', raciRowId);
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const g=(k,def)=>{const v=localStorage.getItem(PFX+k);return v?JSON.parse(v):def;};
+    const n=(k,def)=>{const v=localStorage.getItem(PFX+k);return v!==null?parseInt(v):def;};
+    team=       g('team',      team);
+    links=      g('links',     links);
+    tools=      g('tools',     tools);
+    positions=  g('positions', positions);
+    checklist=  g('checklist', checklist);
+    raciRows=   g('raciRows',  raciRows);
+    raciMembers=g('raciMembers',raciMembers);
+    raciDepts=  g('raciDepts', raciDepts);
+    customDepts=g('customDepts',[]);
+    nid=     n('nid',     nid);
+    posId=   n('posId',   posId);
+    ckId=    n('ckId',    ckId);
+    lid=     n('lid',     lid);
+    tid_=    n('tid',     tid_);
+    raciRowId=n('raciRowId',raciRowId);
+  }catch(e){}
+}
+function restoreCustomDepts(){
+  customDepts.forEach(({key,name})=>{
+    if(document.getElementById('tile-'+key))return;
+    const sb=document.querySelector('.sb'),addBtn=document.getElementById('add-btn');
+    const tile=document.createElement('div');tile.className='sb-it';tile.id='tile-'+key;tile.onclick=()=>sw(key);
+    tile.dataset.tip=`${name} department — custom section.`;
+    tile.innerHTML=`<div class="sb-ico" style="background:rgba(255,255,255,.07);color:var(--t2);">${name[0].toUpperCase()}</div><div><div style="font-size:12px;" id="sbnm-${key}">${name}</div><div style="font-size:9px;color:var(--t3);">Custom</div></div>`;
+    sb.insertBefore(tile,addBtn);
+    const panel=document.createElement('div');panel.id='panel-'+key;panel.className='panel';
+    panel.innerHTML=buildCustomPanel(key,name);
+    document.getElementById('panel-hr').insertAdjacentElement('afterend',panel);
+  });
+}
+// hook persist into every mutation
+const _saveNewMember=saveNewMember;
+saveNewMember=function(){_saveNewMember();persist();};
+const _saveMember=saveMember;
+saveMember=function(id){_saveMember(id);persist();};
+const _deleteMember=deleteMember;
+deleteMember=function(id){_deleteMember(id);setTimeout(persist,250);};
+const _saveLink=saveLink;
+saveLink=function(){_saveLink();persist();};
+const _delLink=delLink;
+delLink=function(e,id){_delLink(e,id);persist();};
+const _saveTool=saveTool;
+saveTool=function(){_saveTool();persist();};
+const _delTool=delTool;
+delTool=function(id){_delTool(id);persist();};
+const _savePosition=savePosition;
+savePosition=function(){_savePosition();persist();};
+const _deletePosition=deletePosition;
+deletePosition=function(id){_deletePosition(id);setTimeout(persist,250);};
+const _saveChecklist=saveChecklist;
+saveChecklist=function(){_saveChecklist();persist();};
+const _toggleCk=toggleCk;
+toggleCk=function(id){_toggleCk(id);persist();};
+const _deleteCk=deleteCk;
+deleteCk=function(id){_deleteCk(id);setTimeout(persist,250);};
+const _saveCkText=saveCkText;
+saveCkText=function(id,txt){_saveCkText(id,txt);persist();};
+const _saveRaciRow=saveRaciRow;
+saveRaciRow=function(){_saveRaciRow();persist();};
+const _saveRaciCol=saveRaciCol;
+saveRaciCol=function(){_saveRaciCol();persist();};
+const _removeRaciCol=removeRaciCol;
+removeRaciCol=function(mid){_removeRaciCol(mid);persist();};
+const _saveRaciDept=saveRaciDept;
+saveRaciDept=function(){_saveRaciDept();persist();};
+const _cycleAvail=cycleAvail;
+cycleAvail=function(id,e){_cycleAvail(id,e);persist();};
+// RACI cell clicks persist via auto-save interval (cells mutate raciRows directly)
+setInterval(persist,3000);
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+buildRings();animateTimeline();
+loadState();
+restoreCustomDepts();
+renderSbTeam();renderLinks();renderTools();initTips();initSbDrag();renderRaci();
 </script>
 </body>
 </html>
